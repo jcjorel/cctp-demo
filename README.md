@@ -36,7 +36,9 @@ Ces serveurs fournissent des outils et des ressources supplémentaires qui sont 
 
 ## Structure des branches Git
 
-Le projet est organisé avec différentes branches correspondant aux étapes de développement:
+Le projet est organisé avec différentes branches correspondant aux étapes de développement.
+
+> **Note pour la maintenance du diagramme**: Pour maintenir la lisibilité du diagramme, représenter uniquement un commit virtuel par branche qui résume les principales contributions de cette branche. Cette directive permet de garder un diagramme compact et facile à comprendre, tout en mettant en évidence la structure des branches et leurs objectifs.
 
 ```mermaid
 gitGraph
@@ -44,24 +46,19 @@ gitGraph
    commit id: "Création du README.md"
    branch analyse-donnees-entrees-contexte-business
    checkout analyse-donnees-entrees-contexte-business
-   commit id: "Ajout des documents d'analyse de contexte business"
+   commit id: "Analyse contexte business, PR-FAQ et Working Backwards"
    branch enrichissement-contexte-business
    checkout enrichissement-contexte-business
-   commit id: "Ajout des identités visuelles et règles UX"
+   commit id: "Identités visuelles et règles UX"
    branch validation-ihm-preliminaire
    checkout validation-ihm-preliminaire
-   commit id: "Structure des mockups"
-   commit id: "Interfaces utilisateur standard"
-   commit id: "Interfaces gestionnaire"
-   commit id: "Interfaces administrateur"
-   commit id: "Interfaces d'affichage public"
-   commit id: "Validation IHM préliminaire ✓"
+   commit id: "Maquettes UI (utilisateur, gestionnaire, admin, affichage public) ✓"
    branch initialisation-architecture-technique
    checkout initialisation-architecture-technique
-   commit id: "Définition de l'architecture technique"
-   commit id: "Documentation technique complète ✓"
-   branch implementation-architecture-base
-   checkout implementation-architecture-base
+   commit id: "Documentation technique complète (DESIGN, API, DATA_MODEL, etc.) ✓"
+   branch implementation-architecture-dev
+   checkout implementation-architecture-dev
+   commit id: "Initialisation environnement de développement"
 ```
 
 Au fil du développement, la structure des branches évoluera pour inclure des branches dédiées à chaque étape d'implémentation.
@@ -156,15 +153,34 @@ Cette étape a défini et mis en place l'architecture technique qui servira de f
 
 Cette étape a permis d'établir une documentation technique robuste qui servira de référence tout au long du développement du projet, assurant ainsi la cohérence de l'implémentation avec les exigences définies et l'architecture prévue.
 
-## Prochaine étape
+### Étape 6 : Implémentation de l'infrastructure de développement (branche `implementation-architecture-dev`)
 
-La prochaine étape (branche `implementation-architecture-base`) consistera à mettre en place l'infrastructure de base du projet selon l'architecture technique définie. Elle comprendra:
+Cette nouvelle étape se concentre sur la mise en place de l'environnement de développement local qui permettra d'implémenter et de tester le système en mode développement. L'objectif est de créer une infrastructure légère mais complète qui reflète fidèlement l'architecture de production tout en étant adaptée aux besoins de développement.
 
-1. La mise en place de l'environnement de développement avec Docker Compose
-2. La configuration initiale des services AWS (VPC, ECS, Aurora PostgreSQL)
-3. La création des structures de base de données à partir du modèle de données défini
-4. L'implémentation du squelette de l'API backend avec FastAPI
-5. La configuration de l'authentification et des autorisations RBAC
-6. La mise en place du frontend React avec Material-UI selon les maquettes validées
+**Objectifs à atteindre :**
+- Création d'un environnement de développement conteneurisé avec Docker Compose
+- Configuration de la base de données PostgreSQL locale avec schémas initiaux
+- Mise en place du squelette d'API FastAPI avec routes principales
+- Configuration du frontend React avec Material-UI et styles personnalisés
+- Implémentation d'un système de données de test et de mocks pour simuler les intégrations externes
+- Configuration d'un système de développement "hot-reload" pour faciliter l'itération rapide
 
-Cette étape posera les fondations techniques qui permettront ensuite l'implémentation progressive des fonctionnalités métier du système de réservation de ressources.
+**Livrables attendus :**
+- `docker-compose.yml` pour l'orchestration des services de développement
+- Structure de base du backend FastAPI avec documentation auto-générée
+- Structure de base du frontend React avec routage et état global
+- Scripts de migration pour initialiser la base de données
+- Documentation des procédures de développement local
+
+Cette étape permettra aux développeurs de commencer à implémenter les fonctionnalités métier dans un environnement contrôlé et proche de la configuration finale, tout en facilitant les tests et l'itération rapide.
+
+## Prochaines étapes
+
+Après la mise en place de l'environnement de développement, les étapes suivantes consisteront à :
+
+1. Implémenter les fonctionnalités de gestion des utilisateurs et d'authentification
+2. Développer le module de gestion des ressources
+3. Mettre en place le système de réservation avec ses règles métier
+4. Implémenter le workflow de validation des réservations
+5. Créer les tableaux de bord et les interfaces de reporting
+6. Développer les intégrations avec les systèmes externes (Active Directory, Exchange)
