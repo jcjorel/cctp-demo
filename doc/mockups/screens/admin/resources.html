@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des ressources - Système de Réservation de Ressources</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .resources-page { max-width: 1280px; margin: 0 auto; padding: var(--space-md); }
+        .resources-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg); }
+        .resources-tabs { display: flex; background-color: white; box-shadow: var(--shadow-1); border-radius: var(--border-radius-md); margin-bottom: var(--space-lg); overflow: hidden; }
+        .resources-tab { padding: var(--space-md) var(--space-lg); cursor: pointer; font-weight: 500; color: var(--color-text-secondary); border-bottom: 3px solid transparent; transition: all var(--transition-fast); }
+        .resources-tab.active { color: var(--color-primary); border-bottom-color: var(--color-primary); background-color: var(--color-background-light); }
+        .resources-tab:hover:not(.active) { background-color: var(--color-background); color: var(--color-text); }
+        .resources-filters { display: flex; flex-wrap: wrap; gap: var(--space-md); margin-bottom: var(--space-md); align-items: center; background-color: white; border-radius: var(--border-radius-md); padding: var(--space-md); box-shadow: var(--shadow-1); }
+        .resources-filters .form-field { flex: 1; min-width: 200px; margin: 0; }
+        .resources-filters .form-field .form-label { margin-bottom: var(--space-xs); }
+        .resources-container { background-color: white; border-radius: var(--border-radius-md); box-shadow: var(--shadow-1); overflow: hidden; }
+        .resources-table { width: 100%; border-collapse: collapse; }
+        .resources-table th, .resources-table td { padding: var(--space-md); text-align: left; border-bottom: 1px solid var(--color-border); }
+        .resources-table th { background-color: var(--color-background-secondary); font-weight: 500; color: var(--color-text-secondary); position: relative; cursor: pointer; }
+        .resources-table th.sort-asc::after { content: ''; position: absolute; right: var(--space-sm); top: 50%; transform: translateY(-50%); border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 5px solid var(--color-text-secondary); }
+        .resources-table th.sort-desc::after { content: ''; position: absolute; right: var(--space-sm); top: 50%; transform: translateY(-50%); border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid var(--color-text-secondary); }
+        .resources-table tbody tr:hover { background-color: var(--color-background-light); }
+        .resources-table .resource-actions { display: flex; gap: var(--space-xs); justify-content: flex-end; }
+        .tag { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: var(--font-size-xs); font-weight: 500; margin-right: var(--space-xs); background-color: var(--color-background-secondary); color: var(--color-text-secondary); }
+        .tag.available { background-color: rgba(76, 175, 80, 0.1); color: #4CAF50; }
+        .tag.maintenance { background-color: rgba(244, 67, 54, 0.1); color: #F44336; }
+        .tag.limited { background-color: rgba(255, 152, 0, 0.1); color: #FF9800; }
+        .resource-type-icon { width: 40px; height: 40px; border-radius: var(--border-radius-circle); background-color: var(--color-background-secondary); display: flex; align-items: center; justify-content: center; margin-right: var(--space-sm); }
+        .resource-cell { display: flex; align-items: center; }
+        .resource-info { display: flex; flex-direction: column; }
+        .resource-name { font-weight: 500; color: var(--color-text); margin-bottom: 4px; }
+        .resource-location { font-size: var(--font-size-xs); color: var(--color-text-secondary); }
+        .resource-capacity { display: flex; align-items: center; color: var(--color-text); }
+        .resource-capacity .material-icons { font-size: 16px; margin-right: var(--space-xs); color: var(--color-text-secondary); }
+        .pagination { display: flex; justify-content: center; padding: var(--space-md); gap: var(--space-xs); }
+        .pagination-button { min-width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: var(--border-radius-sm); background-color: white; border: 1px solid var(--color-border); color: var(--color-text); cursor: pointer; transition: all var(--transition-fast); }
+        .pagination-button:hover { background-color: var(--color-background-light); }
+        .pagination-button.active { background-color: var(--color-primary); color: white; border-color: var(--color-primary); }
+        .pagination-button.disabled { color: var(--color-text-secondary); pointer-events: none; opacity: 0.5; }
+        .modal-resource { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-resource-container { width: 600px; max-width: 90%; max-height: 90%; background-color: white; border-radius: var(--border-radius-md); box-shadow: var(--shadow-3); overflow: auto; display: flex; flex-direction: column; }
+        .modal-resource-header { padding: var(--space-md); border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center; }
+        .modal-resource-title { margin: 0; font-size: var(--font-size-lg); font-weight: 500; color: var(--color-text); }
+        .modal-resource-close { background: none; border: none; cursor: pointer; font-size: var(--font-size-lg); color: var(--color-text-secondary); }
+        .modal-resource-form { padding: var(--space-md); display: flex; flex-direction: column; gap: var(--space-md); }
+        .modal-resource-section { margin-bottom: var(--space-md); }
+        .modal-resource-section-title { font-weight: 500; color: var(--color-primary); margin-bottom: var(--space-sm); padding-bottom: var(--space-xs); border-bottom: 1px solid var(--color-border); }
+        .form-row { display: flex; flex-wrap: wrap; gap: var(--space-md); }
+        .form-row .form-field { flex: 1 1 calc(50% - var(--space-md)); min-width: 200px; }
+        .form-chips { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin-top: var(--space-xs); }
+        .chip { display: inline-flex; align-items: center; padding: 4px 8px; background-color: var(--color-background-secondary); border-radius: 16px; font-size: var(--font-size-xs); margin-right: var(--space-xs); margin-bottom: var(--space-xs); }
+        .chip-close { margin-left: var(--space-xs); cursor: pointer; color: var(--color-text-secondary); }
+        .image-uploader { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-sm); }
+        .image-preview { position: relative; width: 100px; height: 100px; border-radius: var(--border-radius-sm); overflow: hidden; background-color: var(--color-background-secondary); border: 1px solid var(--color-border); }
+        .image-preview img { width: 100%; height: 100%; object-fit: cover; }
+        .image-preview-remove { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; background-color: rgba(0, 0, 0, 0.5); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: var(--font-size-xs); }
+        .image-upload-button { width: 100px; height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px dashed var(--color-border); border-radius: var(--border-radius-sm); cursor: pointer; color: var(--color-text-secondary); transition: all var(--transition-fast); }
+        .image-upload-button:hover { background-color: var(--color-background-light); border-color: var(--color-primary); color: var(--color-primary); }
+        .image-upload-button .material-icons { font-size: 24px; margin-bottom: var(--space-xs); }
+        .modal-resource-footer { padding: var(--space-md); border-top: 1px solid var(--color-border); display: flex; justify-content: flex-end; gap: var(--space-md); }
+        @media (max-width: 768px) { .resources-filters { flex-direction: column; align-items: stretch; } .resources-table { display: block; overflow-x: auto; } .resources-header { flex-direction: column; align-items: flex-start; gap: var(--space-md); } .resources-header .buttons-container { width: 100%; } .resources-header .btn { width: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-container">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="header-logo">
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link">Tableau de bord</a></li>
+                    <li class="nav-item"><a href="configuration.html" class="nav-link">Configuration</a></li>
+                    <li class="nav-item"><a href="resources.html" class="nav-link active">Ressources</a></li>
+                    <li class="nav-item"><a href="users.html" class="nav-link">Utilisateurs</a></li>
+                    <li class="nav-item"><a href="workflows.html" class="nav-link">Workflows</a></li>
+                </ul>
+            </nav>
+            <div class="user-controls">
+                <div class="user-avatar">C</div>
+                <span class="user-name">Claire Martin</span>
+                <button class="btn btn-text" data-action="logout">
+                    <span class="material-icons">logout</span>
+                </button>
+            </div>
+        </header>
+        
+        <main class="resources-page">
+            <div class="resources-header">
+                <h1 class="section-title">Gestion des ressources</h1>
+                <div class="buttons-container">
+                    <button class="btn btn-secondary mr-sm">
+                        <span class="material-icons mr-xs">file_download</span>
+                        Exporter
+                    </button>
+                    <button class="btn btn-primary" id="add-resource-button">
+                        <span class="material-icons mr-xs">add</span>
+                        Ajouter une ressource
+                    </button>
+                </div>
+            </div>
+            
+            <div class="resources-tabs">
+                <div class="resources-tab active">Salles de réunion</div>
+                <div class="resources-tab">Véhicules</div>
+                <div class="resources-tab">Équipements</div>
+                <div class="resources-tab">Autres ressources</div>
+            </div>
+            
+            <div class="resources-filters">
+                <div class="form-field">
+                    <label for="filter-search" class="form-label">Recherche</label>
+                    <input type="text" id="filter-search" class="form-input" placeholder="Nom, localisation...">
+                </div>
+                <div class="form-field">
+                    <label for="filter-building" class="form-label">Bâtiment</label>
+                    <select id="filter-building" class="form-input">
+                        <option value="">Tous les bâtiments</option>
+                        <option value="siege">Siège Plaine Commune</option>
+                        <option value="annexe1">Annexe 1</option>
+                        <option value="annexe2">Annexe 2</option>
+                        <option value="mairie">Mairie de Saint-Denis</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="filter-capacity" class="form-label">Capacité min.</label>
+                    <select id="filter-capacity" class="form-input">
+                        <option value="">Tous</option>
+                        <option value="5">5+ personnes</option>
+                        <option value="10">10+ personnes</option>
+                        <option value="20">20+ personnes</option>
+                        <option value="50">50+ personnes</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="filter-status" class="form-label">Statut</label>
+                    <select id="filter-status" class="form-input">
+                        <option value="">Tous les statuts</option>
+                        <option value="available">Disponible</option>
+                        <option value="maintenance">En maintenance</option>
+                        <option value="limited">Accès limité</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="resources-container">
+                <table class="resources-table">
+                    <thead>
+                        <tr>
+                            <th class="sort-asc">Ressource</th>
+                            <th>Localisation</th>
+                            <th>Capacité</th>
+                            <th>Équipements</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="resource-cell">
+                                    <div class="resource-type-icon">
+                                        <span class="material-icons">meeting_room</span>
+                                    </div>
+                                    <div class="resource-info">
+                                        <div class="resource-name">Salle du Conseil</div>
+                                        <div class="resource-location">1er étage</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Siège Plaine Commune</td>
+                            <td>
+                                <div class="resource-capacity">
+                                    <span class="material-icons">people</span>
+                                    30 personnes
+                                </div>
+                            </td>
+                            <td>
+                                <span class="tag">Visioconférence</span>
+                                <span class="tag">Projecteur</span>
+                                <span class="tag">Sonorisation</span>
+                            </td>
+                            <td>
+                                <span class="tag available">Disponible</span>
+                            </td>
+                            <td>
+                                <div class="resource-actions">
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">edit</span>
+                                    </button>
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">delete</span>
+                                    </button>
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">visibility</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="resource-cell">
+                                    <div class="resource-type-icon">
+                                        <span class="material-icons">meeting_room</span>
+                                    </div>
+                                    <div class="resource-info">
+                                        <div class="resource-name">Salle Pleyel</div>
+                                        <div class="resource-location">RDC</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Siège Plaine Commune</td>
+                            <td>
+                                <div class="resource-capacity">
+                                    <span class="material-icons">people</span>
+                                    20 personnes
+                                </div>
+                            </td>
+                            <td>
+                                <span class="tag">Projecteur</span>
+                                <span class="tag">Wifi</span>
+                            </td>
+                            <td>
+                                <span class="tag available">Disponible</span>
+                            </td>
+                            <td>
+                                <div class="resource-actions">
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">edit</span>
+                                    </button>
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">delete</span>
+                                    </button>
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">visibility</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="resource-cell">
+                                    <div class="resource-type-icon">
+                                        <span class="material-icons">meeting_room</span>
+                                    </div>
+                                    <div class="resource-info">
+                                        <div class="resource-name">Salle A102</div>
+                                        <div class="resource-location">1er étage</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Siège Plaine Commune</td>
+                            <td>
+                                <div class="resource-capacity">
+                                    <span class="material-icons">people</span>
+                                    12 personnes
+                                </div>
+                            </td>
+                            <td>
+                                <span class="tag">Écran tactile</span>
+                                <span class="tag">Wifi</span>
+                            </td>
+                            <td>
+                                <span class="tag maintenance">En maintenance</span>
+                            </td>
+                            <td>
+                                <div class="resource-actions">
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">edit</span>
+                                    </button>
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">delete</span>
+                                    </button>
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">visibility</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="pagination">
+                    <button class="pagination-button disabled">
+                        <span class="material-icons">first_page</span>
+                    </button>
+                    <button class="pagination-button disabled">
+                        <span class="material-icons">chevron_left</span>
+                    </button>
+                    <button class="pagination-button active">1</button>
+                    <button class="pagination-button">2</button>
+                    <button class="pagination-button">3</button>
+                    <button class="pagination-button">
+                        <span class="material-icons">chevron_right</span>
+                    </button>
+                    <button class="pagination-button">
+                        <span class="material-icons">last_page</span>
+                    </button>
+                </div>
+            </div>
+        
+            <!-- Modal pour ajouter/modifier une ressource -->
+            <div class="modal-resource" style="display: none;">
+                <div class="modal-resource-container">
+                    <div class="modal-resource-header">
+                        <h2 class="modal-resource-title">Nouvelle ressource</h2>
+                        <button class="modal-resource-close">&times;</button>
+                    </div>
+                    <div class="modal-resource-form">
+                        <div class="modal-resource-section">
+                            <h3 class="modal-resource-section-title">Informations générales</h3>
+                            <div class="form-row">
+                                <div class="form-field">
+                                    <label for="resource-name" class="form-label">Nom de la ressource</label>
+                                    <input type="text" id="resource-name" class="form-input" placeholder="Ex: Salle du Conseil">
+                                </div>
+                                <div class="form-field">
+                                    <label for="resource-type" class="form-label">Type de ressource</label>
+                                    <select id="resource-type" class="form-input">
+                                        <option value="room">Salle de réunion</option>
+                                        <option value="vehicle">Véhicule</option>
+                                        <option value="equipment">Équipement</option>
+                                        <option value="other">Autre</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-resource-footer">
+                        <button class="btn btn-secondary">Annuler</button>
+                        <button class="btn btn-primary">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="app-footer">
+            <div class="footer-logos">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="footer-logo mr-md">
+                <img src="../../../logos/saint_denis.svg" alt="Logo Saint-Denis" class="footer-logo">
+            </div>
+            <div class="footer-links">
+                <a href="#" class="mr-md">Mentions légales</a>
+                <a href="#" class="mr-md">Politique de confidentialité</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Plaine Commune & Ville de Saint-Denis - Système de Réservation de Ressources
+            </div>
+        </footer>
+    </div>
+    
+    <script src="../../assets/js/navigation.js"></script>
+</body>
+</html>

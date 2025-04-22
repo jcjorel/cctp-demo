@@ -2,6 +2,8 @@
 
 Ce fichier suit les modifications apportées aux documents markdown dans le dossier principal de documentation.
 
+2025-04-22T17:16:00Z : [README.md] Mise à jour de l'étape 4 "Validation IHM préliminaire" suite à la validation client et détail des réalisations
+2025-04-22T10:33:00Z : [README.md] Ajout de l'étape 4 "Validation IHM préliminaire" et mise à jour du diagramme de branches Git
 2025-04-22T11:45:00Z : [UX_DESIGN.md] Création des règles d'usage des logos dans l'interface utilisateur
 2025-04-22T11:33:00Z : [identites_visuelles/INDEX.md] Création du document d'index des identités visuelles avec diagramme des relations
 2025-04-22T11:32:00Z : [identites_visuelles/PLAINE_COMMUNE_DEVELOPPEMENT.md] Création du document d'identité visuelle pour Plaine Commune Développement

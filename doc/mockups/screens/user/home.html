@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil - Système de Réservation de Ressources</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Styles spécifiques à la page d'accueil */
+        .search-section {
+            background-color: var(--color-primary);
+            color: white;
+            padding: var(--space-xl) var(--space-md);
+            margin-bottom: var(--space-xl);
+            border-radius: var(--border-radius-md);
+        }
+        
+        .search-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .search-title {
+            text-align: center;
+            margin-bottom: var(--space-md);
+            font-size: var(--font-size-xl);
+        }
+        
+        .search-form {
+            display: flex;
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+        }
+        
+        .search-input {
+            flex-grow: 1;
+            border: none;
+            padding: var(--space-md);
+            font-size: var(--font-size-lg);
+        }
+        
+        .search-input:focus {
+            outline: none;
+        }
+        
+        .search-button {
+            background-color: var(--color-secondary);
+            color: white;
+            border: none;
+            padding: 0 var(--space-lg);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .search-button:hover {
+            background-color: var(--color-secondary-dark);
+        }
+        
+        .resource-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xxl);
+        }
+        
+        .resource-type-card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-1);
+            transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .resource-type-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-2);
+        }
+        
+        .resource-type-image {
+            height: 120px;
+            background-color: var(--color-background-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .resource-type-image .material-icons {
+            font-size: 48px;
+            color: var(--color-primary);
+        }
+        
+        .resource-type-content {
+            padding: var(--space-md);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .resource-type-title {
+            margin: 0 0 var(--space-sm) 0;
+            color: var(--color-primary);
+        }
+        
+        .resource-type-description {
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-md);
+        }
+        
+        .upcoming-bookings {
+            margin-bottom: var(--space-xl);
+        }
+        
+        .booking-card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            padding: var(--space-md);
+            box-shadow: var(--shadow-1);
+            margin-bottom: var(--space-md);
+            display: flex;
+        }
+        
+        .booking-date {
+            min-width: 60px;
+            margin-right: var(--space-md);
+            text-align: center;
+            border-right: 1px solid var(--color-border);
+            padding-right: var(--space-sm);
+        }
+        
+        .booking-day {
+            font-size: var(--font-size-xl);
+            font-weight: 500;
+            color: var(--color-primary);
+        }
+        
+        .booking-month {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+        }
+        
+        .booking-info {
+            flex-grow: 1;
+        }
+        
+        .booking-title {
+            margin: 0 0 var(--space-xs) 0;
+            color: var(--color-text);
+        }
+        
+        .booking-details {
+            color: var(--color-text-secondary);
+            margin: 0 0 var(--space-xs) 0;
+            font-size: var(--font-size-sm);
+        }
+        
+        .booking-status {
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--border-radius-sm);
+            display: inline-block;
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+        }
+        
+        .status-confirmed {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--color-success);
+            border: 1px solid var(--color-success);
+        }
+        
+        .status-pending {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--color-warning);
+            border: 1px solid var(--color-warning);
+        }
+        
+        .app-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: var(--space-md);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+        
+        .main-nav {
+            flex-grow: 1;
+        }
+        
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+        
+        .nav-item {
+            margin-right: var(--space-md);
+        }
+        
+        .nav-link {
+            display: block;
+            padding: var(--space-sm);
+            color: var(--color-text);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+            border-bottom: 2px solid transparent;
+        }
+        
+        .nav-link:hover {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+        
+        .nav-link.active {
+            color: var(--color-primary);
+            border-bottom: 2px solid var(--color-primary);
+        }
+        
+        .user-controls {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--border-radius-circle);
+            background-color: var(--color-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            margin-right: var(--space-sm);
+        }
+        
+        .user-name {
+            margin-right: var(--space-md);
+            font-weight: 500;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .search-button {
+                padding: var(--space-sm) 0;
+            }
+            
+            .booking-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .booking-date {
+                margin-bottom: var(--space-sm);
+                border-right: none;
+                border-bottom: 1px solid var(--color-border);
+                padding-bottom: var(--space-sm);
+                width: 100%;
+                text-align: left;
+                display: flex;
+                align-items: center;
+            }
+            
+            .booking-day {
+                margin-right: var(--space-sm);
+            }
+            
+            .nav-list {
+                flex-wrap: wrap;
+            }
+            
+            .user-controls {
+                margin-top: var(--space-sm);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-container">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="header-logo">
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="home.html" class="nav-link active">Accueil</a></li>
+                    <li class="nav-item"><a href="search.html" class="nav-link">Rechercher</a></li>
+                    <li class="nav-item"><a href="my-bookings.html" class="nav-link">Mes réservations</a></li>
+                    <li class="nav-item"><a href="help.html" class="nav-link">Aide</a></li>
+                </ul>
+            </nav>
+            <div class="user-controls">
+                <div class="user-avatar">M</div>
+                <span class="user-name">Marie Dupont</span>
+                <button class="btn btn-text">
+                    <span class="material-icons">logout</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Section de recherche principale -->
+            <section class="search-section">
+                <div class="search-container">
+                    <h2 class="search-title">Rechercher une ressource</h2>
+                    <form class="search-form">
+                        <input type="text" class="search-input" placeholder="Salle de réunion, véhicule, équipement...">
+                        <button type="submit" class="search-button">
+                            <span class="material-icons">search</span>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Types de ressources -->
+            <section>
+                <div class="section-header">
+                    <h2 class="section-title">Types de ressources</h2>
+                </div>
+                
+                <div class="resource-types">
+                    <a href="search.html?type=room" class="resource-type-card">
+                        <div class="resource-type-image">
+                            <span class="material-icons">meeting_room</span>
+                        </div>
+                        <div class="resource-type-content">
+                            <div>
+                                <h3 class="resource-type-title">Salles de réunion</h3>
+                                <p class="resource-type-description">Salles équipées pour vos réunions et conférences</p>
+                            </div>
+                            <span class="text-primary">24 salles disponibles</span>
+                        </div>
+                    </a>
+                    
+                    <a href="search.html?type=vehicle" class="resource-type-card">
+                        <div class="resource-type-image">
+                            <span class="material-icons">directions_car</span>
+                        </div>
+                        <div class="resource-type-content">
+                            <div>
+                                <h3 class="resource-type-title">Véhicules</h3>
+                                <p class="resource-type-description">Flotte de véhicules pour vos déplacements professionnels</p>
+                            </div>
+                            <span class="text-primary">12 véhicules disponibles</span>
+                        </div>
+                    </a>
+                    
+                    <a href="search.html?type=equipment" class="resource-type-card">
+                        <div class="resource-type-image">
+                            <span class="material-icons">devices</span>
+                        </div>
+                        <div class="resource-type-content">
+                            <div>
+                                <h3 class="resource-type-title">Équipements</h3>
+                                <p class="resource-type-description">Projecteurs, ordinateurs portables, écrans, etc.</p>
+                            </div>
+                            <span class="text-primary">36 équipements disponibles</span>
+                        </div>
+                    </a>
+                    
+                    <a href="search.html?type=space" class="resource-type-card">
+                        <div class="resource-type-image">
+                            <span class="material-icons">apartment</span>
+                        </div>
+                        <div class="resource-type-content">
+                            <div>
+                                <h3 class="resource-type-title">Espaces événementiels</h3>
+                                <p class="resource-type-description">Amphithéâtres, espaces réception, halls d'exposition</p>
+                            </div>
+                            <span class="text-primary">8 espaces disponibles</span>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Réservations à venir -->
+            <section class="upcoming-bookings">
+                <div class="section-header">
+                    <h2 class="section-title">Vos réservations à venir</h2>
+                    <a href="my-bookings.html" class="btn btn-text">Voir toutes</a>
+                </div>
+                
+                <div class="booking-card">
+                    <div class="booking-date">
+                        <div class="booking-day">25</div>
+                        <div class="booking-month">Avr</div>
+                    </div>
+                    <div class="booking-info">
+                        <h3 class="booking-title">Salle Pleyel - Réunion de service</h3>
+                        <p class="booking-details">14h00 - 16h00 | Capacité: 12 personnes</p>
+                        <span class="booking-status status-confirmed">Confirmée</span>
+                    </div>
+                </div>
+                
+                <div class="booking-card">
+                    <div class="booking-date">
+                        <div class="booking-day">28</div>
+                        <div class="booking-month">Avr</div>
+                    </div>
+                    <div class="booking-info">
+                        <h3 class="booking-title">Renault Zoé - Visite terrain</h3>
+                        <p class="booking-details">09h00 - 17h00 | Véhicule électrique</p>
+                        <span class="booking-status status-pending">En attente</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Notifications -->
+            <section>
+                <div class="section-header">
+                    <h2 class="section-title">Notifications</h2>
+                </div>
+                
+                <div class="notification notification-info mb-md">
+                    <span class="notification-icon">i</span>
+                    <div class="notification-content">
+                        <h4 class="notification-title">Maintenance prévue</h4>
+                        <p class="notification-message">Une maintenance du système est prévue le 26 avril de 18h à 20h.</p>
+                    </div>
+                    <button class="notification-close">&times;</button>
+                </div>
+                
+                <div class="notification notification-success">
+                    <span class="notification-icon">✓</span>
+                    <div class="notification-content">
+                        <h4 class="notification-title">Réservation confirmée</h4>
+                        <p class="notification-message">Votre réservation de la salle Pleyel pour le 25 avril a été approuvée.</p>
+                    </div>
+                    <button class="notification-close">&times;</button>
+                </div>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <div class="footer-logos">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="footer-logo mr-md">
+                <img src="../../../logos/saint_denis.svg" alt="Logo Saint-Denis" class="footer-logo">
+            </div>
+            <div class="footer-links">
+                <a href="#" class="mr-md">Mentions légales</a>
+                <a href="#" class="mr-md">Politique de confidentialité</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Plaine Commune & Ville de Saint-Denis - Système de Réservation de Ressources
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

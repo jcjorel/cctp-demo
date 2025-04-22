@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiques - Système de Réservation de Ressources</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Styles spécifiques à la page de statistiques */
+        .statistics-page {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: var(--space-md);
+        }
+        
+        .statistics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+            gap: var(--space-md);
+        }
+        
+        .filters-card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-1);
+            padding: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .filters-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+        
+        .filters-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .filter-field {
+            flex: 1;
+            min-width: 180px;
+        }
+        
+        .filter-field label {
+            display: block;
+            margin-bottom: var(--space-xs);
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+        
+        .filter-field select,
+        .filter-field input {
+            width: 100%;
+            padding: var(--space-sm);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-sm);
+            background-color: var(--color-background);
+        }
+        
+        .filter-field select:focus,
+        .filter-field input:focus {
+            border-color: var(--color-primary);
+            outline: none;
+        }
+        
+        .filter-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--space-sm);
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--color-border);
+            margin-top: var(--space-md);
+        }
+        
+        .statistics-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--space-md);
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-1);
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+        
+        .stat-card-header {
+            margin-bottom: var(--space-md);
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: var(--space-xs);
+        }
+        
+        .stat-card-title {
+            margin: 0;
+            color: var(--color-primary);
+            font-size: var(--font-size-md);
+            font-weight: 500;
+        }
+        
+        .stat-card-body {
+            position: relative;
+        }
+        
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed var(--color-border);
+            background-color: var(--color-background-secondary);
+        }
+        
+        .chart-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-secondary);
+            text-align: center;
+        }
+        
+        .chart-placeholder .material-icons {
+            font-size: 48px;
+            margin-bottom: var(--space-md);
+            opacity: 0.5;
+        }
+        
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+            margin-top: var(--space-md);
+            justify-content: center;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .legend-color {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            margin-right: var(--space-xs);
+        }
+        
+        .legend-text {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+        }
+        
+        .color-1 { background-color: var(--color-primary); }
+        .color-2 { background-color: #8DAD3E; }
+        .color-3 { background-color: #00ACC1; }
+        .color-4 { background-color: #FF9800; }
+        .color-5 { background-color: #673AB7; }
+        
+        /* Simulation de graphique */
+        .chart-bars {
+            width: 100%;
+            height: 240px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 0 var(--space-md);
+        }
+        
+        .chart-bar {
+            flex: 1;
+            margin: 0 var(--space-xs);
+            height: 0%;
+            background-color: var(--color-primary);
+            position: relative;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            transition: height var(--transition-fast) ease-in-out;
+        }
+        
+        .chart-bar.loaded {
+            animation: grow-bar var(--transition-slow) ease-out forwards;
+        }
+        
+        .chart-bar:nth-child(even) {
+            background-color: var(--color-primary-light);
+        }
+        
+        .bar-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: var(--font-size-xs);
+            color: var(--color-text-secondary);
+            white-space: nowrap;
+        }
+        
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: var(--font-size-xs);
+            color: var(--color-text);
+            font-weight: 500;
+        }
+        
+        .chart-axis {
+            width: 100%;
+            height: 1px;
+            background-color: var(--color-border);
+            margin-top: 20px;
+        }
+        
+        /* Donut chart simulation */
+        .donut-chart {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            margin: var(--space-md) auto;
+            background: conic-gradient(
+                var(--color-primary) 0% 65%,
+                #8DAD3E 65% 85%,
+                var(--color-background-secondary) 85% 100%
+            );
+            position: relative;
+        }
+        
+        .donut-hole {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            background-color: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--color-text);
+        }
+        
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: var(--space-md);
+        }
+        
+        .stat-summary-card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-1);
+            padding: var(--space-md);
+        }
+        
+        .stat-summary-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--border-radius-circle);
+            background-color: var(--color-primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .stat-summary-icon .material-icons {
+            color: white;
+        }
+        
+        .stat-summary-title {
+            margin: 0 0 var(--space-xs) 0;
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+        }
+        
+        .stat-summary-value {
+            margin: 0;
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            color: var(--color-text);
+        }
+        
+        .stat-summary-trend {
+            margin: var(--space-xs) 0 0 0;
+            font-size: var(--font-size-sm);
+            display: flex;
+            align-items: center;
+        }
+        
+        .trend-up {
+            color: var(--color-success);
+        }
+        
+        .trend-down {
+            color: var(--color-error);
+        }
+        
+        .stat-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-size-sm);
+        }
+        
+        .stat-table th {
+            text-align: left;
+            padding: var(--space-sm);
+            background-color: var(--color-background-secondary);
+            font-weight: 500;
+            color: var(--color-text);
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .stat-table td {
+            padding: var(--space-sm);
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-text);
+        }
+        
+        .stat-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .color-indicator {
+            display: inline-block;
+            width: 3px;
+            height: 14px;
+            margin-right: var(--space-sm);
+            vertical-align: middle;
+        }
+        
+        .export-options {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+        
+        .sparkline {
+            height: 20px;
+            width: 60px;
+            display: inline-block;
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            vertical-align: middle;
+        }
+        
+        .sparkline-up {
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 20'><polyline points='0,15 10,12 20,16 30,9 40,5 50,7 60,2' fill='none' stroke='%234CAF50' stroke-width='1'/></svg>");
+        }
+        
+        .sparkline-down {
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 20'><polyline points='0,5 10,7 20,4 30,10 40,12 50,15 60,18' fill='none' stroke='%23F44336' stroke-width='1'/></svg>");
+        }
+        
+        .sparkline-flat {
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 20'><polyline points='0,10 10,9 20,10 30,11 40,10 50,9 60,10' fill='none' stroke='%239E9E9E' stroke-width='1'/></svg>");
+        }
+        
+        /* Grid spans */
+        .col-span-12 { grid-column: span 12; }
+        .col-span-8 { grid-column: span 8; }
+        .col-span-6 { grid-column: span 6; }
+        .col-span-4 { grid-column: span 4; }
+        .col-span-3 { grid-column: span 3; }
+        
+        @media (max-width: 992px) {
+            .col-span-8, .col-span-6 { grid-column: span 12; }
+            .col-span-4 { grid-column: span 6; }
+            .col-span-3 { grid-column: span 6; }
+        }
+        
+        @media (max-width: 768px) {
+            .col-span-4, .col-span-3 { grid-column: span 12; }
+            
+            .statistics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @keyframes grow-bar {
+            from { height: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-container">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="header-logo">
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link">Tableau de bord</a></li>
+                    <li class="nav-item"><a href="requests.html" class="nav-link">Demandes</a></li>
+                    <li class="nav-item"><a href="resources.html" class="nav-link">Ressources</a></li>
+                    <li class="nav-item"><a href="statistics.html" class="nav-link active">Statistiques</a></li>
+                </ul>
+            </nav>
+            <div class="user-controls">
+                <div class="user-avatar">T</div>
+                <span class="user-name">Thomas Martin</span>
+                <button class="btn btn-text" data-action="logout">
+                    <span class="material-icons">logout</span>
+                </button>
+            </div>
+        </header>
+        
+        <main class="statistics-page">
+            <div class="statistics-header">
+                <h1 class="section-title">Statistiques d'utilisation</h1>
+                <div class="export-options">
+                    <button class="btn btn-secondary">
+                        <span class="material-icons mr-xs">print</span>
+                        Imprimer
+                    </button>
+                    <button class="btn btn-secondary">
+                        <span class="material-icons mr-xs">save_alt</span>
+                        Exporter (PDF)
+                    </button>
+                    <button class="btn btn-secondary">
+                        <span class="material-icons mr-xs">table_view</span>
+                        Exporter (Excel)
+                    </button>
+                </div>
+            </div>
+            
+            <div class="filters-card">
+                <div class="filters-row">
+                    <div class="filter-field">
+                        <label for="period">Période</label>
+                        <select id="period">
+                            <option value="current-month">Mois courant</option>
+                            <option value="last-month">Mois précédent</option>
+                            <option value="current-quarter" selected>Trimestre courant</option>
+                            <option value="last-quarter">Trimestre précédent</option>
+                            <option value="year-to-date">Année en cours</option>
+                            <option value="custom">Personnalisé</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label for="resource-type">Type de ressource</label>
+                        <select id="resource-type">
+                            <option value="all" selected>Toutes les ressources</option>
+                            <option value="rooms">Salles</option>
+                            <option value="vehicles">Véhicules</option>
+                            <option value="equipment">Équipements</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label for="location">Lieu</label>
+                        <select id="location">
+                            <option value="all" selected>Tous les lieux</option>
+                            <option value="main-building">Bâtiment Principal</option>
+                            <option value="annex-1">Annexe 1</option>
+                            <option value="annex-2">Annexe 2</option>
+                            <option value="annex-3">Annexe 3</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <button class="btn btn-text">Réinitialiser</button>
+                    <button class="btn btn-primary">Appliquer les filtres</button>
+                </div>
+            </div>
+            
+            <div class="stats-summary">
+                <div class="stat-summary-card">
+                    <div class="stat-summary-icon">
+                        <span class="material-icons">event</span>
+                    </div>
+                    <p class="stat-summary-title">Nombre de réservations</p>
+                    <p class="stat-summary-value">184</p>
+                    <div class="stat-summary-trend trend-up">
+                        <span class="material-icons">arrow_upward</span>
+                        <span>+12% ce trimestre</span>
+                    </div>
+                </div>
+                
+                <div class="stat-summary-card">
+                    <div class="stat-summary-icon">
+                        <span class="material-icons">meeting_room</span>
+                    </div>
+                    <p class="stat-summary-title">Taux d'occupation (salles)</p>
+                    <p class="stat-summary-value">72%</p>
+                    <div class="stat-summary-trend trend-up">
+                        <span class="material-icons">arrow_upward</span>
+                        <span>+5% ce trimestre</span>
+                    </div>
+                </div>
+                
+                <div class="stat-summary-card">
+                    <div class="stat-summary-icon">
+                        <span class="material-icons">directions_car</span>
+                    </div>
+                    <p class="stat-summary-title">Taux d'occupation (véhicules)</p>
+                    <p class="stat-summary-value">63%</p>
+                    <div class="stat-summary-trend trend-down">
+                        <span class="material-icons">arrow_downward</span>
+                        <span>-3% ce trimestre</span>
+                    </div>
+                </div>
+                
+                <div class="stat-summary-card">
+                    <div class="stat-summary-icon">
+                        <span class="material-icons">people</span>
+                    </div>
+                    <p class="stat-summary-title">Nombre d'utilisateurs</p>
+                    <p class="stat-summary-value">86</p>
+                    <div class="stat-summary-trend">
+                        <span class="material-icons">remove</span>
+                        <span>Stable</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="statistics-grid">
+                <!-- Graphique d'occupation par jour -->
+                <div class="stat-card col-span-8">
+                    <div class="stat-card-header">
+                        <h2 class="stat-card-title">Nombre de réservations par jour</h2>
+                    </div>
+                    <div class="stat-card-body">
+                        <div class="chart-container">
+                            <div class="chart-bars">
+                                <div class="chart-bar loaded" style="height: 40%">
+                                    <span class="bar-value">8</span>
+                                    <span class="bar-label">Lun</span>
+                                </div>
+                                <div class="chart-bar loaded" style="height: 60%">
+                                    <span class="bar-value">12</span>
+                                    <span class="bar-label">Mar</span>
+                                </div>
+                                <div class="chart-bar loaded" style="height: 85%">
+                                    <span class="bar-value">17</span>
+                                    <span class="bar-label">Mer</span>
+                                </div>
+                                <div class="chart-bar loaded" style="height: 100%">
+                                    <span class="bar-value">20</span>
+                                    <span class="bar-label">Jeu</span>
+                                </div>
+                                <div class="chart-bar loaded" style="height: 75%">
+                                    <span class="bar-value">15</span>
+                                    <span class="bar-label">Ven</span>
+                                </div>
+                                <div class="chart-bar loaded" style="height: 15%">
+                                    <span class="bar-value">3</span>
+                                    <span class="bar-label">Sam</span>
+                                </div>
+                                <div class="chart-bar loaded" style="height: 5%">
+                                    <span class="bar-value">1</span>
+                                    <span class="bar-label">Dim</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <span class="legend-color color-1"></span>
+                                <span class="legend-text">Nombre de réservations</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Répartition par type de ressource -->
+                <div class="stat-card col-span-4">
+                    <div class="stat-card-header">
+                        <h2 class="stat-card-title">Répartition par type</h2>
+                    </div>
+                    <div class="stat-card-body">
+                        <div class="donut-chart">
+                            <div class="donut-hole">65%</div>
+                        </div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <span class="legend-color color-1"></span>
+                                <span class="legend-text">Salles (65%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color color-2"></span>
+                                <span class="legend-text">Véhicules (20%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background-color: var(--color-background-secondary)"></span>
+                                <span class="legend-text">Équipements (15%)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Top des ressources les plus demandées -->
+                <div class="stat-card col-span-6">
+                    <div class="stat-card-header">
+                        <h2 class="stat-card-title">Top 5 des ressources les plus demandées</h2>
+                    </div>
+                    <div class="stat-card-body">
+                        <table class="stat-table">
+                            <thead>
+                                <tr>
+                                    <th>Ressource</th>
+                                    <th>Type</th>
+                                    <th>Demandes</th>
+                                    <th>Taux d'occupation</th>
+                                    <th>Tendance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="color-indicator" style="background-color: var(--color-primary)"></span> Salle du Conseil</td>
+                                    <td>Salle</td>
+                                    <td>48</td>
+                                    <td>89%</td>
+                                    <td><span class="sparkline sparkline-up"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="color-indicator" style="background-color: var(--color-primary)"></span> Salle Pleyel</td>
+                                    <td>Salle</td>
+                                    <td>42</td>
+                                    <td>78%</td>
+                                    <td><span class="sparkline sparkline-up"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="color-indicator" style="background-color: #8DAD3E"></span> Renault Zoé 1</td>
+                                    <td>Véhicule</td>
+                                    <td>37</td>
+                                    <td>73%</td>
+                                    <td><span class="sparkline sparkline-flat"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="color-indicator" style="background-color: var(--color-primary)"></span> Salle de réunion A102</td>
+                                    <td>Salle</td>
+                                    <td>35</td>
+                                    <td>65%</td>
+                                    <td><span class="sparkline sparkline-down"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="color-indicator" style="background-color: var(--color-background-secondary)"></span> Projecteur 4K</td>
+                                    <td>Équipement</td>
+                                    <td>28</td>
+                                    <td>52%</td>
+                                    <td><span class="sparkline sparkline-up"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Réservations par direction -->
+                <div class="stat-card col-span-6">
+                    <div class="stat-card-header">
+                        <h2 class="stat-card-title">Réservations par direction</h2>
+                    </div>
+                    <div class="stat-card-body">
+                        <div class="chart-container">
+                            <div class="chart-placeholder">
+                                <span class="material-icons">bar_chart</span>
+                                <p>Graphique de répartition des réservations par direction</p>
+                            </div>
+                        </div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <span class="legend-color color-1"></span>
+                                <span class="legend-text">Direction Générale</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color color-2"></span>
+                                <span class="legend-text">Ressources Humaines</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color color-3"></span>
+                                <span class="legend-text">DSI</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color color-4"></span>
+                                <span class="legend-text">Communication</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color color-5"></span>
+                                <span class="legend-text">Autres</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Taux d'utilisation par plage horaire -->
+                <div class="stat-card col-span-12">
+                    <div class="stat-card-header">
+                        <h2 class="stat-card-title">Taux d'occupation par plage horaire</h2>
+                    </div>
+                    <div class="stat-card-body">
+                        <div class="chart-container">
+                            <div class="chart-placeholder">
+                                <span class="material-icons">timeline</span>
+                                <p>Graphique d'occupation par plage horaire (moyenne hebdomadaire)</p>
+                            </div>
+                        </div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <span class="legend-color color-1"></span>
+                                <span class="legend-text">Salles</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color color-2"></span>
+                                <span class="legend-text">Véhicules</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color color-3"></span>
+                                <span class="legend-text">Équipements</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="app-footer">
+            <div class="footer-logos">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="footer-logo mr-md">
+                <img src="../../../logos/saint_denis.svg" alt="Logo Saint-Denis" class="footer-logo">
+            </div>
+            <div class="footer-links">
+                <a href="#" class="mr-md">Mentions légales</a>
+                <a href="#" class="mr-md">Politique de confidentialité</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Plaine Commune & Ville de Saint-Denis - Système de Réservation de Ressources
+            </div>
+        </footer>
+    </div>
+    
+    <script src="../../assets/js/navigation.js"></script>
+</body>
+</html>

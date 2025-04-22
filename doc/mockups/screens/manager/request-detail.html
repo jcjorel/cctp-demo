@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détail de la demande - Système de Réservation de Ressources</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Styles spécifiques à la page de détail de demande */
+        .request-detail-page {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: var(--space-md);
+        }
+        
+        .request-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+            gap: var(--space-md);
+        }
+        
+        .request-detail-actions {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+        
+        .request-card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-1);
+            margin-bottom: var(--space-lg);
+            overflow: hidden;
+        }
+        
+        .request-card-header {
+            padding: var(--space-md);
+            background-color: var(--color-background-secondary);
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .request-card-title {
+            margin: 0;
+            font-size: var(--font-size-lg);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        
+        .request-card-title .status-badge {
+            margin-left: var(--space-md);
+        }
+        
+        .request-card-body {
+            padding: var(--space-md);
+        }
+        
+        .request-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--space-md);
+        }
+        
+        .request-info-section {
+            margin-bottom: var(--space-lg);
+        }
+        
+        .request-info-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .request-info-section h3 {
+            margin-top: 0;
+            margin-bottom: var(--space-md);
+            font-size: var(--font-size-md);
+            font-weight: 500;
+            color: var(--color-primary);
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: var(--space-xs);
+        }
+        
+        .info-row {
+            display: flex;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .info-label {
+            flex: 1;
+            min-width: 180px;
+            max-width: 200px;
+            color: var(--color-text-secondary);
+            font-weight: 500;
+            font-size: var(--font-size-sm);
+        }
+        
+        .info-value {
+            flex: 2;
+            color: var(--color-text);
+            font-size: var(--font-size-sm);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .status-pending {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--color-warning);
+            border: 1px solid var(--color-warning);
+        }
+        
+        .status-approved {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--color-success);
+            border: 1px solid var(--color-success);
+        }
+        
+        .status-rejected {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--color-error);
+            border: 1px solid var(--color-error);
+        }
+        
+        .priority-indicator {
+            display: inline-flex;
+            align-items: center;
+            margin-left: var(--space-md);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+        }
+        
+        .priority-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: var(--space-xs);
+        }
+        
+        .priority-high {
+            background-color: var(--color-error);
+        }
+        
+        .resource-card {
+            background-color: white;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--color-border);
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+        
+        .resource-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .resource-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--border-radius-circle);
+            background-color: var(--color-primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--space-sm);
+        }
+        
+        .resource-icon .material-icons {
+            color: white;
+            font-size: 24px;
+        }
+        
+        .resource-name {
+            font-size: var(--font-size-md);
+            font-weight: 500;
+            margin: 0;
+        }
+        
+        .resource-type {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+            margin: 0;
+        }
+        
+        .resource-props {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+            margin-top: var(--space-sm);
+        }
+        
+        .resource-prop {
+            display: flex;
+            align-items: center;
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+        }
+        
+        .resource-prop .material-icons {
+            font-size: 16px;
+            margin-right: var(--space-xs);
+        }
+        
+        .approval-form {
+            margin-top: var(--space-md);
+            border-top: 1px solid var(--color-border);
+            padding-top: var(--space-md);
+        }
+        
+        .form-group {
+            margin-bottom: var(--space-md);
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: var(--space-xs);
+            font-weight: 500;
+            color: var(--color-text);
+        }
+        
+        .form-group textarea {
+            width: 100%;
+            padding: var(--space-sm);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-sm);
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-group textarea:focus {
+            border-color: var(--color-primary);
+            outline: none;
+        }
+        
+        .form-options {
+            margin-bottom: var(--space-md);
+        }
+        
+        .form-check {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--space-xs);
+        }
+        
+        .form-check input {
+            margin-right: var(--space-sm);
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--space-md);
+        }
+        
+        .comments-section {
+            margin-top: var(--space-lg);
+        }
+        
+        .comment {
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .comment:last-child {
+            border-bottom: none;
+        }
+        
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-xs);
+        }
+        
+        .comment-author {
+            font-weight: 500;
+            color: var(--color-text);
+        }
+        
+        .comment-date {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+        
+        .comment-text {
+            color: var(--color-text);
+            font-size: var(--font-size-sm);
+            margin: 0;
+        }
+        
+        .timeline-section {
+            margin-top: var(--space-lg);
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: var(--space-md);
+        }
+        
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: 10px;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+        }
+        
+        .timeline-item:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            left: 14px;
+            top: 14px;
+            width: 2px;
+            height: calc(100% - 10px);
+            background-color: var(--color-border);
+        }
+        
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-xs);
+        }
+        
+        .timeline-title {
+            font-weight: 500;
+            color: var(--color-text);
+        }
+        
+        .timeline-date {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+        
+        .timeline-text {
+            color: var(--color-text);
+            font-size: var(--font-size-sm);
+            margin: 0;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .request-info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .info-row {
+                flex-direction: column;
+            }
+            
+            .info-label {
+                margin-bottom: var(--space-xs);
+                max-width: none;
+            }
+            
+            .request-detail-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .request-detail-actions .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-container">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="header-logo">
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link">Tableau de bord</a></li>
+                    <li class="nav-item"><a href="requests.html" class="nav-link active">Demandes</a></li>
+                    <li class="nav-item"><a href="resources.html" class="nav-link">Ressources</a></li>
+                    <li class="nav-item"><a href="statistics.html" class="nav-link">Statistiques</a></li>
+                </ul>
+            </nav>
+            <div class="user-controls">
+                <div class="user-avatar">T</div>
+                <span class="user-name">Thomas Martin</span>
+                <button class="btn btn-text" data-action="logout">
+                    <span class="material-icons">logout</span>
+                </button>
+            </div>
+        </header>
+        
+        <main class="request-detail-page">
+            <div class="request-detail-header">
+                <div>
+                    <div class="breadcrumb mb-xs">
+                        <a href="requests.html">Demandes</a> &gt; DEM-2025-04-22-1458
+                    </div>
+                    <h1 class="section-title mb-0">Demande de réservation</h1>
+                </div>
+                <div class="request-detail-actions">
+                    <button class="btn btn-success btn-lg">
+                        <span class="material-icons mr-xs">check_circle</span>
+                        Approuver
+                    </button>
+                    <button class="btn btn-error btn-lg">
+                        <span class="material-icons mr-xs">cancel</span>
+                        Refuser
+                    </button>
+                </div>
+            </div>
+            
+            <div class="request-card">
+                <div class="request-card-header">
+                    <h2 class="request-card-title">
+                        DEM-2025-04-22-1458
+                        <span class="status-badge status-pending">En attente</span>
+                        <span class="priority-indicator">
+                            <span class="priority-dot priority-high"></span> Priorité haute
+                        </span>
+                    </h2>
+                </div>
+                <div class="request-card-body">
+                    <div class="request-info-grid">
+                        <div class="request-info-section">
+                            <h3>Détails de la demande</h3>
+                            <div class="info-row">
+                                <div class="info-label">Référence</div>
+                                <div class="info-value">DEM-2025-04-22-1458</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Date de soumission</div>
+                                <div class="info-value">22 avril 2025 à 14:58</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Statut</div>
+                                <div class="info-value"><span class="status-badge status-pending">En attente</span></div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Priorité</div>
+                                <div class="info-value">
+                                    <span class="priority-dot priority-high"></span> Haute
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="request-info-section">
+                            <h3>Demandeur</h3>
+                            <div class="info-row">
+                                <div class="info-label">Nom</div>
+                                <div class="info-value">Marie Dupont</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Direction</div>
+                                <div class="info-value">Direction de la Communication</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Email</div>
+                                <div class="info-value">marie.dupont@plainecommune.fr</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Téléphone</div>
+                                <div class="info-value">01 49 XX XX XX</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="request-info-section">
+                        <h3>Ressource demandée</h3>
+                        <div class="resource-card">
+                            <div class="resource-header">
+                                <div class="resource-icon">
+                                    <span class="material-icons">meeting_room</span>
+                                </div>
+                                <div>
+                                    <h4 class="resource-name">Salle Pleyel</h4>
+                                    <p class="resource-type">Salle de réunion</p>
+                                </div>
+                            </div>
+                            <div class="resource-props">
+                                <div class="resource-prop">
+                                    <span class="material-icons">people</span> Capacité: 20 personnes
+                                </div>
+                                <div class="resource-prop">
+                                    <span class="material-icons">place</span> Bâtiment: Annexe 3
+                                </div>
+                                <div class="resource-prop">
+                                    <span class="material-icons">videocam</span> Équipement: Projecteur, Visioconférence
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="request-info-section">
+                        <h3>Détails de la réservation</h3>
+                        <div class="info-row">
+                            <div class="info-label">Date</div>
+                            <div class="info-value">23 avril 2025</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Horaires</div>
+                            <div class="info-value">14h00 - 16h00 (2h)</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Objet</div>
+                            <div class="info-value">Présentation du nouveau site internet de la ville</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Description</div>
+                            <div class="info-value">
+                                Réunion de présentation du nouveau site internet avec les responsables des services Communication et la DSI. 
+                                Démonstration prévue, besoin d'un projecteur et d'une connexion visioconférence 
+                                pour les participants distants.
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Participants</div>
+                            <div class="info-value">12 participants attendus</div>
+                        </div>
+                    </div>
+
+                    <div class="approval-form">
+                        <h3>Décision</h3>
+                        <div class="form-group">
+                            <label for="approval-comment">Commentaire (visible par le demandeur)</label>
+                            <textarea id="approval-comment" placeholder="Ajoutez un commentaire concernant cette demande..."></textarea>
+                        </div>
+                        <div class="form-options">
+                            <div class="form-check">
+                                <input type="checkbox" id="send-notification" checked>
+                                <label for="send-notification">Envoyer une notification par email au demandeur</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="add-calendar">
+                                <label for="add-calendar">Ajouter au planning des ressources</label>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn btn-secondary">Demander plus d'informations</button>
+                            <button class="btn btn-error">Refuser</button>
+                            <button class="btn btn-success">Approuver</button>
+                        </div>
+                    </div>
+
+                    <div class="comments-section">
+                        <h3>Commentaires (2)</h3>
+                        <div class="comment">
+                            <div class="comment-header">
+                                <span class="comment-author">Marie Dupont</span>
+                                <span class="comment-date">22/04/2025 14:58</span>
+                            </div>
+                            <p class="comment-text">
+                                Je souhaiterais que la salle soit préparée avec une configuration en U pour faciliter 
+                                les échanges durant la présentation. Merci d'avance.
+                            </p>
+                        </div>
+                        <div class="comment">
+                            <div class="comment-header">
+                                <span class="comment-author">Système</span>
+                                <span class="comment-date">22/04/2025 14:59</span>
+                            </div>
+                            <p class="comment-text">
+                                Demande créée et assignée au gestionnaire Thomas Martin.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-section">
+                        <h3>Historique de la demande</h3>
+                        <div class="timeline-item">
+                            <div class="timeline-header">
+                                <span class="timeline-title">Demande créée</span>
+                                <span class="timeline-date">22/04/2025 14:58</span>
+                            </div>
+                            <p class="timeline-text">
+                                Demande créée par Marie Dupont
+                            </p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-header">
+                                <span class="timeline-title">Assignation</span>
+                                <span class="timeline-date">22/04/2025 14:59</span>
+                            </div>
+                            <p class="timeline-text">
+                                La demande a été assignée au gestionnaire Thomas Martin
+                            </p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-header">
+                                <span class="timeline-title">Consultation</span>
+                                <span class="timeline-date">22/04/2025 15:10</span>
+                            </div>
+                            <p class="timeline-text">
+                                La demande a été consultée par le gestionnaire
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="app-footer">
+            <div class="footer-logos">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="footer-logo mr-md">
+                <img src="../../../logos/saint_denis.svg" alt="Logo Saint-Denis" class="footer-logo">
+            </div>
+            <div class="footer-links">
+                <a href="#" class="mr-md">Mentions légales</a>
+                <a href="#" class="mr-md">Politique de confidentialité</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Plaine Commune & Ville de Saint-Denis - Système de Réservation de Ressources
+            </div>
+        </footer>
+    </div>
+    
+    <script src="../../assets/js/navigation.js"></script>
+</body>
+</html>

@@ -48,6 +48,17 @@ gitGraph
    branch enrichissement-contexte-business
    checkout enrichissement-contexte-business
    commit id: "Ajout des identités visuelles et règles UX"
+   branch validation-ihm-preliminaire
+   checkout validation-ihm-preliminaire
+   commit id: "Structure des mockups"
+   commit id: "Interfaces utilisateur standard"
+   commit id: "Interfaces gestionnaire"
+   commit id: "Interfaces administrateur"
+   commit id: "Interfaces d'affichage public"
+   commit id: "Validation IHM préliminaire ✓"
+   branch initialisation-architecture-technique
+   checkout initialisation-architecture-technique
+   commit id: "Définition de l'architecture technique"
 ```
 
 Au fil du développement, la structure des branches évoluera pour inclure des branches dédiées à chaque étape d'implémentation.
@@ -92,3 +103,50 @@ Cette étape a permis d'enrichir le contexte business avec des ressources visuel
 **Conversations capturées :**
 - [Création branche enrichissement contexte business (22/04/2025)](coding_assistant/captured_chats/20250422-1050-creation_branche_enrichissement_contexte_business.md) - Création de la branche Git pour le travail d'enrichissement
 - [Identités visuelles et UX logos (22/04/2025)](coding_assistant/captured_chats/20250422-1147-identites_visuelles_et_ux_logos.md) - Création des documents d'identité visuelle, des logos SVG et des règles UX
+
+### Étape 4 : Validation IHM préliminaire (branche `validation-ihm-preliminaire`)
+
+Cette étape visait à valider en amont les interfaces utilisateur du projet avant de procéder à leur implémentation complète. Cette validation préliminaire a permis au donneur d'ordre d'évaluer à la fois la forme (aspect visuel, ergonomie) et le fond (fonctionnalités, workflows) des interfaces proposées.
+
+**Objectifs atteints :**
+- Création d'une bibliothèque de composants UI réutilisables conforme aux identités visuelles
+- Implémentation des maquettes HTML/CSS pour l'ensemble des interfaces utilisateur:
+  - **Utilisateurs standards**: connexion, accueil, recherche, détail de ressource, confirmation de réservation, historique
+  - **Gestionnaires**: tableau de bord, liste des demandes, détail des demandes, statistiques
+  - **Administrateurs**: configuration système, gestion des ressources, gestion des utilisateurs, paramétrage des workflows
+  - **Affichage public**: écran d'information pour hall d'accueil, planning journalier
+
+**Documents clés produits :**
+- [IHM_MOCKUPS.md](doc/mockups/IHM_MOCKUPS.md) - Spécifications détaillées de l'interface utilisateur
+- [mockups/index.html](doc/mockups/index.html) - Point d'entrée pour naviguer entre les différentes maquettes
+- [mockups/components/components-library.html](doc/mockups/components/components-library.html) - Bibliothèque de composants UI réutilisables
+
+**Conversations capturées :**
+- [Validation IHM préliminaire (22/04/2025)](coding_assistant/captured_chats/20250422-1315-validation_ihm_preliminaire.md) - Mise en place de la structure pour les mockups
+- [Validation IHM administrateur (22/04/2025)](coding_assistant/captured_chats/20250422-1530-validation_ihm_administrateur.md) - Implémentation des interfaces administrateur
+
+Cette approche a permis d'obtenir la validation formelle du donneur d'ordre, évitant ainsi des corrections coûteuses plus tard dans le cycle de développement, et assurant que le produit final répondra pleinement aux attentes des utilisateurs et du donneur d'ordre.
+
+### Étape 5 : Initialisation de l'architecture technique (branche `initialisation-architecture-technique`)
+
+Cette étape vise à définir et mettre en place l'architecture technique qui servira de fondation à l'implémentation du système de réservation de ressources. L'objectif est d'établir une structure solide répondant aux exigences techniques et aux contraintes définies dans le CCTP.
+
+**Objectifs principaux :**
+- Définir l'architecture globale du système (backend, frontend, base de données)
+- Établir les choix technologiques détaillés adaptés aux contraintes des collectivités
+- Documenter les principes d'architecture et les patterns de conception
+- Mettre en place la structure initiale du projet et les configurations de base
+- Créer les documents de design système nécessaires (DESIGN.md, DATA_MODEL.md, etc.)
+
+**Documents à produire :**
+- Documents d'architecture détaillée (DESIGN.md)
+- Modélisation des données (DATA_MODEL.md)
+- Structure des API (API.md)
+- Documentation des relations entre les documents (DOCUMENT_RELATIONSHIPS.md)
+- Templates de documentation (GENAI_HEADER_TEMPLATE.txt, GENAI_FUNCTION_TEMPLATE.txt)
+
+Cette étape s'inscrit dans la continuité des travaux de validation des interfaces utilisateur et permettra de traduire les besoins fonctionnels validés en une architecture technique robuste et évolutive.
+
+## Prochaine étape
+
+La prochaine étape consistera à implémenter l'infrastructure de base du projet selon l'architecture technique définie, avec notamment la mise en place de l'environnement de développement, des structures de données principales et des premiers modules fonctionnels.

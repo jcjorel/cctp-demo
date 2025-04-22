@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affichage Hall - Système de Réservation de Ressources</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            font-family: Roboto, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            overflow: hidden;
+        }
+        
+        /* Styles spécifiques pour l'affichage en hall */
+        .display-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .display-header {
+            background-color: var(--color-primary);
+            color: white;
+            padding: var(--space-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+        
+        .display-logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .display-logo {
+            height: 60px;
+            margin-right: var(--space-md);
+        }
+        
+        .display-title {
+            font-size: 2.2rem;
+            font-weight: 500;
+            margin: 0;
+        }
+        
+        .display-datetime {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        
+        .display-date {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin: 0;
+        }
+        
+        .display-time {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .display-content {
+            flex: 1;
+            display: flex;
+            padding: var(--space-md);
+            overflow: hidden;
+        }
+        
+        .building-selector {
+            width: 25%;
+            padding-right: var(--space-md);
+            overflow-y: auto;
+        }
+        
+        .building-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--color-text);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-xs);
+            border-bottom: 2px solid var(--color-primary);
+        }
+        
+        .building-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .building-item {
+            padding: var(--space-md);
+            border-radius: var(--border-radius-md);
+            margin-bottom: var(--space-xs);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: white;
+            box-shadow: var(--shadow-1);
+        }
+        
+        .building-item:hover {
+            background-color: var(--color-background-light);
+        }
+        
+        .building-item.active {
+            background-color: var(--color-primary-light);
+            color: var(--color-primary);
+            font-weight: 500;
+            box-shadow: var(--shadow-2);
+        }
+        
+        .building-item .badge {
+            float: right;
+            background-color: var(--color-primary);
+            color: white;
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .display-schedule {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .room-schedule {
+            background: white;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-1);
+            margin-bottom: var(--space-md);
+            overflow: hidden;
+        }
+        
+        .room-header {
+            background-color: var(--color-background-secondary);
+            padding: var(--space-sm) var(--space-md);
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .room-name {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+        }
+        
+        .room-name .material-icons {
+            margin-right: var(--space-xs);
+            color: var(--color-primary);
+        }
+        
+        .room-details {
+            display: flex;
+            gap: var(--space-md);
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+        
+        .room-detail {
+            display: flex;
+            align-items: center;
+        }
+        
+        .room-detail .material-icons {
+            font-size: 18px;
+            margin-right: var(--space-xs);
+        }
+        
+        .room-timeline {
+            display: flex;
+            position: relative;
+            min-height: 80px;
+            padding: var(--space-sm) 0;
+        }
+        
+        .timeline-hour-labels {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            display: flex;
+            padding: 0 var(--space-md);
+        }
+        
+        .hour-label {
+            flex: 1;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+            border-left: 1px dashed var(--color-border);
+            position: relative;
+        }
+        
+        .hour-label:first-child {
+            border-left: none;
+        }
+        
+        .timeline-content {
+            flex: 1;
+            position: relative;
+            margin-top: 20px;
+            padding: var(--space-md);
+        }
+        
+        .booking-block {
+            position: absolute;
+            height: 40px;
+            top: 20px;
+            border-radius: var(--border-radius-sm);
+            padding: var(--space-xs) var(--space-sm);
+            color: white;
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            box-shadow: var(--shadow-1);
+        }
+        
+        .booking-title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .booking-time {
+            margin-left: auto;
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+        
+        .booking-primary {
+            background-color: var(--color-primary);
+        }
+        
+        .booking-secondary {
+            background-color: var(--color-secondary);
+        }
+        
+        .booking-info {
+            background-color: var(--color-info);
+        }
+        
+        .booking-warning {
+            background-color: var(--color-warning);
+        }
+        
+        .no-bookings {
+            display: flex;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            font-style: italic;
+            color: var(--color-text-secondary);
+            border: 1px dashed var(--color-border);
+            border-radius: var(--border-radius-sm);
+            margin: var(--space-sm) 0;
+        }
+        
+        .display-footer {
+            background-color: var(--color-background-secondary);
+            color: var(--color-text-secondary);
+            padding: var(--space-md);
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-logos {
+            display: flex;
+            align-items: center;
+        }
+        
+        .footer-logo {
+            height: 40px;
+            margin-right: var(--space-md);
+        }
+        
+        .footer-message {
+            font-size: 1.2rem;
+            max-width: 60%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            animation: scrollText 15s linear infinite;
+        }
+        
+        .refresh-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .refresh-info .material-icons {
+            margin-right: var(--space-xs);
+        }
+        
+        @keyframes scrollText {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        /* Pour l'affichage dynamique avec des animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="display-container">
+        <header class="display-header">
+            <div class="display-logo-container">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="display-logo">
+                <h1 class="display-title">Réservations du jour</h1>
+            </div>
+            <div class="display-datetime">
+                <div class="display-date">Mardi 22 avril 2025</div>
+                <div class="display-time">14:54</div>
+            </div>
+        </header>
+        
+        <main class="display-content">
+            <aside class="building-selector">
+                <h2 class="building-title">Bâtiments</h2>
+                <ul class="building-list">
+                    <li class="building-item active">
+                        Siège Plaine Commune <span class="badge">12</span>
+                    </li>
+                    <li class="building-item">
+                        Annexe 1 <span class="badge">5</span>
+                    </li>
+                    <li class="building-item">
+                        Annexe 2 <span class="badge">3</span>
+                    </li>
+                    <li class="building-item">
+                        Annexe 3 <span class="badge">8</span>
+                    </li>
+                    <li class="building-item">
+                        Mairie de Saint-Denis <span class="badge">6</span>
+                    </li>
+                </ul>
+            </aside>
+            
+            <section class="display-schedule">
+                <div class="room-schedule">
+                    <div class="room-header">
+                        <h3 class="room-name">
+                            <span class="material-icons">meeting_room</span>
+                            Salle du Conseil - 1er étage
+                        </h3>
+                        <div class="room-details">
+                            <div class="room-detail">
+                                <span class="material-icons">people</span>
+                                30 personnes
+                            </div>
+                            <div class="room-detail">
+                                <span class="material-icons">desktop_windows</span>
+                                Visioconférence
+                            </div>
+                        </div>
+                    </div>
+                    <div class="room-timeline">
+                        <div class="timeline-hour-labels">
+                            <div class="hour-label">8h</div>
+                            <div class="hour-label">9h</div>
+                            <div class="hour-label">10h</div>
+                            <div class="hour-label">11h</div>
+                            <div class="hour-label">12h</div>
+                            <div class="hour-label">13h</div>
+                            <div class="hour-label">14h</div>
+                            <div class="hour-label">15h</div>
+                            <div class="hour-label">16h</div>
+                            <div class="hour-label">17h</div>
+                            <div class="hour-label">18h</div>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="booking-block booking-primary" style="left: 8.3%; width: 20.8%;">
+                                <div class="booking-title">Réunion Direction</div>
+                                <div class="booking-time">9h - 11h</div>
+                            </div>
+                            <div class="booking-block booking-info" style="left: 62.5%; width: 20.8%;">
+                                <div class="booking-title">Présentation Projet SRR</div>
+                                <div class="booking-time">15h - 17h</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="room-schedule">
+                    <div class="room-header">
+                        <h3 class="room-name">
+                            <span class="material-icons">meeting_room</span>
+                            Salle Pleyel - RDC
+                        </h3>
+                        <div class="room-details">
+                            <div class="room-detail">
+                                <span class="material-icons">people</span>
+                                20 personnes
+                            </div>
+                            <div class="room-detail">
+                                <span class="material-icons">videocam</span>
+                                Projecteur
+                            </div>
+                        </div>
+                    </div>
+                    <div class="room-timeline">
+                        <div class="timeline-hour-labels">
+                            <div class="hour-label">8h</div>
+                            <div class="hour-label">9h</div>
+                            <div class="hour-label">10h</div>
+                            <div class="hour-label">11h</div>
+                            <div class="hour-label">12h</div>
+                            <div class="hour-label">13h</div>
+                            <div class="hour-label">14h</div>
+                            <div class="hour-label">15h</div>
+                            <div class="hour-label">16h</div>
+                            <div class="hour-label">17h</div>
+                            <div class="hour-label">18h</div>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="booking-block booking-warning" style="left: 25%; width: 12.5%;">
+                                <div class="booking-title">Réunion DSI</div>
+                                <div class="booking-time">11h - 12h</div>
+                            </div>
+                            <div class="booking-block booking-secondary" style="left: 58.3%; width: 12.5%;">
+                                <div class="booking-title">Formation</div>
+                                <div class="booking-time">14h - 15h</div>
+                            </div>
+                            <div class="booking-block booking-primary" style="left: 75%; width: 16.7%;">
+                                <div class="booking-title">Comité Technique</div>
+                                <div class="booking-time">16h - 18h</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="room-schedule">
+                    <div class="room-header">
+                        <h3 class="room-name">
+                            <span class="material-icons">meeting_room</span>
+                            Salle A102 - 1er étage
+                        </h3>
+                        <div class="room-details">
+                            <div class="room-detail">
+                                <span class="material-icons">people</span>
+                                12 personnes
+                            </div>
+                            <div class="room-detail">
+                                <span class="material-icons">desktop_windows</span>
+                                Écran tactile
+                            </div>
+                        </div>
+                    </div>
+                    <div class="room-timeline">
+                        <div class="timeline-hour-labels">
+                            <div class="hour-label">8h</div>
+                            <div class="hour-label">9h</div>
+                            <div class="hour-label">10h</div>
+                            <div class="hour-label">11h</div>
+                            <div class="hour-label">12h</div>
+                            <div class="hour-label">13h</div>
+                            <div class="hour-label">14h</div>
+                            <div class="hour-label">15h</div>
+                            <div class="hour-label">16h</div>
+                            <div class="hour-label">17h</div>
+                            <div class="hour-label">18h</div>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="no-bookings">
+                                Aucune réservation aujourd'hui
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="room-schedule">
+                    <div class="room-header">
+                        <h3 class="room-name">
+                            <span class="material-icons">meeting_room</span>
+                            Salle B201 - 2ème étage
+                        </h3>
+                        <div class="room-details">
+                            <div class="room-detail">
+                                <span class="material-icons">people</span>
+                                8 personnes
+                            </div>
+                            <div class="room-detail">
+                                <span class="material-icons">palette</span>
+                                Tableau blanc
+                            </div>
+                        </div>
+                    </div>
+                    <div class="room-timeline">
+                        <div class="timeline-hour-labels">
+                            <div class="hour-label">8h</div>
+                            <div class="hour-label">9h</div>
+                            <div class="hour-label">10h</div>
+                            <div class="hour-label">11h</div>
+                            <div class="hour-label">12h</div>
+                            <div class="hour-label">13h</div>
+                            <div class="hour-label">14h</div>
+                            <div class="hour-label">15h</div>
+                            <div class="hour-label">16h</div>
+                            <div class="hour-label">17h</div>
+                            <div class="hour-label">18h</div>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="booking-block booking-primary" style="left: 0%; width: 20.8%;">
+                                <div class="booking-title">Workshop Innovation</div>
+                                <div class="booking-time">8h - 10h</div>
+                            </div>
+                            <div class="booking-block booking-secondary" style="left: 45.8%; width: 37.5%;">
+                                <div class="booking-title">Groupe de travail UX</div>
+                                <div class="booking-time">13h - 17h</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="display-footer">
+            <div class="footer-logos">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="footer-logo">
+                <img src="../../../logos/saint_denis.svg" alt="Logo Saint-Denis" class="footer-logo">
+            </div>
+            <div class="footer-message">
+                Réunion d'information sur le nouveau système de réservation - Jeudi 24 avril à 14h - Salle du Conseil
+            </div>
+            <div class="refresh-info">
+                <span class="material-icons">update</span>
+                <span>Mise à jour automatique toutes les 5 minutes</span>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        // Fonction pour mettre à jour l'heure
+        function updateTime() {
+            const now = new Date();
+            const timeElement = document.querySelector('.display-time');
+            timeElement.textContent = now.toLocaleTimeString('fr-FR', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            setTimeout(updateTime, 60000); // Mise à jour chaque minute
+        }
+        
+        // Initialisation au chargement de la page
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTime();
+            
+            // Simulation du changement de bâtiment
+            const buildings = document.querySelectorAll('.building-item');
+            buildings.forEach(building => {
+                building.addEventListener('click', function() {
+                    // Retirer la classe active de tous les bâtiments
+                    buildings.forEach(b => b.classList.remove('active'));
+                    // Ajouter la classe active au bâtiment cliqué
+                    this.classList.add('active');
+                    
+                    // Dans un contexte réel, on chargerait ici les données du bâtiment sélectionné
+                });
+            });
+        });
+    </script>
+</body>
+</html>

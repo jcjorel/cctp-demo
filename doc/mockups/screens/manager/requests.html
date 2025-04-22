@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des demandes - Système de Réservation de Ressources</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Styles spécifiques à la page de gestion des demandes */
+        .requests-page {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: var(--space-md);
+        }
+        
+        .requests-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+            gap: var(--space-md);
+        }
+        
+        .filters-card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-1);
+            padding: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .filters-title {
+            margin-top: 0;
+            margin-bottom: var(--space-md);
+            color: var(--color-primary);
+            font-size: var(--font-size-md);
+            font-weight: 500;
+        }
+        
+        .filters-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+        
+        .filters-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .filter-field {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-field label {
+            display: block;
+            margin-bottom: var(--space-xs);
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+        
+        .filter-field select,
+        .filter-field input {
+            width: 100%;
+            padding: var(--space-sm);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-sm);
+            background-color: var(--color-background);
+        }
+        
+        .filter-field select:focus,
+        .filter-field input:focus {
+            border-color: var(--color-primary);
+            outline: none;
+        }
+        
+        .filter-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--space-sm);
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--color-border);
+            margin-top: var(--space-md);
+        }
+        
+        .requests-stats {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+        }
+        
+        .stat-pill {
+            background-color: white;
+            border-radius: var(--border-radius-pill);
+            padding: var(--space-xs) var(--space-md);
+            box-shadow: var(--shadow-1);
+            font-size: var(--font-size-sm);
+        }
+        
+        .stat-pill-value {
+            font-weight: 500;
+            color: var(--color-primary);
+            margin-left: var(--space-xs);
+        }
+        
+        .requests-list-card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-1);
+            overflow: hidden;
+        }
+        
+        .requests-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .requests-list-title {
+            margin: 0;
+            color: var(--color-primary);
+            font-size: var(--font-size-md);
+            font-weight: 500;
+        }
+        
+        .requests-list-actions {
+            display: flex;
+            gap: var(--space-sm);
+        }
+        
+        .requests-table-container {
+            overflow-x: auto;
+        }
+        
+        .requests-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .requests-table th {
+            text-align: left;
+            padding: var(--space-sm);
+            background-color: var(--color-background-secondary);
+            font-weight: 500;
+            color: var(--color-text);
+            border-bottom: 1px solid var(--color-border);
+            white-space: nowrap;
+        }
+        
+        .requests-table td {
+            padding: var(--space-sm);
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-text);
+            vertical-align: middle;
+        }
+        
+        .requests-table tr:hover {
+            background-color: var(--color-background-secondary);
+        }
+        
+        .requests-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .status-pending {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--color-warning);
+            border: 1px solid var(--color-warning);
+        }
+        
+        .status-approved {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--color-success);
+            border: 1px solid var(--color-success);
+        }
+        
+        .status-rejected {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--color-error);
+            border: 1px solid var(--color-error);
+        }
+        
+        .request-actions {
+            display: flex;
+            gap: var(--space-xs);
+            justify-content: flex-end;
+        }
+        
+        .request-actions button {
+            padding: var(--space-xs) var(--space-sm);
+            font-size: var(--font-size-xs);
+        }
+        
+        .table-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-sm) var(--space-md);
+            background-color: var(--color-background-secondary);
+            border-top: 1px solid var(--color-border);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+        }
+        
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+        
+        .pagination-btn {
+            padding: var(--space-xs);
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--color-primary);
+        }
+        
+        .pagination-btn.disabled {
+            color: var(--color-text-secondary);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .checkbox-cell {
+            width: 36px;
+            padding: var(--space-sm) 0 var(--space-sm) var(--space-sm);
+        }
+        
+        .select-all-checkbox,
+        .select-row-checkbox {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .priority-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: var(--space-xs);
+        }
+        
+        .priority-high {
+            background-color: var(--color-error);
+        }
+        
+        .priority-medium {
+            background-color: var(--color-warning);
+        }
+        
+        .priority-low {
+            background-color: var(--color-success);
+        }
+        
+        .batch-actions {
+            margin-left: var(--space-md);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        .batch-actions.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 992px) {
+            .requests-table th:nth-child(3),
+            .requests-table td:nth-child(3) {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .requests-table th:nth-child(4),
+            .requests-table td:nth-child(4) {
+                display: none;
+            }
+            
+            .batch-actions {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .requests-table th:nth-child(5),
+            .requests-table td:nth-child(5) {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-container">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="header-logo">
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link">Tableau de bord</a></li>
+                    <li class="nav-item"><a href="requests.html" class="nav-link active">Demandes</a></li>
+                    <li class="nav-item"><a href="resources.html" class="nav-link">Ressources</a></li>
+                    <li class="nav-item"><a href="statistics.html" class="nav-link">Statistiques</a></li>
+                </ul>
+            </nav>
+            <div class="user-controls">
+                <div class="user-avatar">T</div>
+                <span class="user-name">Thomas Martin</span>
+                <button class="btn btn-text" data-action="logout">
+                    <span class="material-icons">logout</span>
+                </button>
+            </div>
+        </header>
+        
+        <main class="requests-page">
+            <div class="requests-header">
+                <h1 class="section-title">Gestion des demandes</h1>
+            </div>
+            
+            <div class="filters-card">
+                <h2 class="filters-title">Filtrer les demandes</h2>
+                <div class="filters-row">
+                    <div class="filter-field">
+                        <label for="filter-status">Statut</label>
+                        <select id="filter-status">
+                            <option value="all">Tous les statuts</option>
+                            <option value="pending" selected>En attente</option>
+                            <option value="approved">Approuvées</option>
+                            <option value="rejected">Refusées</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label for="filter-priority">Priorité</label>
+                        <select id="filter-priority">
+                            <option value="all" selected>Toutes les priorités</option>
+                            <option value="high">Haute</option>
+                            <option value="medium">Moyenne</option>
+                            <option value="low">Basse</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label for="filter-type">Type de ressource</label>
+                        <select id="filter-type">
+                            <option value="all" selected>Tous types</option>
+                            <option value="room">Salles</option>
+                            <option value="vehicle">Véhicules</option>
+                            <option value="equipment">Équipements</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filters-row">
+                    <div class="filter-field">
+                        <label for="filter-date-from">Date de demande du</label>
+                        <input type="date" id="filter-date-from" value="2025-04-01">
+                    </div>
+                    <div class="filter-field">
+                        <label for="filter-date-to">au</label>
+                        <input type="date" id="filter-date-to" value="2025-04-30">
+                    </div>
+                    <div class="filter-field">
+                        <label for="filter-search">Recherche</label>
+                        <input type="text" id="filter-search" placeholder="Référence, demandeur, ressource...">
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <button class="btn btn-text">Réinitialiser</button>
+                    <button class="btn btn-primary">Appliquer les filtres</button>
+                </div>
+            </div>
+            
+            <div class="requests-stats">
+                <span class="stat-pill">Total: <span class="stat-pill-value">42</span></span>
+                <span class="stat-pill">En attente: <span class="stat-pill-value">8</span></span>
+                <span class="stat-pill">Approuvées: <span class="stat-pill-value">32</span></span>
+                <span class="stat-pill">Refusées: <span class="stat-pill-value">2</span></span>
+                <span class="stat-pill">Priorité haute: <span class="stat-pill-value">3</span></span>
+            </div>
+            
+            <div class="requests-list-card">
+                <div class="requests-list-header">
+                    <h2 class="requests-list-title">Demandes en attente</h2>
+                    <div class="requests-list-actions">
+                        <div class="batch-actions">
+                            <button class="btn btn-secondary">
+                                <span class="material-icons">check</span>
+                                Approuver selection
+                            </button>
+                            <button class="btn btn-secondary">
+                                <span class="material-icons">close</span>
+                                Refuser selection
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="requests-table-container">
+                    <table class="requests-table">
+                        <thead>
+                            <tr>
+                                <th class="checkbox-cell">
+                                    <input type="checkbox" class="select-all-checkbox">
+                                </th>
+                                <th>Référence</th>
+                                <th>Date de demande</th>
+                                <th>Ressource</th>
+                                <th>Date souhaitée</th>
+                                <th>Demandeur</th>
+                                <th>Priorité</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="checkbox-cell">
+                                    <input type="checkbox" class="select-row-checkbox">
+                                </td>
+                                <td>
+                                    <span class="priority-indicator priority-high"></span>
+                                    DEM-2025-04-22-1458
+                                </td>
+                                <td>22/04/2025 14:58</td>
+                                <td class="resource-type">
+                                    <span class="material-icons resource-icon">meeting_room</span>
+                                    Salle Pleyel
+                                </td>
+                                <td>23/04/2025 14h-16h</td>
+                                <td>Marie Dupont</td>
+                                <td>Haute</td>
+                                <td><span class="status-badge status-pending">En attente</span></td>
+                                <td>
+                                    <div class="request-actions">
+                                        <button class="btn btn-text btn-sm" title="Voir les détails">
+                                            <span class="material-icons">visibility</span>
+                                        </button>
+                                        <button class="btn btn-text btn-sm text-success" title="Approuver">
+                                            <span class="material-icons">check_circle</span>
+                                        </button>
+                                        <button class="btn btn-text btn-sm text-error" title="Refuser">
+                                            <span class="material-icons">cancel</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="checkbox-cell">
+                                    <input type="checkbox" class="select-row-checkbox">
+                                </td>
+                                <td>
+                                    <span class="priority-indicator priority-high"></span>
+                                    DEM-2025-04-22-1402
+                                </td>
+                                <td>22/04/2025 14:02</td>
+                                <td class="resource-type">
+                                    <span class="material-icons resource-icon">videocam</span>
+                                    Projecteur Sony
+                                </td>
+                                <td>24/04/2025 09h-17h</td>
+                                <td>Philippe Legrand</td>
+                                <td>Haute</td>
+                                <td><span class="status-badge status-pending">En attente</span></td>
+                                <td>
+                                    <div class="request-actions">
+                                        <button class="btn btn-text btn-sm" title="Voir les détails">
+                                            <span class="material-icons">visibility</span>
+                                        </button>
+                                        <button class="btn btn-text btn-sm text-success" title="Approuver">
+                                            <span class="material-icons">check_circle</span>
+                                        </button>
+                                        <button class="btn btn-text btn-sm text-error" title="Refuser">
+                                            <span class="material-icons">cancel</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="checkbox-cell">
+                                    <input type="checkbox" class="select-row-checkbox">
+                                </td>
+                                <td>
+                                    <span class="priority-indicator priority-medium"></span>
+                                    DEM-2025-04-21-0934
+                                </td>
+                                <td>21/04/2025 09:34</td>
+                                <td class="resource-type">
+                                    <span class="material-icons resource-icon">directions_car</span>
+                                    Renault Zoé
+                                </td>
+                                <td>28/04/2025 09h-17h</td>
+                                <td>Marie Dupont</td>
+                                <td>Moyenne</td>
+                                <td><span class="status-badge status-pending">En attente</span></td>
+                                <td>
+                                    <div class="request-actions">
+                                        <button class="btn btn-text btn-sm" title="Voir les détails">
+                                            <span class="material-icons">visibility</span>
+                                        </button>
+                                        <button class="btn btn-text btn-sm text-success" title="Approuver">
+                                            <span class="material-icons">check_circle</span>
+                                        </button>
+                                        <button class="btn btn-text btn-sm text-error" title="Refuser">
+                                            <span class="material-icons">cancel</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="checkbox-cell">
+                                    <input type="checkbox" class="select-row-checkbox">
+                                </td>
+                                <td>
+                                    <span class="priority-indicator priority-medium"></span>
+                                    DEM-2025-04-20-1623
+                                </td>
+                                <td>20/04/2025 16:23</td>
+                                <td class="resource-type">
+                                    <span class="material-icons resource-icon">meeting_room</span>
+                                    Salle du Conseil
+                                </td>
+                                <td>25/04/2025 10h-12h</td>
+                                <td>Jean Dubois</td>
+                                <td>Moyenne</td>
+                                <td><span class="status-badge status-pending">En attente</span></td>
+                                <td>
+                                    <div class="request-actions">
+                                        <button class="btn btn-text btn-sm" title="Voir les détails">
+                                            <span class="material-icons">visibility</span>
+                                        </button>
+                                        <button class="btn btn-text btn-sm text-success" title="Approuver">
+                                            <span class="material-icons">check_circle</span>
+                                        </button>
+                                        <button class="btn btn-text btn-sm text-error" title="Refuser">
+                                            <span class="material-icons">cancel</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="checkbox-cell">
+                                    <input type="checkbox" class="select-row-checkbox">
+                                </td>
+                                <td>
+                                    <span class="priority-indicator priority-low"></span>
+                                    DEM-2025-04-20-1456
+                                </td>
+                                <td>20/04/2025 14:56</td>
+                                <td class="resource-type">
+                                    <span class="material-icons resource-icon">meeting_room</span>
+                                    Salle de formation B203
+                                </td>
+                                <td>29/04/2025 13h-17h</td>
+                                <td>Sophie Lambert</td>
+                                <td>Basse</td>
+                                <td><span class="status-badge status-pending">En attente</span></td>
+                                <td>
+                                    <div class="request-actions">
+                                        <button class="btn btn-text btn-sm" title="Voir les détails">
+                                            <span class="material-icons">visibility</span>
+                                        </button>
+                                        <button class="btn btn-text btn-sm text-success" title="Approuver">
+                                            <span class="material-icons">check_circle</span>
+                                        </button>
+                                        <button class="btn btn-text btn-sm text-error" title="Refuser">
+                                            <span class="material-icons">cancel</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-footer">
+                    <div>Affichage de 5 sur 8 demandes en attente</div>
+                    <div class="pagination">
+                        <button class="pagination-btn disabled">
+                            <span class="material-icons">keyboard_arrow_left</span>
+                        </button>
+                        <span>Page 1 sur 2</span>
+                        <button class="pagination-btn">
+                            <span class="material-icons">keyboard_arrow_right</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="app-footer">
+            <div class="footer-logos">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="footer-logo mr-md">
+                <img src="../../../logos/saint_denis.svg" alt="Logo Saint-Denis" class="footer-logo">
+            </div>
+            <div class="footer-links">
+                <a href="#" class="mr-md">Mentions légales</a>
+                <a href="#" class="mr-md">Politique de confidentialité</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Plaine Commune & Ville de Saint-Denis - Système de Réservation de Ressources
+            </div>
+        </footer>
+    </div>
+    
+    <script src="../../assets/js/navigation.js"></script>
+</body>
+</html>

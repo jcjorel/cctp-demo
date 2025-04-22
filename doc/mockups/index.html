@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockups - Système de Réservation de Ressources</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        /* Styles spécifiques à la page d'index */
+        .mockup-section {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border-radius: 4px;
+            background-color: #f5f5f5;
+        }
+        .mockup-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .mockup-card {
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            padding: 0;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .mockup-card:hover {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+            transform: translateY(-2px);
+        }
+        .mockup-card a {
+            color: inherit;
+            text-decoration: none;
+            display: block;
+            padding: 1rem;
+        }
+        .mockup-card a:hover {
+            text-decoration: none;
+        }
+        .mockup-title {
+            font-size: 1.1rem;
+            margin: 0 0 0.5rem 0;
+            color: #D51B5C;
+        }
+        .mockup-description {
+            font-size: 0.9rem;
+            color: #757575;
+            margin: 0;
+        }
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+        .status-done {
+            background-color: #8DAD3E;
+            color: white;
+        }
+        .status-progress {
+            background-color: #FF9800;
+            color: white;
+        }
+        .status-pending {
+            background-color: #E0E0E0;
+            color: #757575;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-container">
+                <img src="../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="header-logo">
+            </div>
+            <h1 class="header-title">Mockups SRR</h1>
+        </header>
+
+        <main class="main-content">
+            <section class="page-section">
+                <h2 class="section-title">Système de Réservation de Ressources - Mockups</h2>
+                <p class="section-description">
+                    Cette page regroupe tous les mockups HTML/CSS du Système de Réservation de Ressources pour la Communauté d'Agglomération Plaine Commune et la Ville de Saint-Denis.
+                    Ces mockups sont destinés à valider les interfaces utilisateur avant l'implémentation complète en React.js avec Material-UI.
+                </p>
+
+                <div class="action-links">
+                    <a href="IHM_MOCKUPS.md" class="btn btn-primary">Documentation IHM</a>
+                    <a href="MOCKUPS_PROGRESS.md" class="btn btn-secondary">Suivi d'avancement</a>
+                </div>
+            </section>
+
+            <!-- Section de la bibliothèque de composants -->
+            <section class="mockup-section">
+                <h3>Bibliothèque de composants</h3>
+                <div class="mockup-list">
+                    <div class="mockup-card">
+                        <a href="components/components-library.html">
+                            <h4 class="mockup-title">Composants de base</h4>
+                            <p class="mockup-description">Boutons, champs de formulaire, notifications et autres composants UI communs</p>
+                            <span class="status status-done">Terminé</span>
+                        </a>
+                    </div>
+                    <div class="mockup-card">
+                        <a href="screens/user/home.html">
+                            <h4 class="mockup-title">En-tête et navigation</h4>
+                            <p class="mockup-description">En-tête avec logo, navigation principale et contrôles utilisateur</p>
+                            <span class="status status-done">Terminé</span>
+                        </a>
+                    </div>
+                    <div class="mockup-card">
+                        <a href="screens/user/home.html">
+                            <h4 class="mockup-title">Pied de page</h4>
+                            <p class="mockup-description">Pied de page avec logos des entités et liens légaux</p>
+                            <span class="status status-done">Terminé</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section des écrans utilisateur -->
+            <section class="mockup-section">
+                <h3>Écrans - Utilisateur standard</h3>
+                <div class="mockup-list">
+                    <div class="mockup-card">
+                        <a href="screens/user/login.html">
+                            <h4 class="mockup-title">Page de connexion</h4>
+                            <p class="mockup-description">Écran d'authentification avec Active Directory</p>
+                            <span class="status status-done">Terminé</span>
+                        </a>
+                    </div>
+                    <div class="mockup-card">
+                        <a href="screens/user/home.html">
+                            <h4 class="mockup-title">Page d'accueil</h4>
+                            <p class="mockup-description">Dashboard utilisateur avec accès aux fonctions principales</p>
+                            <span class="status status-done">Terminé</span>
+                        </a>
+                    </div>
+                    <div class="mockup-card">
+                        <a href="screens/user/search.html">
+                            <h4 class="mockup-title">Recherche de ressources</h4>
+                            <p class="mockup-description">Interface de recherche avec filtres avancés</p>
+                            <span class="status status-done">Terminé</span>
+                        </a>
+                    </div>
+                    <div class="mockup-card">
+                        <a href="screens/user/search.html">
+                            <h4 class="mockup-title">Liste de résultats</h4>
+                            <p class="mockup-description">Affichage des ressources disponibles selon les critères</p>
+                            <span class="status status-done">Terminé</span>
+                        </a>
+                    </div>
+                    <div class="mockup-card">
+                        <a href="screens/user/resource-detail.html">
+                            <h4 class="mockup-title">Détail de ressource</h4>
+                            <p class="mockup-description">Vue détaillée d'une ressource spécifique</p>
+                            <span class="status status-done">Terminé</span>
+                        </a>
+                    </div>
+                    <div class="mockup-card">
+                        <a href="screens/user/booking-confirmation.html">
+                            <h4 class="mockup-title">Formulaire de réservation</h4>
+                            <p class="mockup-description">Formulaire de demande de réservation</p>
+                            <span class="status status-done">Terminé</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section des écrans gestionnaire -->
+            <section class="mockup-section">
+                <h3>Écrans - Gestionnaire de ressources</h3>
+                <div class="mockup-list">
+                    <div class="mockup-card">
+                        <a href="screens/manager/dashboard.html">
+                            <h4 class="mockup-title">Tableau de bord</h4>
+                            <p class="mockup-description">Vue d'ensemble pour les gestionnaires</p>
+                            <span class="status status-done">Terminé</span>
+                        </a>
+                    </div>
+                    <div class="mockup-card">
+                        <a href="screens/manager/requests.html">
+                            <h4 class="mockup-title">Liste des demandes</h4>
+                            <p class="mockup-description">Gestion des demandes de réservation</p>
+                            <span class="status status-done">Terminé</span>
+                        </a>
+                    </div>
+                    <div class="mockup-card">
+                        <a href="screens/manager/statistics.html">
+                            <h4 class="mockup-title">Statistiques d'utilisation</h4>
+                            <p class="mockup-description">Analyse de l'utilisation des ressources</p>
+                            <span class="status status-done">Terminé</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section des écrans administrateur -->
+            <section class="mockup-section">
+                <h3>Écrans - Administrateur système</h3>
+                <div class="mockup-list">
+                    <div class="mockup-card">
+                        <a href="screens/admin/configuration.html">
+                            <h4 class="mockup-title">Configuration</h4>
+                            <p class="mockup-description">Paramètres généraux du système</p>
+                            <span class="status status-done">Terminé</span>
+                        </a>
+                    </div>
+                    <div class="mockup-card">
+                        <a href="screens/admin/resources.html">
+                            <h4 class="mockup-title">Gestion des ressources</h4>
+                            <p class="mockup-description">Administration des ressources disponibles</p>
+                            <span class="status status-done">Terminé</span>
+                        </a>
+                    </div>
+                    <div class="mockup-card">
+                        <a href="screens/admin/users.html">
+                            <h4 class="mockup-title">Gestion des utilisateurs</h4>
+                            <p class="mockup-description">Configuration des droits et rôles</p>
+                            <span class="status status-done">Terminé</span>
+                        </a>
+                    </div>
+                    <div class="mockup-card">
+                        <a href="screens/admin/workflows.html">
+                            <h4 class="mockup-title">Paramétrage des workflows</h4>
+                            <p class="mockup-description">Configuration des circuits de validation</p>
+                            <span class="status status-done">Terminé</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section des écrans d'affichage public -->
+            <section class="mockup-section">
+                <h3>Écrans - Affichage public</h3>
+                <div class="mockup-list">
+                    <div class="mockup-card">
+                        <a href="screens/public/display-hall.html">
+                            <h4 class="mockup-title">Écran d'information hall</h4>
+                            <p class="mockup-description">Affichage des réservations du jour pour le public</p>
+                            <span class="status status-done">Terminé</span>
+                        </a>
+                    </div>
+                    <div class="mockup-card">
+                        <a href="screens/public/daily-schedule.html">
+                            <h4 class="mockup-title">Planning journalier</h4>
+                            <p class="mockup-description">Affichage du planning des salles avec réservations</p>
+                            <span class="status status-done">Terminé</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section des parcours utilisateur -->
+            <section class="mockup-section">
+                <h3>Parcours utilisateurs</h3>
+                <div class="mockup-list">
+                    <div class="mockup-card">
+                        <a href="javascript:void(0);" onclick="alert('Ce parcours est en cours de développement.');">
+                            <h4 class="mockup-title">Parcours de réservation</h4>
+                            <p class="mockup-description">Parcours complet d'un agent demandeur</p>
+                            <span class="status status-pending">À venir</span>
+                        </a>
+                    </div>
+                    <div class="mockup-card">
+                        <a href="javascript:void(0);" onclick="alert('Ce parcours est en cours de développement.');">
+                            <h4 class="mockup-title">Parcours de validation</h4>
+                            <p class="mockup-description">Parcours d'un gestionnaire de ressources</p>
+                            <span class="status status-pending">À venir</span>
+                        </a>
+                    </div>
+                    <div class="mockup-card">
+                        <a href="javascript:void(0);" onclick="alert('Ce parcours est en cours de développement.');">
+                            <h4 class="mockup-title">Parcours d'administration</h4>
+                            <p class="mockup-description">Parcours d'un administrateur système</p>
+                            <span class="status status-pending">À venir</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <div class="footer-logos">
+                <!-- Les logos seront ajoutés ici -->
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Plaine Commune & Ville de Saint-Denis - Mockups pour validation IHM
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

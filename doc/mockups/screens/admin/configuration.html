@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration du système - Système de Réservation de Ressources</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Styles spécifiques à la page de configuration */
+        .config-page {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: var(--space-md);
+        }
+        
+        .config-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .config-tabs {
+            display: flex;
+            background-color: white;
+            box-shadow: var(--shadow-1);
+            border-radius: var(--border-radius-md);
+            margin-bottom: var(--space-lg);
+            overflow: hidden;
+        }
+        
+        .config-tab {
+            padding: var(--space-md) var(--space-lg);
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            border-bottom: 3px solid transparent;
+            transition: all var(--transition-fast);
+        }
+        
+        .config-tab.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+            background-color: var(--color-background-light);
+        }
+        
+        .config-tab:hover:not(.active) {
+            background-color: var(--color-background);
+            color: var(--color-text);
+        }
+        
+        .config-section {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-1);
+            margin-bottom: var(--space-lg);
+            overflow: hidden;
+        }
+        
+        .config-section-header {
+            padding: var(--space-md);
+            background-color: var(--color-background-secondary);
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .config-section-title {
+            margin: 0;
+            font-size: var(--font-size-md);
+            font-weight: 500;
+            color: var(--color-text);
+        }
+        
+        .config-section-body {
+            padding: var(--space-md);
+        }
+        
+        .config-form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-md);
+        }
+        
+        .config-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: var(--space-md);
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--color-border);
+            gap: var(--space-md);
+        }
+        
+        .config-card {
+            display: grid;
+            grid-template-columns: 36px 1fr;
+            gap: var(--space-sm);
+            align-items: center;
+            padding: var(--space-md);
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-1);
+            transition: all var(--transition-fast);
+        }
+        
+        .config-card:hover {
+            box-shadow: var(--shadow-2);
+            transform: translateY(-2px);
+        }
+        
+        .config-card-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--border-radius-circle);
+            background-color: var(--color-primary-light);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .config-card-icon .material-icons {
+            font-size: 20px;
+        }
+        
+        .config-card-content {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .config-card-title {
+            font-weight: 500;
+            color: var(--color-text);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .config-card-description {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--color-border);
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--color-primary);
+        }
+        
+        input:focus + .slider {
+            box-shadow: 0 0 1px var(--color-primary);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .setting-row:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-label {
+            font-weight: 500;
+            color: var(--color-text);
+        }
+        
+        .setting-description {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+            margin-top: var(--space-xs);
+        }
+        
+        .setting-control {
+            min-width: 120px;
+            text-align: right;
+        }
+        
+        .settings-group {
+            margin-bottom: var(--space-lg);
+        }
+        
+        .settings-group-title {
+            font-size: var(--font-size-md);
+            font-weight: 500;
+            color: var(--color-primary);
+            margin-bottom: var(--space-sm);
+            padding-bottom: var(--space-xs);
+            border-bottom: 1px solid var(--color-border);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-container">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="header-logo">
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link">Tableau de bord</a></li>
+                    <li class="nav-item"><a href="configuration.html" class="nav-link active">Configuration</a></li>
+                    <li class="nav-item"><a href="resources.html" class="nav-link">Ressources</a></li>
+                    <li class="nav-item"><a href="users.html" class="nav-link">Utilisateurs</a></li>
+                    <li class="nav-item"><a href="workflows.html" class="nav-link">Workflows</a></li>
+                </ul>
+            </nav>
+            <div class="user-controls">
+                <div class="user-avatar">C</div>
+                <span class="user-name">Claire Martin</span>
+                <button class="btn btn-text" data-action="logout">
+                    <span class="material-icons">logout</span>
+                </button>
+            </div>
+        </header>
+        
+        <main class="config-page">
+            <div class="config-header">
+                <h1 class="section-title">Configuration du système</h1>
+                <div>
+                    <button class="btn btn-primary">
+                        <span class="material-icons mr-xs">save</span>
+                        Enregistrer les modifications
+                    </button>
+                </div>
+            </div>
+            
+            <div class="config-tabs responsive-tabs">
+                <div class="config-tab active">Général</div>
+                <div class="config-tab">Notifications</div>
+                <div class="config-tab">Apparence</div>
+                <div class="config-tab">Intégrations</div>
+                <div class="config-tab">Sécurité</div>
+                <div class="config-tab">Avancé</div>
+            </div>
+            
+            <div class="config-section">
+                <div class="config-section-header">
+                    <h2 class="config-section-title">Paramètres généraux</h2>
+                </div>
+                <div class="config-section-body">
+                    <div class="settings-group">
+                        <h3 class="settings-group-title">Informations du système</h3>
+                        <div class="setting-row">
+                            <div>
+                                <div class="setting-label">Nom du système</div>
+                                <div class="setting-description">Nom affiché dans l'en-tête et les communications</div>
+                            </div>
+                            <div class="setting-control">
+                                <input type="text" class="form-input" value="Système de Réservation de Ressources">
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div>
+                                <div class="setting-label">URL de base</div>
+                                <div class="setting-description">URL principale d'accès au système</div>
+                            </div>
+                            <div class="setting-control">
+                                <input type="text" class="form-input" value="https://reservation.plainecommune.fr">
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div>
+                                <div class="setting-label">Contact administrateur</div>
+                                <div class="setting-description">Email affiché pour l'assistance</div>
+                            </div>
+                            <div class="setting-control">
+                                <input type="email" class="form-input" value="admin-srr@plainecommune.fr">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-group">
+                        <h3 class="settings-group-title">Comportement du système</h3>
+                        <div class="setting-row">
+                            <div>
+                                <div class="setting-label">Environnement</div>
+                                <div class="setting-description">Détermine le mode de fonctionnement du système</div>
+                            </div>
+                            <div class="setting-control">
+                                <select class="form-input">
+                                    <option value="production">Production</option>
+                                    <option value="staging">Pré-production</option>
+                                    <option value="development">Développement</option>
+                                    <option value="test">Test</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div>
+                                <div class="setting-label">Mode maintenance</div>
+                                <div class="setting-description">Active la page de maintenance</div>
+                            </div>
+                            <div class="setting-control">
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div>
+                                <div class="setting-label">Délai max de réservation</div>
+                                <div class="setting-description">Nombre maximum de jours à l'avance pour une réservation</div>
+                            </div>
+                            <div class="setting-control">
+                                <input type="number" class="form-input" value="90">
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div>
+                                <div class="setting-label">Début journée de travail</div>
+                                <div class="setting-description">Heure de début pour l'affichage des calendriers</div>
+                            </div>
+                            <div class="setting-control">
+                                <input type="time" class="form-input" value="08:00">
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div>
+                                <div class="setting-label">Fin journée de travail</div>
+                                <div class="setting-description">Heure de fin pour l'affichage des calendriers</div>
+                            </div>
+                            <div class="setting-control">
+                                <input type="time" class="form-input" value="19:00">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-group">
+                        <h3 class="settings-group-title">Fonctionnalités</h3>
+                        <div class="setting-row">
+                            <div>
+                                <div class="setting-label">Réservations récurrentes</div>
+                                <div class="setting-description">Permet aux utilisateurs de créer des réservations récurrentes</div>
+                            </div>
+                            <div class="setting-control">
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div>
+                                <div class="setting-label">Réservation à la demande</div>
+                                <div class="setting-description">Permet la réservation immédiate sans validation</div>
+                            </div>
+                            <div class="setting-control">
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div>
+                                <div class="setting-label">Statistiques utilisateurs</div>
+                                <div class="setting-description">Affiche des statistiques pour les utilisateurs standard</div>
+                            </div>
+                            <div class="setting-control">
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div>
+                                <div class="setting-label">Commentaires</div>
+                                <div class="setting-description">Permet l'ajout de commentaires sur les réservations</div>
+                            </div>
+                            <div class="setting-control">
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="config-actions">
+                        <button class="btn btn-secondary">Réinitialiser</button>
+                        <button class="btn btn-primary">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="config-section">
+                <div class="config-section-header">
+                    <h2 class="config-section-title">Configuration LDAP</h2>
+                </div>
+                <div class="config-section-body">
+                    <div class="settings-group">
+                        <div class="setting-row">
+                            <div>
+                                <div class="setting-label">Serveur LDAP</div>
+                                <div class="setting-description">Adresse du serveur LDAP pour l'authentification</div>
+                            </div>
+                            <div class="setting-control">
+                                <input type="text" class="form-input" value="ldap://ad.plainecommune.fr">
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div>
+                                <div class="setting-label">Port</div>
+                            </div>
+                            <div class="setting-control">
+                                <input type="text" class="form-input" value="389">
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div>
+                                <div class="setting-label">DN de base</div>
+                                <div class="setting-description">Distinguished Name de base pour la recherche</div>
+                            </div>
+                            <div class="setting-control">
+                                <input type="text" class="form-input" value="dc=plainecommune,dc=fr">
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div>
+                                <div class="setting-label">Attribut d'identification</div>
+                                <div class="setting-description">Attribut utilisé pour l'identification</div>
+                            </div>
+                            <div class="setting-control">
+                                <input type="text" class="form-input" value="sAMAccountName">
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div>
+                                <div class="setting-label">Filtre utilisateurs</div>
+                                <div class="setting-description">Filtre LDAP pour limiter les utilisateurs autorisés</div>
+                            </div>
+                            <div class="setting-control">
+                                <input type="text" class="form-input" value="(&(objectClass=user)(memberOf=cn=SRR_Users,ou=Groups,dc=plainecommune,dc=fr))">
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div>
+                                <div class="setting-label">Utiliser SSL</div>
+                                <div class="setting-description">Activer la connexion LDAP sécurisée</div>
+                            </div>
+                            <div class="setting-control">
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="config-actions">
+                        <button class="btn btn-secondary mr-auto">Tester la connexion LDAP</button>
+                        <button class="btn btn-secondary">Réinitialiser</button>
+                        <button class="btn btn-primary">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="app-footer">
+            <div class="footer-logos">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="footer-logo mr-md">
+                <img src="../../../logos/saint_denis.svg" alt="Logo Saint-Denis" class="footer-logo">
+            </div>
+            <div class="footer-links">
+                <a href="#" class="mr-md">Mentions légales</a>
+                <a href="#" class="mr-md">Politique de confidentialité</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Plaine Commune & Ville de Saint-Denis - Système de Réservation de Ressources
+            </div>
+        </footer>
+    </div>
+    
+    <script src="../../assets/js/navigation.js"></script>
+</body>
+</html>

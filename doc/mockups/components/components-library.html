@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bibliothèque de Composants - Système de Réservation de Ressources</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        /* Styles spécifiques à la bibliothèque de composants */
+        .component-section {
+            margin-bottom: 3rem;
+            padding: 1rem;
+            border-radius: 4px;
+            background-color: #f5f5f5;
+        }
+        
+        .component-title {
+            color: #D51B5C;
+            border-bottom: 2px solid #E0E0E0;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .component-description {
+            margin-bottom: 1.5rem;
+            color: #757575;
+        }
+        
+        .component-demo {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            margin-bottom: 1rem;
+        }
+        
+        .code-block {
+            background-color: #f8f8f8;
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+            margin-top: 1rem;
+            white-space: pre-wrap;
+        }
+        
+        .color-swatch {
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            margin: 0.5rem;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+        
+        .color-name {
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .color-value {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #757575;
+        }
+        
+        .color-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+            vertical-align: middle;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-container">
+                <img src="../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="header-logo">
+            </div>
+            <h1 class="header-title">Bibliothèque de Composants UI</h1>
+            <div class="user-controls">
+                <a href="../index.html" class="btn btn-secondary">Retour à l'accueil</a>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="page-section">
+                <h2 class="section-title">Introduction</h2>
+                <p class="section-description">
+                    Cette bibliothèque contient tous les composants UI utilisés dans les mockups du Système de Réservation de Ressources.
+                    Elle sert de référence pour maintenir une cohérence visuelle et fonctionnelle à travers toutes les interfaces.
+                    Les composants sont inspirés du Material Design et préparés pour une migration future vers React avec Material-UI.
+                </p>
+            </section>
+
+            <!-- Section Couleurs -->
+            <section class="component-section" id="colors">
+                <h2 class="component-title">Palette de Couleurs</h2>
+                <p class="component-description">
+                    La palette de couleurs est basée sur les identités visuelles de Plaine Commune et de la Ville de Saint-Denis,
+                    complétée par des couleurs sémantiques pour les différentes actions et états du système.
+                </p>
+                
+                <h3>Couleurs Primaires</h3>
+                <div class="component-demo">
+                    <div class="color-container">
+                        <div>
+                            <div class="color-swatch" style="background-color: #D51B5C;"></div>
+                            <div class="color-name">Primaire</div>
+                            <div class="color-value">#D51B5C</div>
+                        </div>
+                        <div>
+                            <div class="color-swatch" style="background-color: #e14b81;"></div>
+                            <div class="color-name">Primaire - Clair</div>
+                            <div class="color-value">#e14b81</div>
+                        </div>
+                        <div>
+                            <div class="color-swatch" style="background-color: #a81549;"></div>
+                            <div class="color-name">Primaire - Foncé</div>
+                            <div class="color-value">#a81549</div>
+                        </div>
+                        <div>
+                            <div class="color-swatch" style="background-color: #8DAD3E;"></div>
+                            <div class="color-name">Secondaire</div>
+                            <div class="color-value">#8DAD3E</div>
+                        </div>
+                        <div>
+                            <div class="color-swatch" style="background-color: #a4c151;"></div>
+                            <div class="color-name">Secondaire - Clair</div>
+                            <div class="color-value">#a4c151</div>
+                        </div>
+                        <div>
+                            <div class="color-swatch" style="background-color: #768a34;"></div>
+                            <div class="color-name">Secondaire - Foncé</div>
+                            <div class="color-value">#768a34</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Couleurs Sémantiques</h3>
+                <div class="component-demo">
+                    <div class="color-container">
+                        <div>
+                            <div class="color-swatch" style="background-color: #4CAF50;"></div>
+                            <div class="color-name">Succès</div>
+                            <div class="color-value">#4CAF50</div>
+                        </div>
+                        <div>
+                            <div class="color-swatch" style="background-color: #FF9800;"></div>
+                            <div class="color-name">Avertissement</div>
+                            <div class="color-value">#FF9800</div>
+                        </div>
+                        <div>
+                            <div class="color-swatch" style="background-color: #F44336;"></div>
+                            <div class="color-name">Erreur</div>
+                            <div class="color-value">#F44336</div>
+                        </div>
+                        <div>
+                            <div class="color-swatch" style="background-color: #2196F3;"></div>
+                            <div class="color-name">Information</div>
+                            <div class="color-value">#2196F3</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Couleurs Neutres</h3>
+                <div class="component-demo">
+                    <div class="color-container">
+                        <div>
+                            <div class="color-swatch" style="background-color: #000000;"></div>
+                            <div class="color-name">Texte Principal</div>
+                            <div class="color-value">#000000</div>
+                        </div>
+                        <div>
+                            <div class="color-swatch" style="background-color: #757575;"></div>
+                            <div class="color-name">Texte Secondaire</div>
+                            <div class="color-value">#757575</div>
+                        </div>
+                        <div>
+                            <div class="color-swatch" style="background-color: #FFFFFF; border: 1px solid #E0E0E0;"></div>
+                            <div class="color-name">Fond Principal</div>
+                            <div class="color-value">#FFFFFF</div>
+                        </div>
+                        <div>
+                            <div class="color-swatch" style="background-color: #F5F5F5; border: 1px solid #E0E0E0;"></div>
+                            <div class="color-name">Fond Secondaire</div>
+                            <div class="color-value">#F5F5F5</div>
+                        </div>
+                        <div>
+                            <div class="color-swatch" style="background-color: #E0E0E0;"></div>
+                            <div class="color-name">Bordures</div>
+                            <div class="color-value">#E0E0E0</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section Typographie -->
+            <section class="component-section" id="typography">
+                <h2 class="component-title">Typographie</h2>
+                <p class="component-description">
+                    Le système utilise la police Roboto pour une lisibilité optimale sur tous les appareils et tailles d'écran.
+                    La hiérarchie typographique aide à organiser et prioriser l'information.
+                </p>
+                
+                <div class="component-demo">
+                    <h1 style="margin-top: 0;">Titre h1 (2rem / 32px)</h1>
+                    <h2>Titre h2 (1.5rem / 24px)</h2>
+                    <h3>Titre h3 (1.25rem / 20px)</h3>
+                    <h4>Titre h4 (1.1rem / 17.6px)</h4>
+                    <p>Paragraphe standard (1rem / 16px). Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget felis eget nunc lobortis mattis aliquam faucibus.</p>
+                    <p><small>Texte secondaire (0.875rem / 14px). Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small></p>
+                </div>
+                
+                <h3>Variantes de texte</h3>
+                <div class="component-demo">
+                    <p class="font-normal">Normal (400) - Lorem ipsum dolor sit amet</p>
+                    <p class="font-medium">Medium (500) - Lorem ipsum dolor sit amet</p>
+                    <p class="font-bold">Bold (700) - Lorem ipsum dolor sit amet</p>
+                    <p class="text-primary">Texte en couleur primaire</p>
+                    <p class="text-secondary">Texte en couleur secondaire</p>
+                    <p class="text-muted">Texte atténué</p>
+                </div>
+            </section>
+
+            <!-- Section Boutons -->
+            <section class="component-section" id="buttons">
+                <h2 class="component-title">Boutons</h2>
+                <p class="component-description">
+                    Les boutons permettent aux utilisateurs d'effectuer des actions et de faire des choix d'un simple clic.
+                    Différents types de boutons sont disponibles selon l'importance de l'action.
+                </p>
+                
+                <h3>Types de base</h3>
+                <div class="component-demo">
+                    <button class="btn btn-primary mr-md">Bouton Primaire</button>
+                    <button class="btn btn-secondary mr-md">Bouton Secondaire</button>
+                    <button class="btn btn-text">Bouton Texte</button>
+                </div>
+                
+                <div class="code-block">
+&lt;button class="btn btn-primary"&gt;Bouton Primaire&lt;/button&gt;
+&lt;button class="btn btn-secondary"&gt;Bouton Secondaire&lt;/button&gt;
+&lt;button class="btn btn-text"&gt;Bouton Texte&lt;/button&gt;</div>
+                
+                <h3>Variantes de taille</h3>
+                <div class="component-demo">
+                    <button class="btn btn-primary btn-small mr-md">Petit</button>
+                    <button class="btn btn-primary mr-md">Normal</button>
+                    <button class="btn btn-primary btn-large">Grand</button>
+                </div>
+                
+                <div class="code-block">
+&lt;button class="btn btn-primary btn-small"&gt;Petit&lt;/button&gt;
+&lt;button class="btn btn-primary"&gt;Normal&lt;/button&gt;
+&lt;button class="btn btn-primary btn-large"&gt;Grand&lt;/button&gt;</div>
+                
+                <h3>Avec icônes</h3>
+                <div class="component-demo">
+                    <button class="btn btn-primary mr-md">
+                        <span class="material-icons mr-xs">add</span>
+                        Créer
+                    </button>
+                    <button class="btn btn-secondary mr-md">
+                        <span class="material-icons mr-xs">edit</span>
+                        Modifier
+                    </button>
+                    <button class="btn btn-icon mr-md">
+                        <span class="material-icons">delete</span>
+                    </button>
+                </div>
+                
+                <div class="code-block">
+&lt;button class="btn btn-primary"&gt;
+    &lt;span class="material-icons mr-xs"&gt;add&lt;/span&gt;
+    Créer
+&lt;/button&gt;
+
+&lt;button class="btn btn-icon"&gt;
+    &lt;span class="material-icons"&gt;delete&lt;/span&gt;
+&lt;/button&gt;</div>
+                
+                <h3>États</h3>
+                <div class="component-demo">
+                    <button class="btn btn-primary mr-md">Normal</button>
+                    <button class="btn btn-primary mr-md" disabled>Désactivé</button>
+                    <button class="btn btn-primary disabled mr-md">Classe disabled</button>
+                </div>
+            </section>
+
+            <!-- Section Formulaires -->
+            <section class="component-section" id="forms">
+                <h2 class="component-title">Champs de Formulaire</h2>
+                <p class="component-description">
+                    Les champs de formulaire permettent aux utilisateurs de saisir, sélectionner et manipuler des données.
+                    Chaque type de champ est conçu pour un type spécifique de données ou d'interaction.
+                </p>
+                
+                <h3>Champs de texte</h3>
+                <div class="component-demo">
+                    <div class="form-field">
+                        <label for="text-field-1" class="form-label">Champ de texte standard</label>
+                        <input type="text" id="text-field-1" class="form-input" placeholder="Saisir un texte">
+                        <span class="form-helper">Texte d'aide pour le champ</span>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="text-field-2" class="form-label">Champ avec valeur</label>
+                        <input type="text" id="text-field-2" class="form-input" value="Texte pré-rempli">
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="text-field-3" class="form-label">Champ avec erreur</label>
+                        <input type="text" id="text-field-3" class="form-input has-error" value="Valeur incorrecte">
+                        <span class="form-error">Ce champ contient une erreur</span>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="text-field-4" class="form-label">Champ désactivé</label>
+                        <input type="text" id="text-field-4" class="form-input" value="Valeur non modifiable" disabled>
+                    </div>
+                </div>
+                
+                <div class="code-block">
+&lt;div class="form-field"&gt;
+    &lt;label for="text-field-1" class="form-label"&gt;Libellé&lt;/label&gt;
+    &lt;input type="text" id="text-field-1" class="form-input" placeholder="Texte de substitution"&gt;
+    &lt;span class="form-helper"&gt;Texte d'aide&lt;/span&gt;
+&lt;/div&gt;</div>
+                
+                <h3>Champ multiligne</h3>
+                <div class="component-demo">
+                    <div class="form-field">
+                        <label for="textarea-field" class="form-label">Description</label>
+                        <textarea id="textarea-field" class="form-input" rows="4" placeholder="Saisir une description"></textarea>
+                    </div>
+                </div>
+                
+                <h3>Sélecteurs</h3>
+                <div class="component-demo">
+                    <div class="form-field">
+                        <label for="select-field" class="form-label">Liste déroulante</label>
+                        <select id="select-field" class="form-input">
+                            <option value="" disabled selected>Sélectionner une option</option>
+                            <option value="option1">Option 1</option>
+                            <option value="option2">Option 2</option>
+                            <option value="option3">Option 3</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label class="form-label">Cases à cocher</label>
+                        <div>
+                            <label class="d-flex align-center mb-sm">
+                                <input type="checkbox" class="mr-sm"> Option 1
+                            </label>
+                            <label class="d-flex align-center mb-sm">
+                                <input type="checkbox" class="mr-sm" checked> Option 2 (sélectionnée)
+                            </label>
+                            <label class="d-flex align-center">
+                                <input type="checkbox" class="mr-sm" disabled> Option 3 (désactivée)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label class="form-label">Boutons radio</label>
+                        <div>
+                            <label class="d-flex align-center mb-sm">
+                                <input type="radio" name="radio-group" class="mr-sm"> Option A
+                            </label>
+                            <label class="d-flex align-center mb-sm">
+                                <input type="radio" name="radio-group" class="mr-sm" checked> Option B (sélectionnée)
+                            </label>
+                            <label class="d-flex align-center">
+                                <input type="radio" name="radio-group" class="mr-sm" disabled> Option C (désactivée)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Sélecteurs de date et heure</h3>
+                <div class="component-demo">
+                    <div class="form-field">
+                        <label for="date-field" class="form-label">Date</label>
+                        <input type="date" id="date-field" class="form-input">
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="time-field" class="form-label">Heure</label>
+                        <input type="time" id="time-field" class="form-input">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section Cartes -->
+            <section class="component-section" id="cards">
+                <h2 class="component-title">Cartes</h2>
+                <p class="component-description">
+                    Les cartes sont des conteneurs qui regroupent différentes informations sur un même sujet.
+                    Elles sont particulièrement utiles pour afficher des ressources réservables.
+                </p>
+                
+                <h3>Carte standard</h3>
+                <div class="component-demo">
+                    <div class="card">
+                        <h3 class="mt-0 mb-md">Titre de la carte</h3>
+                        <p class="mb-0">Contenu de la carte avec des informations. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    </div>
+                </div>
+                
+                <div class="code-block">
+&lt;div class="card"&gt;
+    &lt;h3 class="mt-0 mb-md"&gt;Titre de la carte&lt;/h3&gt;
+    &lt;p class="mb-0"&gt;Contenu de la carte avec des informations.&lt;/p&gt;
+&lt;/div&gt;</div>
+                
+                <h3>Carte de ressource</h3>
+                <div class="component-demo">
+                    <div style="max-width: 300px;">
+                        <div class="resource-card">
+                            <div class="resource-image">
+                                <img src="https://via.placeholder.com/300x160?text=Salle+de+réunion" alt="Salle de réunion">
+                            </div>
+                            <div class="resource-content">
+                                <h3 class="resource-title">Salle Pleyel</h3>
+                                <p class="resource-details">Capacité : 12 personnes</p>
+                                <p class="resource-details">Équipements : Vidéoprojecteur, Wifi</p>
+                            </div>
+                            <div class="resource-actions">
+                                <button class="btn btn-primary">Réserver</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="code-block">
+&lt;div class="resource-card"&gt;
+    &lt;div class="resource-image"&gt;
+        &lt;img src="..." alt="Salle de réunion"&gt;
+    &lt;/div&gt;
+    &lt;div class="resource-content"&gt;
+        &lt;h3 class="resource-title"&gt;Salle Pleyel&lt;/h3&gt;
+        &lt;p class="resource-details"&gt;Capacité : 12 personnes&lt;/p&gt;
+        &lt;p class="resource-details"&gt;Équipements : Vidéoprojecteur, Wifi&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="resource-actions"&gt;
+        &lt;button class="btn btn-primary"&gt;Réserver&lt;/button&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</div>
+            </section>
+
+            <!-- Section Tableaux -->
+            <section class="component-section" id="tables">
+                <h2 class="component-title">Tableaux</h2>
+                <p class="component-description">
+                    Les tableaux permettent d'afficher des données structurées en rangées et colonnes.
+                    Ils sont particulièrement adaptés pour les listes de réservations et la gestion des ressources.
+                </p>
+                
+                <div class="component-demo">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Nom de la ressource</th>
+                                    <th>Type</th>
+                                    <th>Disponibilité</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Salle Pleyel</td>
+                                    <td>Salle de réunion</td>
+                                    <td>Disponible</td>
+                                    <td>
+                                        <button class="btn btn-text btn-small">
+                                            <span class="material-icons">visibility</span>
+                                        </button>
+                                        <button class="btn btn-text btn-small">
+                                            <span class="material-icons">edit</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Renault Zoé</td>
+                                    <td>Véhicule électrique</td>
+                                    <td>Réservée</td>
+                                    <td>
+                                        <button class="btn btn-text btn-small">
+                                            <span class="material-icons">visibility</span>
+                                        </button>
+                                        <button class="btn btn-text btn-small">
+                                            <span class="material-icons">edit</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Dell XPS 15</td>
+                                    <td>Ordinateur portable</td>
+                                    <td>Disponible</td>
+                                    <td>
+                                        <button class="btn btn-text btn-small">
+                                            <span class="material-icons">visibility</span>
+                                        </button>
+                                        <button class="btn btn-text btn-small">
+                                            <span class="material-icons">edit</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="code-block">
+&lt;table class="data-table"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Nom de la ressource&lt;/th&gt;
+            &lt;th&gt;Type&lt;/th&gt;
+            &lt;th&gt;Disponibilité&lt;/th&gt;
+            &lt;th&gt;Actions&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td&gt;Salle Pleyel&lt;/td&gt;
+            &lt;td&gt;Salle de réunion&lt;/td&gt;
+            &lt;td&gt;Disponible&lt;/td&gt;
+            &lt;td&gt;
+                &lt;button class="btn btn-text btn-small"&gt;
+                    &lt;span class="material-icons"&gt;visibility&lt;/span&gt;
+                &lt;/button&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;</div>
+            </section>
+
+            <!-- Section Notifications -->
+            <section class="component-section" id="notifications">
+                <h2 class="component-title">Notifications</h2>
+                <p class="component-description">
+                    Les notifications informent les utilisateurs d'événements importants, de confirmations ou d'erreurs.
+                    Leur couleur indique visuellement la nature du message.
+                </p>
+                
+                <div class="component-demo">
+                    <div class="notification notification-success mb-md">
+                        <span class="notification-icon">✓</span>
+                        <div class="notification-content">
+                            <h4 class="notification-title">Succès</h4>
+                            <p class="notification-message">La réservation a été créée avec succès.</p>
+                        </div>
+                        <button class="notification-close">&times;</button>
+                    </div>
+                    
+                    <div class="notification notification-info mb-md">
+                        <span class="notification-icon">i</span>
+                        <div class="notification-content">
+                            <h4 class="notification-title">Information</h4>
+                            <p class="notification-message">Votre demande est en attente de validation.</p>
+                        </div>
+                        <button class="notification-close">&times;</button>
+                    </div>
+                    
+                    <div class="notification notification-warning mb-md">
+                        <span class="notification-icon">!</span>
+                        <div class="notification-content">
+                            <h4 class="notification-title">Avertissement</h4>
+                            <p class="notification-message">Cette ressource sera bientôt indisponible pour maintenance.</p>
+                        </div>
+                        <button class="notification-close">&times;</button>
+                    </div>
+                    
+                    <div class="notification notification-error">
+                        <span class="notification-icon">⚠</span>
+                        <div class="notification-content">
+                            <h4 class="notification-title">Erreur</h4>
+                            <p class="notification-message">La réservation n'a pas pu être enregistrée.</p>
+                        </div>
+                        <button class="notification-close">&times;</button>
+                    </div>
+                </div>
+                
+                <div class="code-block">
+&lt;div class="notification notification-success"&gt;
+    &lt;span class="notification-icon"&gt;✓&lt;/span&gt;
+    &lt;div class="notification-content"&gt;
+        &lt;h4 class="notification-title"&gt;Succès&lt;/h4&gt;
+        &lt;p class="notification-message"&gt;La réservation a été créée avec succès.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;button class="notification-close"&gt;&amp;times;&lt;/button&gt;
+&lt;/div&gt;</div>
+            </section>
+
+            <!-- Section Modals -->
+            <section class="component-section" id="modals">
+                <h2 class="component-title">Modals et Dialogues</h2>
+                <p class="component-description">
+                    Les modals permettent d'afficher du contenu dans une fenêtre superposée à la page principale,
+                    attirant l'attention de l'utilisateur sur une action ou une information importante.
+                </p>
+                
+                <h3>Structure d'un modal</h3>
+                <div class="component-demo">
+                    <p>Cliquez sur le bouton pour afficher un exemple de modal :</p>
+                    <button id="showModalBtn" class="btn btn-primary">Afficher le modal</button>
+                    
+                    <!-- Modal example (hidden by default) -->
+                    <div class="modal-overlay" id="exampleModal" style="display: none; position: fixed; background-color: rgba(0,0,0,0.5); top: 0; left: 0; right: 0; bottom: 0; align-items: center; justify-content: center; z-index: 1000;">
+                        <div class="modal-container" style="background-color: white; width: 80%; max-width: 500px; border-radius: 4px; overflow: hidden; box-shadow: var(--shadow-3);">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Confirmation de réservation</h3>
+                                <button class="modal-close" onclick="document.getElementById('exampleModal').style.display = 'none';">&times;</button>
+                            </div>
+                            <div class="modal-content">
+                                <p>Voulez-vous confirmer la réservation de la salle Pleyel pour le 25/04/2025 de 14h à 16h ?</p>
+                            </div>
+                            <div class="modal-actions">
+                                <button class="btn btn-secondary" onclick="document.getElementById('exampleModal').style.display = 'none';">Annuler</button>
+                                <button class="btn btn-primary">Confirmer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="code-block">
+&lt;div class="modal-overlay"&gt;
+    &lt;div class="modal-container"&gt;
+        &lt;div class="modal-header"&gt;
+            &lt;h3 class="modal-title"&gt;Titre du modal&lt;/h3&gt;
+            &lt;button class="modal-close"&gt;&amp;times;&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;div class="modal-content"&gt;
+            &lt;!-- Contenu du modal --&gt;
+        &lt;/div&gt;
+        &lt;div class="modal-actions"&gt;
+            &lt;button class="btn btn-secondary"&gt;Annuler&lt;/button&gt;
+            &lt;button class="btn btn-primary"&gt;Confirmer&lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</div>
+
+                <script>
+                    // Simple script to show modal example
+                    document.getElementById('showModalBtn').addEventListener('click', function() {
+                        document.getElementById('exampleModal').style.display = 'flex';
+                    });
+                </script>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <div class="footer-logos">
+                <img src="../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="footer-logo mr-md">
+                <img src="../../logos/saint_denis.svg" alt="Logo Saint-Denis" class="footer-logo">
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Plaine Commune & Ville de Saint-Denis - Système de Réservation de Ressources
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

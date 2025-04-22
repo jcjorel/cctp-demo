@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paramétrage des workflows - Système de Réservation de Ressources</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Styles spécifiques à la page workflows */
+        .workflows-page { max-width: 1280px; margin: 0 auto; padding: var(--space-md); }
+        .workflows-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg); }
+        .workflow-types { display: flex; background-color: white; box-shadow: var(--shadow-1); border-radius: var(--border-radius-md); margin-bottom: var(--space-lg); overflow: hidden; }
+        .workflow-type { padding: var(--space-md) var(--space-lg); cursor: pointer; font-weight: 500; color: var(--color-text-secondary); border-bottom: 3px solid transparent; transition: all var(--transition-fast); }
+        .workflow-type.active { color: var(--color-primary); border-bottom-color: var(--color-primary); background-color: var(--color-background-light); }
+        .workflow-type:hover:not(.active) { background-color: var(--color-background); color: var(--color-text); }
+        .workflows-container { background-color: white; border-radius: var(--border-radius-md); box-shadow: var(--shadow-1); padding: var(--space-md); margin-bottom: var(--space-lg); }
+        .workflow-card { border: 1px solid var(--color-border); border-radius: var(--border-radius-md); margin-bottom: var(--space-md); overflow: hidden; }
+        .workflow-card-header { padding: var(--space-md); background-color: var(--color-background); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border); }
+        .workflow-card-title { margin: 0; font-weight: 500; }
+        .workflow-card-content { padding: var(--space-md); }
+        .workflow-steps { display: flex; flex-wrap: wrap; gap: var(--space-md); margin: var(--space-md) 0; }
+        .workflow-step { position: relative; background-color: var(--color-background-light); border: 1px solid var(--color-border); border-radius: var(--border-radius-sm); padding: var(--space-sm) var(--space-md); display: flex; flex-direction: column; align-items: center; min-width: 150px; }
+        .workflow-step::after { content: ''; position: absolute; right: -20px; top: 50%; transform: translateY(-50%); width: 15px; height: 2px; background-color: var(--color-border); }
+        .workflow-step:last-child::after { display: none; }
+        .step-role { font-weight: 500; margin-bottom: var(--space-xs); color: var(--color-primary); }
+        .step-action { font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+        .workflow-actions { display: flex; gap: var(--space-xs); }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-container">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="header-logo">
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link">Tableau de bord</a></li>
+                    <li class="nav-item"><a href="configuration.html" class="nav-link">Configuration</a></li>
+                    <li class="nav-item"><a href="resources.html" class="nav-link">Ressources</a></li>
+                    <li class="nav-item"><a href="users.html" class="nav-link">Utilisateurs</a></li>
+                    <li class="nav-item"><a href="workflows.html" class="nav-link active">Workflows</a></li>
+                </ul>
+            </nav>
+            <div class="user-controls">
+                <div class="user-avatar">C</div>
+                <span class="user-name">Claire Martin</span>
+                <button class="btn btn-text" data-action="logout">
+                    <span class="material-icons">logout</span>
+                </button>
+            </div>
+        </header>
+        
+        <main class="workflows-page">
+            <div class="workflows-header">
+                <h1 class="section-title">Paramétrage des workflows</h1>
+                <div class="buttons-container">
+                    <button class="btn btn-primary" id="add-workflow-button">
+                        <span class="material-icons mr-xs">add</span>
+                        Nouveau workflow
+                    </button>
+                </div>
+            </div>
+            
+            <div class="workflow-types">
+                <div class="workflow-type active">Salles de réunion</div>
+                <div class="workflow-type">Véhicules</div>
+                <div class="workflow-type">Équipements informatiques</div>
+                <div class="workflow-type">Autres ressources</div>
+            </div>
+            
+            <div class="workflows-container">
+                <!-- Workflow standard pour les salles -->
+                <div class="workflow-card">
+                    <div class="workflow-card-header">
+                        <h3 class="workflow-card-title">Workflow standard salles</h3>
+                        <div class="workflow-actions">
+                            <button class="btn btn-icon">
+                                <span class="material-icons">edit</span>
+                            </button>
+                            <button class="btn btn-icon">
+                                <span class="material-icons">content_copy</span>
+                            </button>
+                            <button class="btn btn-icon">
+                                <span class="material-icons">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="workflow-card-content">
+                        <div class="form-field">
+                            <label class="form-label">Description</label>
+                            <p>Workflow de validation standard pour la plupart des salles de réunion</p>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Étapes de validation</label>
+                            <div class="workflow-steps">
+                                <div class="workflow-step">
+                                    <span class="step-role">Demandeur</span>
+                                    <span class="step-action">Soumission</span>
+                                </div>
+                                <div class="workflow-step">
+                                    <span class="step-role">Gestionnaire</span>
+                                    <span class="step-action">Validation</span>
+                                </div>
+                                <div class="workflow-step">
+                                    <span class="step-role">Demandeur</span>
+                                    <span class="step-action">Notification</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Délai de validation</label>
+                            <p>4 heures ouvrées</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Workflow salles Direction -->
+                <div class="workflow-card">
+                    <div class="workflow-card-header">
+                        <h3 class="workflow-card-title">Workflow salles Direction</h3>
+                        <div class="workflow-actions">
+                            <button class="btn btn-icon">
+                                <span class="material-icons">edit</span>
+                            </button>
+                            <button class="btn btn-icon">
+                                <span class="material-icons">content_copy</span>
+                            </button>
+                            <button class="btn btn-icon">
+                                <span class="material-icons">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="workflow-card-content">
+                        <div class="form-field">
+                            <label class="form-label">Description</label>
+                            <p>Workflow de validation pour les salles réservées aux membres de la Direction</p>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Étapes de validation</label>
+                            <div class="workflow-steps">
+                                <div class="workflow-step">
+                                    <span class="step-role">Demandeur</span>
+                                    <span class="step-action">Soumission</span>
+                                </div>
+                                <div class="workflow-step">
+                                    <span class="step-role">Responsable service</span>
+                                    <span class="step-action">Prévalidation</span>
+                                </div>
+                                <div class="workflow-step">
+                                    <span class="step-role">Direction</span>
+                                    <span class="step-action">Validation finale</span>
+                                </div>
+                                <div class="workflow-step">
+                                    <span class="step-role">Demandeur</span>
+                                    <span class="step-action">Notification</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Délai de validation</label>
+                            <p>24 heures ouvrées</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Workflow réservation directe -->
+                <div class="workflow-card">
+                    <div class="workflow-card-header">
+                        <h3 class="workflow-card-title">Réservation directe</h3>
+                        <div class="workflow-actions">
+                            <button class="btn btn-icon">
+                                <span class="material-icons">edit</span>
+                            </button>
+                            <button class="btn btn-icon">
+                                <span class="material-icons">content_copy</span>
+                            </button>
+                            <button class="btn btn-icon">
+                                <span class="material-icons">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="workflow-card-content">
+                        <div class="form-field">
+                            <label class="form-label">Description</label>
+                            <p>Réservation immédiate sans validation pour les petites salles de réunion</p>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Étapes de validation</label>
+                            <div class="workflow-steps">
+                                <div class="workflow-step">
+                                    <span class="step-role">Demandeur</span>
+                                    <span class="step-action">Soumission</span>
+                                </div>
+                                <div class="workflow-step">
+                                    <span class="step-role">Système</span>
+                                    <span class="step-action">Validation auto</span>
+                                </div>
+                                <div class="workflow-step">
+                                    <span class="step-role">Demandeur</span>
+                                    <span class="step-action">Confirmation</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Délai de validation</label>
+                            <p>Immédiat</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="app-footer">
+            <div class="footer-logos">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="footer-logo mr-md">
+                <img src="../../../logos/saint_denis.svg" alt="Logo Saint-Denis" class="footer-logo">
+            </div>
+            <div class="footer-links">
+                <a href="#" class="mr-md">Mentions légales</a>
+                <a href="#" class="mr-md">Politique de confidentialité</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Plaine Commune & Ville de Saint-Denis - Système de Réservation de Ressources
+            </div>
+        </footer>
+    </div>
+    
+    <script src="../../assets/js/navigation.js"></script>
+    
+    <!-- Modal pour créer/éditer un workflow -->
+    <div class="modal-workflow" style="display: none;">
+        <div class="modal-workflow-container">
+            <div class="modal-workflow-header">
+                <h2 class="modal-workflow-title">Nouveau workflow</h2>
+                <button class="modal-workflow-close">&times;</button>
+            </div>
+            <div class="modal-workflow-form">
+                <div class="form-field">
+                    <label for="workflow-name" class="form-label">Nom du workflow</label>
+                    <input type="text" id="workflow-name" class="form-input" placeholder="Ex: Workflow standard salles">
+                </div>
+                
+                <div class="form-field">
+                    <label for="workflow-description" class="form-label">Description</label>
+                    <textarea id="workflow-description" class="form-input" rows="3" placeholder="Décrivez l'objectif de ce workflow..."></textarea>
+                </div>
+                
+                <div class="form-field">
+                    <label for="workflow-ressource-type" class="form-label">Type de ressource</label>
+                    <select id="workflow-ressource-type" class="form-input">
+                        <option value="room">Salles de réunion</option>
+                        <option value="vehicle">Véhicules</option>
+                        <option value="equipment">Équipements informatiques</option>
+                        <option value="other">Autres ressources</option>
+                    </select>
+                </div>
+                
+                <div class="form-field">
+                    <label class="form-label">Étapes de validation</label>
+                    <div class="workflow-builder">
+                        <div class="workflow-step-list">
+                            <div class="workflow-step-item">
+                                <div class="step-header">
+                                    <span class="step-number">1</span>
+                                    <span class="step-title">Demandeur - Soumission</span>
+                                    <button class="btn btn-icon step-actions">
+                                        <span class="material-icons">more_vert</span>
+                                    </button>
+                                </div>
+                                <div class="step-details">
+                                    <div class="form-field">
+                                        <label class="form-label">Rôle</label>
+                                        <select class="form-input">
+                                            <option value="requester" selected>Demandeur</option>
+                                            <option value="manager">Gestionnaire</option>
+                                            <option value="director">Direction</option>
+                                            <option value="system">Système</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label">Action</label>
+                                        <select class="form-input">
+                                            <option value="submission" selected>Soumission</option>
+                                            <option value="validation">Validation</option>
+                                            <option value="notification">Notification</option>
+                                            <option value="auto">Validation automatique</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label">Notification email</label>
+                                        <div class="checkbox-field">
+                                            <input type="checkbox" id="step1-notification" class="form-checkbox">
+                                            <label for="step1-notification">Envoyer email</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="workflow-step-item">
+                                <div class="step-header">
+                                    <span class="step-number">2</span>
+                                    <span class="step-title">Gestionnaire - Validation</span>
+                                    <button class="btn btn-icon step-actions">
+                                        <span class="material-icons">more_vert</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="workflow-step-item">
+                                <div class="step-header">
+                                    <span class="step-number">3</span>
+                                    <span class="step-title">Demandeur - Notification</span>
+                                    <button class="btn btn-icon step-actions">
+                                        <span class="material-icons">more_vert</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-secondary btn-block" id="add-step-button">
+                            <span class="material-icons mr-xs">add</span>
+                            Ajouter une étape
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-field">
+                    <label for="workflow-delay" class="form-label">Délai de validation</label>
+                    <div class="form-row">
+                        <input type="number" id="workflow-delay" class="form-input" style="width: 80px;" value="4">
+                        <select class="form-input" style="width: 200px;">
+                            <option value="hours">Heures</option>
+                            <option value="business-hours" selected>Heures ouvrées</option>
+                            <option value="days">Jours</option>
+                            <option value="business-days">Jours ouvrés</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-field">
+                    <label for="workflow-notification" class="form-label">Notifications automatiques</label>
+                    <div class="checkbox-field">
+                        <input type="checkbox" id="workflow-reminder" class="form-checkbox" checked>
+                        <label for="workflow-reminder">Rappel de validation</label>
+                    </div>
+                    <div class="checkbox-field">
+                        <input type="checkbox" id="workflow-escalation" class="form-checkbox">
+                        <label for="workflow-escalation">Escalade si dépassement du délai</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-workflow-footer">
+                <button class="btn btn-secondary">Annuler</button>
+                <button class="btn btn-primary">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détail de la ressource - Système de Réservation de Ressources</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Styles spécifiques à la page de détail de ressource */
+        .resource-detail-page {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: var(--space-md);
+        }
+        
+        .resource-back-link {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--space-md);
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .resource-back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .resource-back-link .material-icons {
+            margin-right: var(--space-xs);
+            font-size: 20px;
+        }
+        
+        .resource-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .resource-title {
+            margin: 0;
+            color: var(--color-text);
+        }
+        
+        .resource-subtitle {
+            color: var(--color-text-secondary);
+            margin: var(--space-xs) 0 0 0;
+        }
+        
+        .resource-status {
+            background-color: rgba(76, 175, 80, 0.1);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--border-radius-sm);
+            color: var(--color-success);
+            border: 1px solid var(--color-success);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+        }
+        
+        .resource-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .resource-main {
+            flex: 1;
+            min-width: 65%;
+        }
+        
+        .resource-sidebar {
+            flex: 0 0 30%;
+            min-width: 280px;
+        }
+        
+        .resource-gallery {
+            margin-bottom: var(--space-lg);
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-1);
+        }
+        
+        .resource-gallery-main {
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            background-color: var(--color-background-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .resource-gallery-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .resource-gallery-thumbs {
+            display: flex;
+            padding: var(--space-sm);
+            background-color: var(--color-background);
+        }
+        
+        .gallery-thumb {
+            width: 80px;
+            height: 60px;
+            margin-right: var(--space-sm);
+            border-radius: var(--border-radius-sm);
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .gallery-thumb.active {
+            border-color: var(--color-primary);
+        }
+        
+        .gallery-thumb:hover {
+            opacity: 0.9;
+        }
+        
+        .gallery-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .resource-description {
+            margin-bottom: var(--space-lg);
+        }
+        
+        .resource-description h2 {
+            color: var(--color-primary);
+            margin-top: 0;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .resource-details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .resource-details-table th {
+            text-align: left;
+            padding: var(--space-sm);
+            background-color: var(--color-background-secondary);
+            font-weight: 500;
+            color: var(--color-text);
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .resource-details-table td {
+            padding: var(--space-sm);
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-text-secondary);
+        }
+        
+        .resource-details-table tr:last-child td,
+        .resource-details-table tr:last-child th {
+            border-bottom: none;
+        }
+        
+        .booking-card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-2);
+            padding: var(--space-md);
+            position: sticky;
+            top: 20px;
+        }
+        
+        .booking-card-header {
+            margin-bottom: var(--space-md);
+        }
+        
+        .booking-card-title {
+            margin: 0 0 var(--space-xs) 0;
+            color: var(--color-primary);
+        }
+        
+        .booking-price {
+            font-size: var(--font-size-lg);
+            font-weight: 500;
+            margin: 0 0 var(--space-md) 0;
+            color: var(--color-text);
+        }
+        
+        .booking-form-field {
+            margin-bottom: var(--space-md);
+        }
+        
+        .booking-form-field label {
+            display: block;
+            margin-bottom: var(--space-xs);
+            color: var(--color-text);
+            font-weight: 500;
+        }
+        
+        .booking-form-field input,
+        .booking-form-field select {
+            width: 100%;
+            padding: var(--space-sm);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-sm);
+        }
+        
+        .booking-form-field input:focus,
+        .booking-form-field select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+        
+        .booking-dates {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+        
+        .booking-date-field {
+            flex: 1;
+        }
+        
+        .booking-submit {
+            width: 100%;
+            padding: var(--space-md);
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .booking-submit:hover {
+            background-color: var(--color-primary-dark);
+        }
+        
+        .availability-calendar {
+            margin-bottom: var(--space-lg);
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .calendar-title {
+            font-weight: 500;
+        }
+        
+        .calendar-nav {
+            display: flex;
+            gap: var(--space-xs);
+        }
+        
+        .calendar-nav-btn {
+            padding: var(--space-xs);
+            background: none;
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .calendar-nav-btn:hover {
+            background-color: var(--color-background-secondary);
+        }
+        
+        .calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .calendar-table th,
+        .calendar-table td {
+            padding: var(--space-sm);
+            text-align: center;
+            border: 1px solid var(--color-border);
+        }
+        
+        .calendar-table th {
+            background-color: var(--color-background-secondary);
+            color: var(--color-text);
+            font-weight: 500;
+        }
+        
+        .calendar-day {
+            height: 40px;
+            cursor: pointer;
+        }
+        
+        .calendar-day:hover {
+            background-color: rgba(141, 173, 62, 0.1);
+        }
+        
+        .calendar-day.available {
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+        
+        .calendar-day.unavailable {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--color-text-secondary);
+            cursor: not-allowed;
+        }
+        
+        .calendar-day.selected {
+            background-color: var(--color-primary);
+            color: white;
+        }
+        
+        .calendar-day.today {
+            font-weight: bold;
+            box-shadow: inset 0 0 0 2px var(--color-primary);
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 var(--space-lg) 0;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+            color: var(--color-text-secondary);
+        }
+        
+        .feature-icon {
+            margin-right: var(--space-sm);
+            color: var(--color-primary);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .resource-content {
+                flex-direction: column;
+            }
+            
+            .resource-gallery-main {
+                height: 300px;
+            }
+            
+            .resource-header {
+                flex-direction: column;
+            }
+            
+            .resource-status {
+                margin-top: var(--space-sm);
+                align-self: flex-start;
+            }
+            
+            .booking-dates {
+                flex-direction: column;
+                gap: var(--space-md);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-container">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="header-logo">
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="home.html" class="nav-link">Accueil</a></li>
+                    <li class="nav-item"><a href="search.html" class="nav-link">Rechercher</a></li>
+                    <li class="nav-item"><a href="my-bookings.html" class="nav-link">Mes réservations</a></li>
+                    <li class="nav-item"><a href="help.html" class="nav-link">Aide</a></li>
+                </ul>
+            </nav>
+            <div class="user-controls">
+                <div class="user-avatar">M</div>
+                <span class="user-name">Marie Dupont</span>
+                <button class="btn btn-text" data-action="logout">
+                    <span class="material-icons">logout</span>
+                </button>
+            </div>
+        </header>
+        
+        <main class="resource-detail-page">
+            <a href="search.html" class="resource-back-link">
+                <span class="material-icons">arrow_back</span>
+                Retour aux résultats
+            </a>
+            
+            <div class="resource-header">
+                <div>
+                    <h1 class="resource-title">Salle Pleyel</h1>
+                    <p class="resource-subtitle">Salle de réunion | Hôtel de Ville - Saint-Denis</p>
+                </div>
+                <span class="resource-status">Disponible</span>
+            </div>
+            
+            <div class="resource-content">
+                <div class="resource-main">
+                    <div class="resource-gallery">
+                        <div class="resource-gallery-main">
+                            <img src="https://via.placeholder.com/800x400?text=Salle+Pleyel" alt="Salle Pleyel - Vue principale">
+                        </div>
+                        <div class="resource-gallery-thumbs">
+                            <div class="gallery-thumb active">
+                                <img src="https://via.placeholder.com/80x60?text=Vue+1" alt="Salle Pleyel - Vue 1">
+                            </div>
+                            <div class="gallery-thumb">
+                                <img src="https://via.placeholder.com/80x60?text=Vue+2" alt="Salle Pleyel - Vue 2">
+                            </div>
+                            <div class="gallery-thumb">
+                                <img src="https://via.placeholder.com/80x60?text=Vue+3" alt="Salle Pleyel - Vue 3">
+                            </div>
+                            <div class="gallery-thumb">
+                                <img src="https://via.placeholder.com/80x60?text=Vue+4" alt="Salle Pleyel - Vue 4">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-description">
+                        <h2>Description</h2>
+                        <p>La salle Pleyel est une salle de réunion spacieuse située au 2ème étage de l'Hôtel de Ville de Saint-Denis. Elle est idéale pour les réunions professionnelles, les formations et les petites conférences.</p>
+                        <p>Entièrement rénovée en 2024, elle dispose d'un équipement audiovisuel moderne et d'une connexion Wi-Fi haut débit. La disposition classique en rectangle permet une bonne interaction entre les participants.</p>
+                    </div>
+                    
+                    <div class="resource-specifications">
+                        <h2>Caractéristiques</h2>
+                        <table class="resource-details-table">
+                            <tr>
+                                <th>Capacité</th>
+                                <td>12 personnes</td>
+                            </tr>
+                            <tr>
+                                <th>Surface</th>
+                                <td>30 m²</td>
+                            </tr>
+                            <tr>
+                                <th>Disposition</th>
+                                <td>Rectangulaire</td>
+                            </tr>
+                            <tr>
+                                <th>Étage</th>
+                                <td>2ème étage (avec ascenseur)</td>
+                            </tr>
+                            <tr>
+                                <th>Accessibilité PMR</th>
+                                <td>Oui</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="resource-features">
+                        <h2>Équipements inclus</h2>
+                        <ul class="feature-list">
+                            <li class="feature-item">
+                                <span class="material-icons feature-icon">videocam</span>
+                                Système de visioconférence
+                            </li>
+                            <li class="feature-item">
+                                <span class="material-icons feature-icon">tv</span>
+                                Écran interactif 65"
+                            </li>
+                            <li class="feature-item">
+                                <span class="material-icons feature-icon">wifi</span>
+                                Wi-Fi haut débit
+                            </li>
+                            <li class="feature-item">
+                                <span class="material-icons feature-icon">edit</span>
+                                Tableau blanc magnétique
+                            </li>
+                            <li class="feature-item">
+                                <span class="material-icons feature-icon">hvac</span>
+                                Climatisation
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="availability-calendar">
+                        <h2>Disponibilité</h2>
+                        <div class="calendar-header">
+                            <span class="calendar-title">Avril 2025</span>
+                            <div class="calendar-nav">
+                                <button class="calendar-nav-btn">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <button class="calendar-nav-btn">
+                                    <span class="material-icons">chevron_right</span>
+                                </button>
+                            </div>
+                        </div>
+                        <table class="calendar-table">
+                            <thead>
+                                <tr>
+                                    <th>Lun</th>
+                                    <th>Mar</th>
+                                    <th>Mer</th>
+                                    <th>Jeu</th>
+                                    <th>Ven</th>
+                                    <th>Sam</th>
+                                    <th>Dim</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>3</td>
+                                    <td>4</td>
+                                    <td>5</td>
+                                    <td>6</td>
+                                </tr>
+                                <tr>
+                                    <td>7</td>
+                                    <td>8</td>
+                                    <td>9</td>
+                                    <td>10</td>
+                                    <td>11</td>
+                                    <td>12</td>
+                                    <td>13</td>
+                                </tr>
+                                <tr>
+                                    <td>14</td>
+                                    <td>15</td>
+                                    <td>16</td>
+                                    <td>17</td>
+                                    <td>18</td>
+                                    <td>19</td>
+                                    <td>20</td>
+                                </tr>
+                                <tr>
+                                    <td>21</td>
+                                    <td class="calendar-day today">22</td>
+                                    <td class="calendar-day available selected">23</td>
+                                    <td class="calendar-day available">24</td>
+                                    <td class="calendar-day unavailable">25</td>
+                                    <td>26</td>
+                                    <td>27</td>
+                                </tr>
+                                <tr>
+                                    <td class="calendar-day available">28</td>
+                                    <td class="calendar-day available">29</td>
+                                    <td class="calendar-day available">30</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="resource-sidebar">
+                    <div class="booking-card">
+                        <div class="booking-card-header">
+                            <h3 class="booking-card-title">Réserver cette salle</h3>
+                        </div>
+                        
+                        <form class="booking-form" action="booking-confirmation.html">
+                            <div class="booking-dates">
+                                <div class="booking-date-field">
+                                    <label for="booking-date">Date</label>
+                                    <input type="date" id="booking-date" value="2025-04-23" class="form-input">
+                                </div>
+                            </div>
+                            
+                            <div class="booking-dates">
+                                <div class="booking-date-field">
+                                    <label for="booking-start-time">Heure de début</label>
+                                    <input type="time" id="booking-start-time" value="14:00" class="form-input">
+                                </div>
+                                
+                                <div class="booking-date-field">
+                                    <label for="booking-end-time">Heure de fin</label>
+                                    <input type="time" id="booking-end-time" value="16:00" class="form-input">
+                                </div>
+                            </div>
+                            
+                            <div class="booking-form-field">
+                                <label for="booking-purpose">Motif de la réservation</label>
+                                <input type="text" id="booking-purpose" placeholder="Ex: Réunion de service" class="form-input">
+                            </div>
+                            
+                            <div class="booking-form-field">
+                                <label for="booking-participants">Nombre de participants</label>
+                                <select id="booking-participants" class="form-input">
+                                    <option value="1-4">1 à 4 personnes</option>
+                                    <option value="5-8">5 à 8 personnes</option>
+                                    <option value="9-12" selected>9 à 12 personnes</option>
+                                </select>
+                            </div>
+                            
+                            <div class="booking-form-field">
+                                <label for="booking-comment">Commentaire (optionnel)</label>
+                                <textarea id="booking-comment" rows="3" placeholder="Précisions supplémentaires..." class="form-input"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="booking-submit">Réserver maintenant</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="app-footer">
+            <div class="footer-logos">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="footer-logo mr-md">
+                <img src="../../../logos/saint_denis.svg" alt="Logo Saint-Denis" class="footer-logo">
+            </div>
+            <div class="footer-links">
+                <a href="#" class="mr-md">Mentions légales</a>
+                <a href="#" class="mr-md">Politique de confidentialité</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Plaine Commune & Ville de Saint-Denis - Système de Réservation de Ressources
+            </div>
+        </footer>
+    </div>
+    
+    <script src="../../assets/js/navigation.js"></script>
+</body>
+</html>
