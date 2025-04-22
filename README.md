@@ -56,6 +56,9 @@ gitGraph
    commit id: "Interfaces administrateur"
    commit id: "Interfaces d'affichage public"
    commit id: "Validation IHM préliminaire ✓"
+   branch initialisation-architecture-technique
+   checkout initialisation-architecture-technique
+   commit id: "Définition de l'architecture technique"
 ```
 
 Au fil du développement, la structure des branches évoluera pour inclure des branches dédiées à chaque étape d'implémentation.
@@ -124,6 +127,26 @@ Cette étape visait à valider en amont les interfaces utilisateur du projet ava
 
 Cette approche a permis d'obtenir la validation formelle du donneur d'ordre, évitant ainsi des corrections coûteuses plus tard dans le cycle de développement, et assurant que le produit final répondra pleinement aux attentes des utilisateurs et du donneur d'ordre.
 
+### Étape 5 : Initialisation de l'architecture technique (branche `initialisation-architecture-technique`)
+
+Cette étape vise à définir et mettre en place l'architecture technique qui servira de fondation à l'implémentation du système de réservation de ressources. L'objectif est d'établir une structure solide répondant aux exigences techniques et aux contraintes définies dans le CCTP.
+
+**Objectifs principaux :**
+- Définir l'architecture globale du système (backend, frontend, base de données)
+- Établir les choix technologiques détaillés adaptés aux contraintes des collectivités
+- Documenter les principes d'architecture et les patterns de conception
+- Mettre en place la structure initiale du projet et les configurations de base
+- Créer les documents de design système nécessaires (DESIGN.md, DATA_MODEL.md, etc.)
+
+**Documents à produire :**
+- Documents d'architecture détaillée (DESIGN.md)
+- Modélisation des données (DATA_MODEL.md)
+- Structure des API (API.md)
+- Documentation des relations entre les documents (DOCUMENT_RELATIONSHIPS.md)
+- Templates de documentation (GENAI_HEADER_TEMPLATE.txt, GENAI_FUNCTION_TEMPLATE.txt)
+
+Cette étape s'inscrit dans la continuité des travaux de validation des interfaces utilisateur et permettra de traduire les besoins fonctionnels validés en une architecture technique robuste et évolutive.
+
 ## Prochaine étape
 
-La prochaine étape consistera à intégrer les remarques du donneur d'ordre sur les mockups et à préparer l'architecture technique qui servira de base à l'implémentation des fonctionnalités.
+La prochaine étape consistera à implémenter l'infrastructure de base du projet selon l'architecture technique définie, avec notamment la mise en place de l'environnement de développement, des structures de données principales et des premiers modules fonctionnels.
