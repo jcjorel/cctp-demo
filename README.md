@@ -45,26 +45,28 @@ gitGraph
    branch analyse-donnees-entrees-contexte-business
    checkout analyse-donnees-entrees-contexte-business
    commit id: "Ajout des documents d'analyse de contexte business"
+   branch enrichissement-contexte-business
+   checkout enrichissement-contexte-business
+   commit id: "Ajout des identités visuelles et règles UX"
 ```
 
 Au fil du développement, la structure des branches évoluera pour inclure des branches dédiées à chaque étape d'implémentation.
 
 ## Étapes d'implémentation
 
-### Étape 0 : Mise en place projet
+### Étape 1 : Création du projet (branche `master`)
 
-Cette étape préliminaire consiste à configurer l'environnement de développement et à mettre en place la structure initiale du projet. Elle comprend :
+Cette étape initiale consiste à configurer l'environnement de développement et à mettre en place la structure initiale du projet. Elle comprend :
 - La configuration des outils de développement (VSCode, WSL2, Ubuntu 24.04)
 - La mise en place des serveurs MCP pour étendre les capacités de Cline
-- La création de la documentation initiale du projet
-- L'établissement de la structure de base du dépôt Git
+- La création de la documentation initiale du projet (README.md)
 
 **Conversations capturées :**
 - [Création du README (22/04/2025)](coding_assistant/captured_chats/20250422-0822-readme_creation.md) - Mise en place du fichier README.md avec la description du projet et de l'approche basée sur la documentation
 
-### Étape 1 : Analyse des besoins
+### Étape 2 : Analyse du contexte business (branche `analyse-donnees-entrees-contexte-business`)
 
-L'analyse des besoins s'est concentrée sur l'étude du contexte business du système de réservation de ressources à partir du CCTP (Cahier des Clauses Techniques Particulières) et l'élaboration de documents de vision.
+Cette étape s'est concentrée sur l'étude du contexte business du système de réservation de ressources à partir du CCTP (Cahier des Clauses Techniques Particulières) et l'élaboration de documents de vision.
 
 **Documents clés produits :**
 - [46_CCTP_F_grpmt_logiciel_ressource_1389713110489.md](doc/46_CCTP_F_grpmt_logiciel_ressource_1389713110489.md) - Reformulation du CCTP original en format markdown
@@ -76,22 +78,17 @@ L'analyse des besoins s'est concentrée sur l'étude du contexte business du sys
 - [Reformulation du CCTP PDF en Markdown (22/04/2025)](coding_assistant/captured_chats/20250422-1016-reformulation_cctp_pdf_en_markdown.md) - Conversion du CCTP du format PDF au format Markdown
 - [Analyse du contexte business CCTP (22/04/2025)](coding_assistant/captured_chats/20250422-1031-analyse_contexte_business_cctp.md) - Extraction et analyse du contexte business à partir du CCTP
 
-### Étape 2 : Conception du système
+### Étape 3 : Enrichissement du contexte business (branche `enrichissement-contexte-business`)
 
-*À venir - Lien vers la conversation capturée*
+Cette étape a permis d'enrichir le contexte business avec des ressources visuelles et UX pour les différentes entités impliquées dans le projet.
 
-### Étape 3 : Implémentation des fonctionnalités de base
+**Documents clés produits :**
+- [UX_DESIGN.md](doc/UX_DESIGN.md) - Règles détaillées d'usage des logos dans l'interface utilisateur
+- [identites_visuelles/](doc/identites_visuelles/) - Documents d'identité visuelle de chaque entité
+  - [INDEX.md](doc/identites_visuelles/INDEX.md) - Index des identités visuelles avec diagramme des relations
+  - Documents individuels pour Plaine Commune, Saint-Denis, DSIM, etc.
+- [logos/](doc/logos/) - Logos SVG avec fond transparent pour utilisation dans les mockups
 
-*À venir - Lien vers la conversation capturée*
-
-### Étape 4 : Implémentation des fonctionnalités avancées
-
-*À venir - Lien vers la conversation capturée*
-
-### Étape 5 : Intégration avec les systèmes existants
-
-*À venir - Lien vers la conversation capturée*
-
-### Étape 6 : Finalisation et tests
-
-*À venir - Lien vers la conversation capturée*
+**Conversations capturées :**
+- [Création branche enrichissement contexte business (22/04/2025)](coding_assistant/captured_chats/20250422-1050-creation_branche_enrichissement_contexte_business.md) - Création de la branche Git pour le travail d'enrichissement
+- [Identités visuelles et UX logos (22/04/2025)](coding_assistant/captured_chats/20250422-1147-identites_visuelles_et_ux_logos.md) - Création des documents d'identité visuelle, des logos SVG et des règles UX

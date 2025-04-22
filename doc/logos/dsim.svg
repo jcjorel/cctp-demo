@@ -1,0 +1,29 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fond transparent -->
+  <rect width="200" height="200" fill="none"/>
+  
+  <!-- Cercle extérieur -->
+  <circle cx="100" cy="100" r="80" fill="#0072CE" stroke="#FFFFFF" stroke-width="2"/>
+  
+  <!-- Motif réseau stylisé -->
+  <circle cx="100" cy="100" r="40" fill="#FFFFFF" opacity="0.2"/>
+  <circle cx="100" cy="100" r="20" fill="#FFFFFF" opacity="0.4"/>
+  
+  <!-- Points de connexion -->
+  <circle cx="100" cy="45" r="8" fill="#FFFFFF"/>
+  <circle cx="155" cy="100" r="8" fill="#FFFFFF"/>
+  <circle cx="100" cy="155" r="8" fill="#FFFFFF"/>
+  <circle cx="45" cy="100" r="8" fill="#FFFFFF"/>
+  
+  <!-- Lignes de connexion -->
+  <line x1="100" y1="45" x2="100" y2="80" stroke="#FFFFFF" stroke-width="3"/>
+  <line x1="155" y1="100" x2="120" y2="100" stroke="#FFFFFF" stroke-width="3"/>
+  <line x1="100" y1="155" x2="100" y2="120" stroke="#FFFFFF" stroke-width="3"/>
+  <line x1="45" y1="100" x2="80" y2="100" stroke="#FFFFFF" stroke-width="3"/>
+  
+  <!-- Symbole de sécurité au centre -->
+  <path d="M90,100 L100,110 L115,90" stroke="#FFFFFF" stroke-width="4" fill="none"/>
+  
+  <!-- Texte "DSIM" -->
+  <text x="100" y="175" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#FFFFFF">DSIM</text>
+</svg>
