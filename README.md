@@ -145,6 +145,9 @@ Cette étape vise à définir et mettre en place l'architecture technique qui se
 - Documentation des relations entre les documents (DOCUMENT_RELATIONSHIPS.md)
 - Templates de documentation (GENAI_HEADER_TEMPLATE.txt, GENAI_FUNCTION_TEMPLATE.txt)
 
+**Conversations capturées :**
+- [Initialisation architecture technique (22/04/2025)](coding_assistant/captured_chats/20250422-1736-initialisation_architecture_technique.md) - Création de la branche Git et mise à jour du README.md pour la nouvelle étape d'architecture technique
+
 Cette étape s'inscrit dans la continuité des travaux de validation des interfaces utilisateur et permettra de traduire les besoins fonctionnels validés en une architecture technique robuste et évolutive.
 
 ## Prochaine étape
