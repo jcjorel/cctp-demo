@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes réservations - Système de Réservation de Ressources</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Styles spécifiques à la page des réservations */
+        .bookings-page {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: var(--space-md);
+        }
+        
+        .bookings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+            gap: var(--space-md);
+        }
+        
+        .bookings-stats {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .stats-card {
+            flex: 1;
+            min-width: 200px;
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            padding: var(--space-md);
+            box-shadow: var(--shadow-1);
+            display: flex;
+            align-items: center;
+        }
+        
+        .stats-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--color-background-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--space-md);
+        }
+        
+        .stats-icon .material-icons {
+            font-size: 24px;
+            color: var(--color-primary);
+        }
+        
+        .stats-content {
+            flex: 1;
+        }
+        
+        .stats-title {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            margin: 0 0 var(--space-xs) 0;
+        }
+        
+        .stats-value {
+            font-size: var(--font-size-xl);
+            font-weight: 500;
+            color: var(--color-text);
+            margin: 0;
+        }
+        
+        .bookings-filters {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            padding: var(--space-md);
+            box-shadow: var(--shadow-1);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .filter-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .filter-title {
+            margin: 0;
+            color: var(--color-primary);
+            min-width: 120px;
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: var(--space-sm);
+            flex: 1;
+            flex-wrap: wrap;
+        }
+        
+        .filter-chip {
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--border-radius-pill);
+            border: 1px solid var(--color-border);
+            background-color: var(--color-background);
+            font-size: var(--font-size-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .filter-chip.active {
+            background-color: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+        
+        .filter-chip:hover:not(.active) {
+            border-color: var(--color-primary);
+        }
+        
+        .filter-form-row {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+        
+        .filter-form-field {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-form-field label {
+            display: block;
+            margin-bottom: var(--space-xs);
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+        
+        .filter-form-field select,
+        .filter-form-field input {
+            width: 100%;
+            padding: var(--space-sm);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-sm);
+        }
+        
+        .booking-table-container {
+            overflow-x: auto;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .booking-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: var(--shadow-1);
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+        }
+        
+        .booking-table th {
+            text-align: left;
+            padding: var(--space-sm);
+            background-color: var(--color-background-secondary);
+            font-weight: 500;
+            color: var(--color-text);
+            white-space: nowrap;
+        }
+        
+        .booking-table td {
+            padding: var(--space-sm);
+            border-top: 1px solid var(--color-border);
+            color: var(--color-text);
+            vertical-align: middle;
+        }
+        
+        .booking-table tr:hover {
+            background-color: var(--color-background-secondary);
+        }
+        
+        .booking-status {
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--border-radius-sm);
+            display: inline-block;
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .status-confirmed {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--color-success);
+            border: 1px solid var(--color-success);
+        }
+        
+        .status-pending {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--color-warning);
+            border: 1px solid var(--color-warning);
+        }
+        
+        .status-cancelled {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--color-error);
+            border: 1px solid var(--color-error);
+        }
+        
+        .status-completed {
+            background-color: rgba(158, 158, 158, 0.1);
+            color: var(--color-text-secondary);
+            border: 1px solid var(--color-text-secondary);
+        }
+        
+        .booking-actions {
+            display: flex;
+            gap: var(--space-xs);
+            justify-content: flex-end;
+        }
+        
+        .booking-actions .btn {
+            padding: var(--space-xs) var(--space-sm);
+            font-size: var(--font-size-xs);
+        }
+        
+        .resource-type-icon {
+            color: var(--color-primary);
+            margin-right: var(--space-xs);
+            vertical-align: middle;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            margin-top: var(--space-lg);
+        }
+        
+        .page-btn {
+            padding: var(--space-sm) var(--space-md);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-sm);
+            background-color: var(--color-background);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .page-btn.active {
+            background-color: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+        
+        .page-btn:hover:not(.active) {
+            border-color: var(--color-primary);
+        }
+        
+        .page-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 992px) {
+            .booking-table th:nth-child(4),
+            .booking-table td:nth-child(4) {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .booking-table th:nth-child(3),
+            .booking-table td:nth-child(3) {
+                display: none;
+            }
+            
+            .stats-card {
+                flex: 0 0 100%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .booking-table th:nth-child(5),
+            .booking-table td:nth-child(5) {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-container">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="header-logo">
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="home.html" class="nav-link">Accueil</a></li>
+                    <li class="nav-item"><a href="search.html" class="nav-link">Rechercher</a></li>
+                    <li class="nav-item"><a href="my-bookings.html" class="nav-link active">Mes réservations</a></li>
+                    <li class="nav-item"><a href="help.html" class="nav-link">Aide</a></li>
+                </ul>
+            </nav>
+            <div class="user-controls">
+                <div class="user-avatar">M</div>
+                <span class="user-name">Marie Dupont</span>
+                <button class="btn btn-text" data-action="logout">
+                    <span class="material-icons">logout</span>
+                </button>
+            </div>
+        </header>
+        
+        <main class="bookings-page">
+            <div class="bookings-header">
+                <h1 class="section-title">Mes réservations</h1>
+                <a href="search.html" class="btn btn-primary">
+                    <span class="material-icons mr-xs">add</span>
+                    Nouvelle réservation
+                </a>
+            </div>
+            
+            <div class="bookings-stats">
+                <div class="stats-card">
+                    <div class="stats-icon">
+                        <span class="material-icons">event_available</span>
+                    </div>
+                    <div class="stats-content">
+                        <p class="stats-title">Réservations à venir</p>
+                        <p class="stats-value">3</p>
+                    </div>
+                </div>
+                
+                <div class="stats-card">
+                    <div class="stats-icon">
+                        <span class="material-icons">hourglass_top</span>
+                    </div>
+                    <div class="stats-content">
+                        <p class="stats-title">En attente de validation</p>
+                        <p class="stats-value">2</p>
+                    </div>
+                </div>
+                
+                <div class="stats-card">
+                    <div class="stats-icon">
+                        <span class="material-icons">event_busy</span>
+                    </div>
+                    <div class="stats-content">
+                        <p class="stats-title">Annulées / Refusées</p>
+                        <p class="stats-value">1</p>
+                    </div>
+                </div>
+                
+                <div class="stats-card">
+                    <div class="stats-icon">
+                        <span class="material-icons">history</span>
+                    </div>
+                    <div class="stats-content">
+                        <p class="stats-title">Historique total</p>
+                        <p class="stats-value">18</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bookings-filters">
+                <div class="filter-row">
+                    <h3 class="filter-title">Statut</h3>
+                    <div class="filter-options">
+                        <span class="filter-chip active">Tous</span>
+                        <span class="filter-chip">À venir</span>
+                        <span class="filter-chip">En attente</span>
+                        <span class="filter-chip">Complétées</span>
+                        <span class="filter-chip">Annulées</span>
+                    </div>
+                </div>
+                
+                <div class="filter-row">
+                    <h3 class="filter-title">Type</h3>
+                    <div class="filter-options">
+                        <span class="filter-chip active">Tous</span>
+                        <span class="filter-chip">Salles</span>
+                        <span class="filter-chip">Véhicules</span>
+                        <span class="filter-chip">Équipements</span>
+                    </div>
+                </div>
+                
+                <div class="filter-row">
+                    <h3 class="filter-title">Période</h3>
+                    <div class="filter-form-row">
+                        <div class="filter-form-field">
+                            <label for="date-from">Du</label>
+                            <input type="date" id="date-from" class="form-input" value="2025-01-01">
+                        </div>
+                        <div class="filter-form-field">
+                            <label for="date-to">Au</label>
+                            <input type="date" id="date-to" class="form-input" value="2025-12-31">
+                        </div>
+                        <div style="align-self: flex-end;">
+                            <button class="btn btn-secondary" style="margin-top: 21px;">Filtrer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="booking-table-container">
+                <table class="booking-table">
+                    <thead>
+                        <tr>
+                            <th>Référence</th>
+                            <th>Ressource</th>
+                            <th>Date</th>
+                            <th>Horaire</th>
+                            <th>Motif</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>DEM-2025-04-22-1458</td>
+                            <td>
+                                <span class="material-icons resource-type-icon">meeting_room</span>
+                                Salle Pleyel
+                            </td>
+                            <td>23/04/2025</td>
+                            <td>14h00 - 16h00</td>
+                            <td>Réunion de service</td>
+                            <td>
+                                <span class="booking-status status-pending">En attente</span>
+                            </td>
+                            <td>
+                                <div class="booking-actions">
+                                    <a href="resource-detail.html?id=1" class="btn btn-secondary btn-sm">Voir</a>
+                                    <button class="btn btn-text btn-sm text-error">Annuler</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>DEM-2025-04-21-0934</td>
+                            <td>
+                                <span class="material-icons resource-type-icon">directions_car</span>
+                                Renault Zoé
+                            </td>
+                            <td>28/04/2025</td>
+                            <td>09h00 - 17h00</td>
+                            <td>Visite terrain</td>
+                            <td>
+                                <span class="booking-status status-pending">En attente</span>
+                            </td>
+                            <td>
+                                <div class="booking-actions">
+                                    <a href="resource-detail.html?id=3" class="btn btn-secondary btn-sm">Voir</a>
+                                    <button class="btn btn-text btn-sm text-error">Annuler</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>DEM-2025-04-02-1145</td>
+                            <td>
+                                <span class="material-icons resource-type-icon">meeting_room</span>
+                                Salle du Conseil
+                            </td>
+                            <td>15/05/2025</td>
+                            <td>10h00 - 12h30</td>
+                            <td>Présentation projet</td>
+                            <td>
+                                <span class="booking-status status-confirmed">Confirmée</span>
+                            </td>
+                            <td>
+                                <div class="booking-actions">
+                                    <a href="resource-detail.html?id=2" class="btn btn-secondary btn-sm">Voir</a>
+                                    <button class="btn btn-text btn-sm text-error">Annuler</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>DEM-2025-03-14-0902</td>
+                            <td>
+                                <span class="material-icons resource-type-icon">videocam</span>
+                                Projecteur Epson
+                            </td>
+                            <td>15/04/2025</td>
+                            <td>08h00 - 18h00</td>
+                            <td>Formation</td>
+                            <td>
+                                <span class="booking-status status-completed">Terminée</span>
+                            </td>
+                            <td>
+                                <div class="booking-actions">
+                                    <a href="resource-detail.html?id=4" class="btn btn-secondary btn-sm">Voir</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>DEM-2025-03-02-1634</td>
+                            <td>
+                                <span class="material-icons resource-type-icon">directions_car</span>
+                                Citroën C3
+                            </td>
+                            <td>10/04/2025</td>
+                            <td>13h00 - 18h00</td>
+                            <td>Déplacement</td>
+                            <td>
+                                <span class="booking-status status-cancelled">Annulée</span>
+                            </td>
+                            <td>
+                                <div class="booking-actions">
+                                    <a href="resource-detail.html?id=6" class="btn btn-secondary btn-sm">Voir</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="pagination">
+                <button class="page-btn disabled">
+                    <span class="material-icons">navigate_before</span>
+                </button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <span>...</span>
+                <button class="page-btn">5</button>
+                <button class="page-btn">
+                    <span class="material-icons">navigate_next</span>
+                </button>
+            </div>
+        </main>
+        
+        <footer class="app-footer">
+            <div class="footer-logos">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="footer-logo mr-md">
+                <img src="../../../logos/saint_denis.svg" alt="Logo Saint-Denis" class="footer-logo">
+            </div>
+            <div class="footer-links">
+                <a href="#" class="mr-md">Mentions légales</a>
+                <a href="#" class="mr-md">Politique de confidentialité</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Plaine Commune & Ville de Saint-Denis - Système de Réservation de Ressources
+            </div>
+        </footer>
+    </div>
+    
+    <script src="../../assets/js/navigation.js"></script>
+</body>
+</html>

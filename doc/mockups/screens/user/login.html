@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Système de Réservation de Ressources</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <style>
+        /* Styles spécifiques à la page de connexion */
+        .login-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: var(--space-xl);
+            background-color: var(--color-background);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-2);
+        }
+        
+        .login-logo {
+            display: block;
+            width: auto;
+            height: 72px;
+            margin: 0 auto var(--space-xl);
+        }
+        
+        .login-title {
+            text-align: center;
+            color: var(--color-primary);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .login-subtitle {
+            text-align: center;
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-xl);
+            font-size: var(--font-size-md);
+        }
+        
+        .login-form {
+            margin-bottom: var(--space-lg);
+        }
+        
+        .login-actions {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .login-info {
+            text-align: center;
+            margin-top: var(--space-lg);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+        }
+        
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--color-background-secondary);
+        }
+        
+        .login-page-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-xl) var(--space-md);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-page">
+        <header class="app-header">
+            <div class="logo-container">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="header-logo">
+            </div>
+            <h1 class="header-title">Système de Réservation de Ressources</h1>
+        </header>
+
+        <main class="login-page-content">
+            <div class="login-container">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="login-logo">
+                
+                <h2 class="login-title">Connexion</h2>
+                <p class="login-subtitle">Veuillez vous identifier pour accéder au système</p>
+                
+                <form class="login-form">
+                    <div class="form-field">
+                        <label for="username" class="form-label">Identifiant</label>
+                        <input type="text" id="username" name="username" class="form-input" placeholder="Votre identifiant" required>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="password" class="form-label">Mot de passe</label>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="Votre mot de passe" required>
+                    </div>
+                    
+                    <div class="login-actions">
+                        <button type="submit" class="btn btn-primary btn-large">Se connecter</button>
+                    </div>
+                </form>
+                
+                <div class="login-info">
+                    <p>Connexion via Active Directory</p>
+                    <p>En cas de problème, contactez le support DSIM</p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <div class="footer-logos">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="footer-logo mr-md">
+                <img src="../../../logos/saint_denis.svg" alt="Logo Saint-Denis" class="footer-logo">
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Plaine Commune & Ville de Saint-Denis - Système de Réservation de Ressources
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord - Système de Réservation de Ressources</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Styles spécifiques au tableau de bord */
+        .dashboard-page {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: var(--space-md);
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+            gap: var(--space-md);
+        }
+        
+        .status-pills {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+        }
+        
+        .status-pill {
+            background-color: var(--color-background);
+            border-radius: var(--border-radius-pill);
+            padding: var(--space-sm) var(--space-md);
+            box-shadow: var(--shadow-1);
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .status-pill:hover {
+            box-shadow: var(--shadow-2);
+        }
+        
+        .status-pill.active {
+            background-color: var(--color-primary);
+            color: white;
+        }
+        
+        .status-pill-icon {
+            margin-right: var(--space-sm);
+            font-size: 20px;
+        }
+        
+        .status-pill-count {
+            background-color: var(--color-primary-light);
+            color: white;
+            border-radius: var(--border-radius-circle);
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            margin-left: var(--space-sm);
+        }
+        
+        .status-pill.active .status-pill-count {
+            background-color: white;
+            color: var(--color-primary);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .dashboard-card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-1);
+            overflow: hidden;
+        }
+        
+        .dashboard-card-header {
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dashboard-card-title {
+            margin: 0;
+            color: var(--color-primary);
+            font-size: var(--font-size-md);
+            font-weight: 500;
+        }
+        
+        .dashboard-card-content {
+            padding: var(--space-md);
+        }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-1);
+            padding: var(--space-md);
+            display: flex;
+            align-items: center;
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--border-radius-circle);
+            background-color: var(--color-primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--space-md);
+        }
+        
+        .stat-icon .material-icons {
+            font-size: 24px;
+            color: white;
+        }
+        
+        .stat-content {
+            flex: 1;
+        }
+        
+        .stat-title {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            margin: 0 0 var(--space-xs) 0;
+        }
+        
+        .stat-value {
+            font-size: var(--font-size-xl);
+            font-weight: 500;
+            color: var(--color-text);
+            margin: 0;
+        }
+        
+        .stat-trend {
+            font-size: var(--font-size-sm);
+            margin: var(--space-xs) 0 0 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .trend-up {
+            color: var(--color-success);
+        }
+        
+        .trend-down {
+            color: var(--color-error);
+        }
+        
+        .requests-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .requests-table th {
+            text-align: left;
+            padding: var(--space-sm);
+            background-color: var(--color-background-secondary);
+            font-weight: 500;
+            color: var(--color-text);
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .requests-table td {
+            padding: var(--space-sm);
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-text);
+        }
+        
+        .requests-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .requests-table tr:hover {
+            background-color: var(--color-background-secondary);
+            cursor: pointer;
+        }
+        
+        .request-status {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: var(--space-xs);
+        }
+        
+        .status-urgent {
+            background-color: var(--color-error);
+        }
+        
+        .status-normal {
+            background-color: var(--color-warning);
+        }
+        
+        .priority-badge {
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+        }
+        
+        .priority-high {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--color-error);
+        }
+        
+        .priority-medium {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--color-warning);
+        }
+        
+        .priority-low {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--color-success);
+        }
+        
+        .resource-type {
+            display: flex;
+            align-items: center;
+        }
+        
+        .resource-icon {
+            margin-right: var(--space-xs);
+            color: var(--color-primary);
+        }
+        
+        .chart-container {
+            width: 100%;
+            height: 250px;
+            position: relative;
+        }
+        
+        .chart-placeholder {
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-background-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-secondary);
+            font-style: italic;
+        }
+        
+        .table-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-sm) var(--space-md);
+            background-color: var(--color-background-secondary);
+            border-top: 1px solid var(--color-border);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+        }
+        
+        .pagination-simple {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+        
+        .pagination-btn {
+            padding: var(--space-xs);
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--color-primary);
+        }
+        
+        .pagination-btn.disabled {
+            color: var(--color-text-secondary);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .calendar-week {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--space-xs);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .calendar-day {
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-sm);
+            padding: var(--space-xs);
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .calendar-day:hover {
+            background-color: var(--color-background-secondary);
+        }
+        
+        .calendar-day.today {
+            background-color: var(--color-primary-light);
+            color: white;
+            font-weight: 500;
+        }
+        
+        .calendar-day.has-events::after {
+            content: "";
+            display: block;
+            width: 4px;
+            height: 4px;
+            background-color: var(--color-primary);
+            border-radius: 50%;
+            margin: 2px auto 0;
+        }
+        
+        .day-name {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+        }
+        
+        .day-number {
+            font-size: var(--font-size-sm);
+        }
+        
+        .todo-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: var(--space-xs) 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .todo-item:last-child {
+            border-bottom: none;
+        }
+        
+        .todo-checkbox {
+            margin-right: var(--space-sm);
+            width: 18px;
+            height: 18px;
+        }
+        
+        .todo-text {
+            flex: 1;
+            font-size: var(--font-size-sm);
+        }
+        
+        /* Utilitaires */
+        .mt-md { margin-top: var(--space-md); }
+        .mb-md { margin-bottom: var(--space-md); }
+        .text-center { text-align: center; }
+        
+        /* Responsive design */
+        @media (max-width: 992px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-card {
+                grid-column: span 2;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-container">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="header-logo">
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link active">Tableau de bord</a></li>
+                    <li class="nav-item"><a href="requests.html" class="nav-link">Demandes</a></li>
+                    <li class="nav-item"><a href="resources.html" class="nav-link">Ressources</a></li>
+                    <li class="nav-item"><a href="statistics.html" class="nav-link">Statistiques</a></li>
+                </ul>
+            </nav>
+            <div class="user-controls">
+                <div class="user-avatar">T</div>
+                <span class="user-name">Thomas Martin</span>
+                <button class="btn btn-text" data-action="logout">
+                    <span class="material-icons">logout</span>
+                </button>
+            </div>
+        </header>
+        
+        <main class="dashboard-page">
+            <div class="dashboard-header">
+                <h1 class="section-title">Tableau de bord gestionnaire</h1>
+                <a href="../user/search.html" class="btn btn-primary">
+                    <span class="material-icons mr-xs">add</span>
+                    Créer une réservation
+                </a>
+            </div>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <span class="material-icons">event</span>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-title">Réservations aujourd'hui</p>
+                        <p class="stat-value">12</p>
+                        <p class="stat-trend trend-up">
+                            <span class="material-icons">arrow_upward</span>
+                            +3 par rapport à hier
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <span class="material-icons">hourglass_top</span>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-title">En attente de validation</p>
+                        <p class="stat-value">8</p>
+                        <p class="stat-trend">
+                            <span class="material-icons">remove</span>
+                            Stable depuis hier
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <span class="material-icons">meeting_room</span>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-title">Taux d'occupation (salles)</p>
+                        <p class="stat-value">78%</p>
+                        <p class="stat-trend trend-up">
+                            <span class="material-icons">arrow_upward</span>
+                            +5% cette semaine
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <span class="material-icons">directions_car</span>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-title">Taux d'occupation (véhicules)</p>
+                        <p class="stat-value">65%</p>
+                        <p class="stat-trend trend-down">
+                            <span class="material-icons">arrow_downward</span>
+                            -3% cette semaine
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="status-pills">
+                <div class="status-pill active">
+                    <span class="material-icons status-pill-icon">all_inbox</span>
+                    <span>Toutes les demandes</span>
+                    <span class="status-pill-count">8</span>
+                </div>
+                <div class="status-pill">
+                    <span class="material-icons status-pill-icon">priority_high</span>
+                    <span>Prioritaires</span>
+                    <span class="status-pill-count">3</span>
+                </div>
+                <div class="status-pill">
+                    <span class="material-icons status-pill-icon">today</span>
+                    <span>Aujourd'hui</span>
+                    <span class="status-pill-count">5</span>
+                </div>
+                <div class="status-pill">
+                    <span class="material-icons status-pill-icon">date_range</span>
+                    <span>Cette semaine</span>
+                    <span class="status-pill-count">12</span>
+                </div>
+            </div>
+            
+            <div class="dashboard-card mb-md">
+                <div class="dashboard-card-header">
+                    <h2 class="dashboard-card-title">Demandes en attente</h2>
+                    <a href="requests.html" class="btn btn-text">Voir toutes</a>
+                </div>
+                <div class="dashboard-card-content">
+                    <div style="overflow-x: auto;">
+                        <table class="requests-table">
+                            <thead>
+                                <tr>
+                                    <th>Référence</th>
+                                    <th>Date de demande</th>
+                                    <th>Ressource</th>
+                                    <th>Date souhaitée</th>
+                                    <th>Demandeur</th>
+                                    <th>Priorité</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span class="request-status status-urgent"></span>
+                                        DEM-2025-04-22-1458
+                                    </td>
+                                    <td>22/04/2025 14:58</td>
+                                    <td class="resource-type">
+                                        <span class="material-icons resource-icon">meeting_room</span>
+                                        Salle Pleyel
+                                    </td>
+                                    <td>23/04/2025 14h-16h</td>
+                                    <td>Marie Dupont</td>
+                                    <td><span class="priority-badge priority-high">Haute</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="request-status status-urgent"></span>
+                                        DEM-2025-04-22-1402
+                                    </td>
+                                    <td>22/04/2025 14:02</td>
+                                    <td class="resource-type">
+                                        <span class="material-icons resource-icon">videocam</span>
+                                        Projecteur Sony
+                                    </td>
+                                    <td>24/04/2025 09h-17h</td>
+                                    <td>Philippe Legrand</td>
+                                    <td><span class="priority-badge priority-high">Haute</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="request-status status-normal"></span>
+                                        DEM-2025-04-21-0934
+                                    </td>
+                                    <td>21/04/2025 09:34</td>
+                                    <td class="resource-type">
+                                        <span class="material-icons resource-icon">directions_car</span>
+                                        Renault Zoé
+                                    </td>
+                                    <td>28/04/2025 09h-17h</td>
+                                    <td>Marie Dupont</td>
+                                    <td><span class="priority-badge priority-medium">Moyenne</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="request-status status-normal"></span>
+                                        DEM-2025-04-20-1623
+                                    </td>
+                                    <td>20/04/2025 16:23</td>
+                                    <td class="resource-type">
+                                        <span class="material-icons resource-icon">meeting_room</span>
+                                        Salle du Conseil
+                                    </td>
+                                    <td>25/04/2025 10h-12h</td>
+                                    <td>Jean Dubois</td>
+                                    <td><span class="priority-badge priority-medium">Moyenne</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="request-status status-normal"></span>
+                                        DEM-2025-04-20-1456
+                                    </td>
+                                    <td>20/04/2025 14:56</td>
+                                    <td class="resource-type">
+                                        <span class="material-icons resource-icon">meeting_room</span>
+                                        Salle de formation B203
+                                    </td>
+                                    <td>29/04/2025 13h-17h</td>
+                                    <td>Sophie Lambert</td>
+                                    <td><span class="priority-badge priority-low">Basse</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <div>Affichage de 5 sur 8 demandes</div>
+                    <div class="pagination-simple">
+                        <button class="pagination-btn disabled">
+                            <span class="material-icons">keyboard_arrow_left</span>
+                        </button>
+                        <span>Page 1 sur 2</span>
+                        <button class="pagination-btn">
+                            <span class="material-icons">keyboard_arrow_right</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header">
+                        <h2 class="dashboard-card-title">Occupation mensuelle</h2>
+                    </div>
+                    <div class="dashboard-card-content">
+                        <div class="chart-container">
+                            <div class="chart-placeholder">
+                                Graphique d'occupation des ressources
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header">
+                        <h2 class="dashboard-card-title">Calendrier</h2>
+                    </div>
+                    <div class="dashboard-card-content">
+                        <h3 class="text-center mb-md">Avril 2025</h3>
+                        
+                        <div class="calendar-week">
+                            <div class="calendar-day">
+                                <div class="day-name">Lun</div>
+                                <div class="day-number">20</div>
+                            </div>
+                            <div class="calendar-day">
+                                <div class="day-name">Mar</div>
+                                <div class="day-number">21</div>
+                            </div>
+                            <div class="calendar-day today">
+                                <div class="day-name">Mer</div>
+                                <div class="day-number">22</div>
+                            </div>
+                            <div class="calendar-day has-events">
+                                <div class="day-name">Jeu</div>
+                                <div class="day-number">23</div>
+                            </div>
+                            <div class="calendar-day has-events">
+                                <div class="day-name">Ven</div>
+                                <div class="day-number">24</div>
+                            </div>
+                            <div class="calendar-day">
+                                <div class="day-name">Sam</div>
+                                <div class="day-number">25</div>
+                            </div>
+                            <div class="calendar-day">
+                                <div class="day-name">Dim</div>
+                                <div class="day-number">26</div>
+                            </div>
+                        </div>
+                        
+                        <div class="calendar-week">
+                            <div class="calendar-day">
+                                <div class="day-name">Lun</div>
+                                <div class="day-number">27</div>
+                            </div>
+                            <div class="calendar-day has-events">
+                                <div class="day-name">Mar</div>
+                                <div class="day-number">28</div>
+                            </div>
+                            <div class="calendar-day has-events">
+                                <div class="day-name">Mer</div>
+                                <div class="day-number">29</div>
+                            </div>
+                            <div class="calendar-day">
+                                <div class="day-name">Jeu</div>
+                                <div class="day-number">30</div>
+                            </div>
+                            <div class="calendar-day">
+                                <div class="day-name">Ven</div>
+                                <div class="day-number">1</div>
+                            </div>
+                            <div class="calendar-day">
+                                <div class="day-name">Sam</div>
+                                <div class="day-number">2</div>
+                            </div>
+                            <div class="calendar-day">
+                                <div class="day-name">Dim</div>
+                                <div class="day-number">3</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header">
+                        <h2 class="dashboard-card-title">À faire aujourd'hui</h2>
+                    </div>
+                    <div class="dashboard-card-content">
+                        <ul class="todo-list">
+                            <li class="todo-item">
+                                <input type="checkbox" class="todo-checkbox">
+                                <span class="todo-text">Valider les demandes prioritaires (3)</span>
+                            </li>
+                            <li class="todo-item">
+                                <input type="checkbox" class="todo-checkbox">
+                                <span class="todo-text">Vérifier la disponibilité des salles pour demain</span>
+                            </li>
+                            <li class="todo-item">
+                                <input type="checkbox" class="todo-checkbox" checked>
+                                <span class="todo-text" style="text-decoration: line-through;">Réunion d'équipe matinale</span>
+                            </li>
+                            <li class="todo-item">
+                                <input type="checkbox" class="todo-checkbox">
+                                <span class="todo-text">Mettre à jour le planning des ressources</span>
+                            </li>
+                            <li class="todo-item">
+                                <input type="checkbox" class="todo-checkbox">
+                                <span class="todo-text">Relancer les utilisateurs avec demandes en attente</span>
+                            </li>
+                            <li class="todo-item">
+                                <input type="checkbox" class="todo-checkbox">
+                                <span class="todo-text">Préparer le rapport hebdomadaire d'occupation</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="app-footer">
+            <div class="footer-logos">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="footer-logo mr-md">
+                <img src="../../../logos/saint_denis.svg" alt="Logo Saint-Denis" class="footer-logo">
+            </div>
+            <div class="footer-links">
+                <a href="#" class="mr-md">Mentions légales</a>
+                <a href="#" class="mr-md">Politique de confidentialité</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Plaine Commune & Ville de Saint-Denis - Système de Réservation de Ressources
+            </div>
+        </footer>
+    </div>
+    
+    <script src="../../assets/js/navigation.js"></script>
+</body>
+</html>

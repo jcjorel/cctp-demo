@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des utilisateurs - Système de Réservation de Ressources</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .users-page { max-width: 1280px; margin: 0 auto; padding: var(--space-md); }
+        .users-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg); }
+        .users-tabs { display: flex; background-color: white; box-shadow: var(--shadow-1); border-radius: var(--border-radius-md); margin-bottom: var(--space-lg); overflow: hidden; }
+        .users-tab { padding: var(--space-md) var(--space-lg); cursor: pointer; font-weight: 500; color: var(--color-text-secondary); border-bottom: 3px solid transparent; transition: all var(--transition-fast); }
+        .users-tab.active { color: var(--color-primary); border-bottom-color: var(--color-primary); background-color: var(--color-background-light); }
+        .users-tab:hover:not(.active) { background-color: var(--color-background); color: var(--color-text); }
+        .users-filters { display: flex; flex-wrap: wrap; gap: var(--space-md); margin-bottom: var(--space-md); align-items: center; background-color: white; border-radius: var(--border-radius-md); padding: var(--space-md); box-shadow: var(--shadow-1); }
+        .users-filters .form-field { flex: 1; min-width: 200px; margin: 0; }
+        .users-filters .form-field .form-label { margin-bottom: var(--space-xs); }
+        .users-container { background-color: white; border-radius: var(--border-radius-md); box-shadow: var(--shadow-1); overflow: hidden; }
+        .users-table { width: 100%; border-collapse: collapse; }
+        .users-table th, .users-table td { padding: var(--space-md); text-align: left; border-bottom: 1px solid var(--color-border); }
+        .users-table th { background-color: var(--color-background-secondary); font-weight: 500; color: var(--color-text-secondary); position: relative; cursor: pointer; }
+        .users-table th.sort-asc::after { content: ''; position: absolute; right: var(--space-sm); top: 50%; transform: translateY(-50%); border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 5px solid var(--color-text-secondary); }
+        .users-table th.sort-desc::after { content: ''; position: absolute; right: var(--space-sm); top: 50%; transform: translateY(-50%); border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid var(--color-text-secondary); }
+        .users-table tbody tr:hover { background-color: var(--color-background-light); }
+        .user-actions { display: flex; gap: var(--space-xs); justify-content: flex-end; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: var(--font-size-xs); font-weight: 500; margin-right: var(--space-xs); background-color: var(--color-background-secondary); color: var(--color-text-secondary); }
+        .badge.admin { background-color: rgba(244, 67, 54, 0.1); color: #F44336; }
+        .badge.manager { background-color: rgba(33, 150, 243, 0.1); color: #2196F3; }
+        .badge.user { background-color: rgba(76, 175, 80, 0.1); color: #4CAF50; }
+        .badge.inactive { background-color: rgba(158, 158, 158, 0.1); color: #9E9E9E; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; background-color: var(--color-primary-light); color: white; display: flex; align-items: center; justify-content: center; font-weight: 500; margin-right: var(--space-sm); }
+        .user-cell { display: flex; align-items: center; }
+        .user-info { display: flex; flex-direction: column; }
+        .user-name { font-weight: 500; color: var(--color-text); margin-bottom: 4px; }
+        .user-email { font-size: var(--font-size-xs); color: var(--color-text-secondary); }
+        .pagination { display: flex; justify-content: center; padding: var(--space-md); gap: var(--space-xs); }
+        .pagination-button { min-width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: var(--border-radius-sm); background-color: white; border: 1px solid var(--color-border); color: var(--color-text); cursor: pointer; transition: all var(--transition-fast); }
+        .pagination-button:hover { background-color: var(--color-background-light); }
+        .pagination-button.active { background-color: var(--color-primary); color: white; border-color: var(--color-primary); }
+        .pagination-button.disabled { color: var(--color-text-secondary); pointer-events: none; opacity: 0.5; }
+        .modal-user { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-user-container { width: 600px; max-width: 90%; max-height: 90%; background-color: white; border-radius: var(--border-radius-md); box-shadow: var(--shadow-3); overflow: auto; display: flex; flex-direction: column; }
+        .modal-user-header { padding: var(--space-md); border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center; }
+        .modal-user-title { margin: 0; font-size: var(--font-size-lg); font-weight: 500; color: var(--color-text); }
+        .modal-user-close { background: none; border: none; cursor: pointer; font-size: var(--font-size-lg); color: var(--color-text-secondary); }
+        .modal-user-form { padding: var(--space-md); display: flex; flex-direction: column; gap: var(--space-md); }
+        .modal-user-section { margin-bottom: var(--space-md); }
+        .modal-user-section-title { font-weight: 500; color: var(--color-primary); margin-bottom: var(--space-sm); padding-bottom: var(--space-xs); border-bottom: 1px solid var(--color-border); }
+        .form-row { display: flex; flex-wrap: wrap; gap: var(--space-md); }
+        .form-row .form-field { flex: 1 1 calc(50% - var(--space-md)); min-width: 200px; }
+        .modal-user-footer { padding: var(--space-md); border-top: 1px solid var(--color-border); display: flex; justify-content: flex-end; gap: var(--space-md); }
+        @media (max-width: 768px) { .users-filters { flex-direction: column; align-items: stretch; } .users-table { display: block; overflow-x: auto; } .users-header { flex-direction: column; align-items: flex-start; gap: var(--space-md); } .users-header .buttons-container { width: 100%; } .users-header .btn { width: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-container">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="header-logo">
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link">Tableau de bord</a></li>
+                    <li class="nav-item"><a href="configuration.html" class="nav-link">Configuration</a></li>
+                    <li class="nav-item"><a href="resources.html" class="nav-link">Ressources</a></li>
+                    <li class="nav-item"><a href="users.html" class="nav-link active">Utilisateurs</a></li>
+                    <li class="nav-item"><a href="workflows.html" class="nav-link">Workflows</a></li>
+                </ul>
+            </nav>
+            <div class="user-controls">
+                <div class="user-avatar">C</div>
+                <span class="user-name">Claire Martin</span>
+                <button class="btn btn-text" data-action="logout">
+                    <span class="material-icons">logout</span>
+                </button>
+            </div>
+        </header>
+        
+        <main class="users-page">
+            <div class="users-header">
+                <h1 class="section-title">Gestion des utilisateurs</h1>
+                <div class="buttons-container">
+                    <button class="btn btn-secondary mr-sm">
+                        <span class="material-icons mr-xs">file_download</span>
+                        Exporter
+                    </button>
+                    <button class="btn btn-primary" id="add-user-button">
+                        <span class="material-icons mr-xs">add</span>
+                        Ajouter un utilisateur
+                    </button>
+                </div>
+            </div>
+            
+            <div class="users-tabs">
+                <div class="users-tab active">Tous les utilisateurs</div>
+                <div class="users-tab">Administrateurs</div>
+                <div class="users-tab">Gestionnaires</div>
+                <div class="users-tab">Utilisateurs standards</div>
+                <div class="users-tab">Inactifs</div>
+            </div>
+            
+            <div class="users-filters">
+                <div class="form-field">
+                    <label for="filter-search" class="form-label">Recherche</label>
+                    <input type="text" id="filter-search" class="form-input" placeholder="Nom, email...">
+                </div>
+                <div class="form-field">
+                    <label for="filter-department" class="form-label">Service</label>
+                    <select id="filter-department" class="form-input">
+                        <option value="">Tous les services</option>
+                        <option value="dsim">DSIM</option>
+                        <option value="rh">Ressources Humaines</option>
+                        <option value="finances">Finances</option>
+                        <option value="communication">Communication</option>
+                        <option value="technique">Services Techniques</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="filter-role" class="form-label">Rôle</label>
+                    <select id="filter-role" class="form-input">
+                        <option value="">Tous les rôles</option>
+                        <option value="admin">Administrateur</option>
+                        <option value="manager">Gestionnaire</option>
+                        <option value="user">Utilisateur</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="filter-status" class="form-label">Statut</label>
+                    <select id="filter-status" class="form-input">
+                        <option value="">Tous les statuts</option>
+                        <option value="active">Actif</option>
+                        <option value="inactive">Inactif</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="users-container">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th class="sort-asc">Utilisateur</th>
+                            <th>Service</th>
+                            <th>Rôle</th>
+                            <th>Dernière activité</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar">CM</div>
+                                    <div class="user-info">
+                                        <div class="user-name">Claire Martin</div>
+                                        <div class="user-email">c.martin@plainecommune.fr</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>DSIM</td>
+                            <td>
+                                <span class="badge admin">Administrateur</span>
+                            </td>
+                            <td>22/04/2025 14:53</td>
+                            <td>
+                                <span class="badge user">Actif</span>
+                            </td>
+                            <td>
+                                <div class="user-actions">
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">edit</span>
+                                    </button>
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">block</span>
+                                    </button>
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">visibility</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar">JD</div>
+                                    <div class="user-info">
+                                        <div class="user-name">Jean Dupont</div>
+                                        <div class="user-email">j.dupont@plainecommune.fr</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Services Techniques</td>
+                            <td>
+                                <span class="badge manager">Gestionnaire</span>
+                            </td>
+                            <td>21/04/2025 11:27</td>
+                            <td>
+                                <span class="badge user">Actif</span>
+                            </td>
+                            <td>
+                                <div class="user-actions">
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">edit</span>
+                                    </button>
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">block</span>
+                                    </button>
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">visibility</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar">SM</div>
+                                    <div class="user-info">
+                                        <div class="user-name">Sophie Moreau</div>
+                                        <div class="user-email">s.moreau@plainecommune.fr</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Ressources Humaines</td>
+                            <td>
+                                <span class="badge user">Utilisateur</span>
+                            </td>
+                            <td>22/04/2025 09:15</td>
+                            <td>
+                                <span class="badge user">Actif</span>
+                            </td>
+                            <td>
+                                <div class="user-actions">
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">edit</span>
+                                    </button>
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">block</span>
+                                    </button>
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">visibility</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar">PL</div>
+                                    <div class="user-info">
+                                        <div class="user-name">Pierre Lefebvre</div>
+                                        <div class="user-email">p.lefebvre@plainecommune.fr</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Communication</td>
+                            <td>
+                                <span class="badge user">Utilisateur</span>
+                            </td>
+                            <td>19/04/2025 16:42</td>
+                            <td>
+                                <span class="badge inactive">Inactif</span>
+                            </td>
+                            <td>
+                                <div class="user-actions">
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">edit</span>
+                                    </button>
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">check_circle</span>
+                                    </button>
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">visibility</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar">AL</div>
+                                    <div class="user-info">
+                                        <div class="user-name">Anne Leroy</div>
+                                        <div class="user-email">a.leroy@plainecommune.fr</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Finances</td>
+                            <td>
+                                <span class="badge manager">Gestionnaire</span>
+                            </td>
+                            <td>20/04/2025 10:23</td>
+                            <td>
+                                <span class="badge user">Actif</span>
+                            </td>
+                            <td>
+                                <div class="user-actions">
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">edit</span>
+                                    </button>
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">block</span>
+                                    </button>
+                                    <button class="btn btn-icon">
+                                        <span class="material-icons">visibility</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="pagination">
+                    <button class="pagination-button disabled">
+                        <span class="material-icons">first_page</span>
+                    </button>
+                    <button class="pagination-button disabled">
+                        <span class="material-icons">chevron_left</span>
+                    </button>
+                    <button class="pagination-button active">1</button>
+                    <button class="pagination-button">2</button>
+                    <button class="pagination-button">3</button>
+                    <button class="pagination-button">
+                        <span class="material-icons">chevron_right</span>
+                    </button>
+                    <button class="pagination-button">
+                        <span class="material-icons">last_page</span>
+                    </button>
+                </div>
+            </div>
+        
+            <!-- Modal pour ajouter/modifier un utilisateur -->
+            <div class="modal-user" style="display: none;">
+                <div class="modal-user-container">
+                    <div class="modal-user-header">
+                        <h2 class="modal-user-title">Nouvel utilisateur</h2>
+                        <button class="modal-user-close">&times;</button>
+                    </div>
+                    <div class="modal-user-form">
+                        <div class="modal-user-section">
+                            <h3 class="modal-user-section-title">Informations personnelles</h3>
+                            <div class="form-row">
+                                <div class="form-field">
+                                    <label for="user-firstname" class="form-label">Prénom</label>
+                                    <input type="text" id="user-firstname" class="form-input" placeholder="Prénom">
+                                </div>
+                                <div class="form-field">
+                                    <label for="user-lastname" class="form-label">Nom</label>
+                                    <input type="text" id="user-lastname" class="form-input" placeholder="Nom">
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <label for="user-email" class="form-label">Email</label>
+                                <input type="email" id="user-email" class="form-input" placeholder="email@plainecommune.fr">
+                            </div>
+                        </div>
+                        
+                        <div class="modal-user-section">
+                            <h3 class="modal-user-section-title">Rôle et droits</h3>
+                            <div class="form-row">
+                                <div class="form-field">
+                                    <label for="user-role" class="form-label">Rôle</label>
+                                    <select id="user-role" class="form-input">
+                                        <option value="admin">Administrateur</option>
+                                        <option value="manager">Gestionnaire</option>
+                                        <option value="user" selected>Utilisateur</option>
+                                    </select>
+                                </div>
+                                <div class="form-field">
+                                    <label for="user-department" class="form-label">Service</label>
+                                    <select id="user-department" class="form-input">
+                                        <option value="dsim">DSIM</option>
+                                        <option value="rh">Ressources Humaines</option>
+                                        <option value="finances">Finances</option>
+                                        <option value="communication">Communication</option>
+                                        <option value="technique">Services Techniques</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-user-footer">
+                        <button class="btn btn-secondary">Annuler</button>
+                        <button class="btn btn-primary">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="app-footer">
+            <div class="footer-logos">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="footer-logo mr-md">
+                <img src="../../../logos/saint_denis.svg" alt="Logo Saint-Denis" class="footer-logo">
+            </div>
+            <div class="footer-links">
+                <a href="#" class="mr-md">Mentions légales</a>
+                <a href="#" class="mr-md">Politique de confidentialité</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Plaine Commune & Ville de Saint-Denis - Système de Réservation de Ressources
+            </div>
+        </footer>
+    </div>
+    
+    <script src="../../assets/js/navigation.js"></script>
+</body>
+</html>

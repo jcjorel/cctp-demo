@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche de ressources - Système de Réservation de Ressources</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Styles spécifiques à la page de recherche */
+        .search-page {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: var(--space-md);
+        }
+        
+        .search-filters {
+            background-color: var(--color-background);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-1);
+            padding: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .filter-section {
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .filter-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .filter-title {
+            margin-top: 0;
+            margin-bottom: var(--space-sm);
+            font-size: var(--font-size-md);
+            color: var(--color-primary);
+        }
+        
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+        }
+        
+        .filter-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--space-xs);
+        }
+        
+        .filter-option input {
+            margin-right: var(--space-xs);
+        }
+        
+        .filter-dates {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+        }
+        
+        .filter-date-field {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .search-main {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-lg);
+        }
+        
+        .search-sidebar {
+            flex: 0 0 100%;
+        }
+        
+        .search-results {
+            flex: 1;
+        }
+        
+        .search-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+        
+        .search-count {
+            font-size: var(--font-size-md);
+            color: var(--color-text-secondary);
+        }
+        
+        .view-options {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .view-option {
+            padding: var(--space-xs);
+            background: transparent;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+        }
+        
+        .view-option.active {
+            background-color: rgba(213, 27, 92, 0.1);
+            color: var(--color-primary);
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-md);
+        }
+        
+        .results-list {
+            display: none;
+        }
+        
+        .filter-extra {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: var(--space-md);
+        }
+        
+        .filter-toggle {
+            background: none;
+            border: none;
+            color: var(--color-primary);
+            font-size: var(--font-size-sm);
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .filter-toggle .material-icons {
+            font-size: 16px;
+            margin-left: var(--space-xs);
+        }
+        
+        .filter-actions {
+            display: flex;
+            gap: var(--space-sm);
+        }
+        
+        /* Responsive design */
+        @media (min-width: 992px) {
+            .search-sidebar {
+                flex: 0 0 300px;
+            }
+        }
+        
+        /* Styles pour l'affichage de la liste */
+        .list-item {
+            display: flex;
+            background-color: var(--color-background);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-1);
+            margin-bottom: var(--space-md);
+            overflow: hidden;
+        }
+        
+        .list-item-image {
+            flex: 0 0 120px;
+            background-color: var(--color-background-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .list-item-image .material-icons {
+            font-size: 48px;
+            color: var(--color-primary);
+        }
+        
+        .list-item-content {
+            flex: 1;
+            padding: var(--space-md);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .list-item-title {
+            margin: 0 0 var(--space-xs) 0;
+            color: var(--color-primary);
+        }
+        
+        .list-item-details {
+            color: var(--color-text-secondary);
+            margin: 0 0 var(--space-md) 0;
+            font-size: var(--font-size-sm);
+        }
+        
+        .list-item-actions {
+            margin-top: auto;
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        /* Checkbox de filtres personnalisés */
+        .custom-checkbox {
+            position: relative;
+            padding-left: 28px;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .custom-checkbox input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+        
+        .checkbox-icon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            background-color: #fff;
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-sm);
+        }
+        
+        .custom-checkbox:hover input ~ .checkbox-icon {
+            border-color: var(--color-primary-light);
+        }
+        
+        .custom-checkbox input:checked ~ .checkbox-icon {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+        
+        .checkbox-icon:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+        
+        .custom-checkbox input:checked ~ .checkbox-icon:after {
+            display: block;
+        }
+        
+        .custom-checkbox .checkbox-icon:after {
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        
+        /* Toggle avancé/simple */
+        .advanced-filters {
+            display: none;
+            padding-top: var(--space-sm);
+            border-top: 1px solid var(--color-border);
+        }
+        
+        .advanced-filters.visible {
+            display: block;
+        }
+        
+        /* Affichage adaptatif pour le mode liste/grille */
+        .view-list .results-grid {
+            display: none;
+        }
+        
+        .view-list .results-list {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-container">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="header-logo">
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="home.html" class="nav-link">Accueil</a></li>
+                    <li class="nav-item"><a href="search.html" class="nav-link active">Rechercher</a></li>
+                    <li class="nav-item"><a href="my-bookings.html" class="nav-link">Mes réservations</a></li>
+                    <li class="nav-item"><a href="help.html" class="nav-link">Aide</a></li>
+                </ul>
+            </nav>
+            <div class="user-controls">
+                <div class="user-avatar">M</div>
+                <span class="user-name">Marie Dupont</span>
+                <button class="btn btn-text" data-action="logout">
+                    <span class="material-icons">logout</span>
+                </button>
+            </div>
+        </header>
+        
+        <main class="search-page">
+            <h1 class="section-title">Recherche de ressources</h1>
+            
+            <div class="search-filters">
+                <form id="search-filters-form">
+                    <div class="filter-section">
+                        <h3 class="filter-title">Recherche par mot-clé</h3>
+                        <div class="form-field">
+                            <input type="text" class="form-input" placeholder="Salle, équipement, véhicule...">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h3 class="filter-title">Type de ressource</h3>
+                        <div class="filter-options">
+                            <label class="custom-checkbox filter-option">
+                                <input type="checkbox" name="resource-type" value="room" checked>
+                                <span class="checkbox-icon"></span>
+                                Salles de réunion
+                            </label>
+                            <label class="custom-checkbox filter-option">
+                                <input type="checkbox" name="resource-type" value="vehicle" checked>
+                                <span class="checkbox-icon"></span>
+                                Véhicules
+                            </label>
+                            <label class="custom-checkbox filter-option">
+                                <input type="checkbox" name="resource-type" value="equipment" checked>
+                                <span class="checkbox-icon"></span>
+                                Équipements
+                            </label>
+                            <label class="custom-checkbox filter-option">
+                                <input type="checkbox" name="resource-type" value="space" checked>
+                                <span class="checkbox-icon"></span>
+                                Espaces événementiels
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h3 class="filter-title">Période de disponibilité</h3>
+                        <div class="filter-dates">
+                            <div class="form-field filter-date-field">
+                                <label for="date-from" class="form-label">Du</label>
+                                <input type="date" id="date-from" class="form-input" value="2025-04-23">
+                            </div>
+                            <div class="form-field filter-date-field">
+                                <label for="date-to" class="form-label">Au</label>
+                                <input type="date" id="date-to" class="form-input" value="2025-04-23">
+                            </div>
+                            <div class="form-field filter-date-field">
+                                <label for="time-from" class="form-label">De</label>
+                                <input type="time" id="time-from" class="form-input" value="09:00">
+                            </div>
+                            <div class="form-field filter-date-field">
+                                <label for="time-to" class="form-label">À</label>
+                                <input type="time" id="time-to" class="form-input" value="18:00">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="filter-toggle" onclick="document.querySelector('.advanced-filters').classList.toggle('visible')">
+                        Filtres avancés
+                        <span class="material-icons">expand_more</span>
+                    </button>
+                    
+                    <div class="advanced-filters">
+                        <div class="filter-section">
+                            <h3 class="filter-title">Caractéristiques (Salles)</h3>
+                            <div class="filter-options">
+                                <label class="custom-checkbox filter-option">
+                                    <input type="checkbox" name="feature" value="projector">
+                                    <span class="checkbox-icon"></span>
+                                    Vidéoprojecteur
+                                </label>
+                                <label class="custom-checkbox filter-option">
+                                    <input type="checkbox" name="feature" value="whiteboard">
+                                    <span class="checkbox-icon"></span>
+                                    Tableau blanc
+                                </label>
+                                <label class="custom-checkbox filter-option">
+                                    <input type="checkbox" name="feature" value="videoconf">
+                                    <span class="checkbox-icon"></span>
+                                    Système visioconférence
+                                </label>
+                                <label class="custom-checkbox filter-option">
+                                    <input type="checkbox" name="feature" value="wifi">
+                                    <span class="checkbox-icon"></span>
+                                    WiFi
+                                </label>
+                                <label class="custom-checkbox filter-option">
+                                    <input type="checkbox" name="feature" value="accessibility">
+                                    <span class="checkbox-icon"></span>
+                                    Accessibilité PMR
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <h3 class="filter-title">Caractéristiques (Véhicules)</h3>
+                            <div class="filter-options">
+                                <label class="custom-checkbox filter-option">
+                                    <input type="checkbox" name="vehicle-feature" value="electric">
+                                    <span class="checkbox-icon"></span>
+                                    Électrique
+                                </label>
+                                <label class="custom-checkbox filter-option">
+                                    <input type="checkbox" name="vehicle-feature" value="manual">
+                                    <span class="checkbox-icon"></span>
+                                    Boîte manuelle
+                                </label>
+                                <label class="custom-checkbox filter-option">
+                                    <input type="checkbox" name="vehicle-feature" value="automatic">
+                                    <span class="checkbox-icon"></span>
+                                    Boîte automatique
+                                </label>
+                                <label class="custom-checkbox filter-option">
+                                    <input type="checkbox" name="vehicle-feature" value="cargo">
+                                    <span class="checkbox-icon"></span>
+                                    Capacité de chargement
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <h3 class="filter-title">Capacité (Salles)</h3>
+                            <div class="filter-options">
+                                <label class="custom-checkbox filter-option">
+                                    <input type="radio" name="capacity" value="small">
+                                    <span class="checkbox-icon"></span>
+                                    Petite (2-6 personnes)
+                                </label>
+                                <label class="custom-checkbox filter-option">
+                                    <input type="radio" name="capacity" value="medium" checked>
+                                    <span class="checkbox-icon"></span>
+                                    Moyenne (7-12 personnes)
+                                </label>
+                                <label class="custom-checkbox filter-option">
+                                    <input type="radio" name="capacity" value="large">
+                                    <span class="checkbox-icon"></span>
+                                    Grande (13-20 personnes)
+                                </label>
+                                <label class="custom-checkbox filter-option">
+                                    <input type="radio" name="capacity" value="xlarge">
+                                    <span class="checkbox-icon"></span>
+                                    Très grande (20+ personnes)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <h3 class="filter-title">Localisation</h3>
+                            <div class="form-field">
+                                <select class="form-input">
+                                    <option value="">Tous les sites</option>
+                                    <option value="saint-denis" selected>Saint-Denis Centre</option>
+                                    <option value="pierrefitte">Pierrefitte-sur-Seine</option>
+                                    <option value="aubervilliers">Aubervilliers</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-extra">
+                        <button type="button" class="btn btn-secondary">Réinitialiser</button>
+                        <div class="filter-actions">
+                            <button type="button" class="btn btn-text">Annuler</button>
+                            <button type="submit" class="btn btn-primary">Rechercher</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="search-main">
+                <!-- Sidebar pour mobile uniquement, utilisant un design responsive -->
+                <div class="search-sidebar d-none"></div>
+                
+                <div class="search-results">
+                    <div class="search-top">
+                        <div class="search-count">15 résultats trouvés</div>
+                        <div class="view-options">
+                            <button class="view-option active" onclick="document.querySelector('.search-results').classList.remove('view-list')">
+                                <span class="material-icons">grid_view</span>
+                            </button>
+                            <button class="view-option" onclick="document.querySelector('.search-results').classList.add('view-list')">
+                                <span class="material-icons">view_list</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Vue en grille (par défaut) -->
+                    <div class="results-grid">
+                        <!-- Salle Pleyel -->
+                        <a href="resource-detail.html?id=1" class="resource-card">
+                            <div class="resource-image">
+                                <img src="https://via.placeholder.com/300x160?text=Salle+Pleyel" alt="Salle Pleyel">
+                            </div>
+                            <div class="resource-content">
+                                <h3 class="resource-title">Salle Pleyel</h3>
+                                <p class="resource-details">Capacité : 12 personnes</p>
+                                <p class="resource-details">Équipements : Vidéoprojecteur, WiFi</p>
+                            </div>
+                            <div class="resource-actions">
+                                <button class="btn btn-primary">Réserver</button>
+                            </div>
+                        </a>
+                        
+                        <!-- Salle du Conseil -->
+                        <a href="resource-detail.html?id=2" class="resource-card">
+                            <div class="resource-image">
+                                <img src="https://via.placeholder.com/300x160?text=Salle+du+Conseil" alt="Salle du Conseil">
+                            </div>
+                            <div class="resource-content">
+                                <h3 class="resource-title">Salle du Conseil</h3>
+                                <p class="resource-details">Capacité : 24 personnes</p>
+                                <p class="resource-details">Équipements : Visioconférence, WiFi</p>
+                            </div>
+                            <div class="resource-actions">
+                                <button class="btn btn-primary">Réserver</button>
+                            </div>
+                        </a>
+                        
+                        <!-- Renault Zoé -->
+                        <a href="resource-detail.html?id=3" class="resource-card">
+                            <div class="resource-image">
+                                <img src="https://via.placeholder.com/300x160?text=Renault+Zoé" alt="Renault Zoé">
+                            </div>
+                            <div class="resource-content">
+                                <h3 class="resource-title">Renault Zoé</h3>
+                                <p class="resource-details">Type : Véhicule électrique</p>
+                                <p class="resource-details">Boîte : Automatique</p>
+                            </div>
+                            <div class="resource-actions">
+                                <button class="btn btn-primary">Réserver</button>
+                            </div>
+                        </a>
+                        
+                        <!-- Projecteur Epson -->
+                        <a href="resource-detail.html?id=4" class="resource-card">
+                            <div class="resource-image">
+                                <span class="material-icons">video_projector</span>
+                            </div>
+                            <div class="resource-content">
+                                <h3 class="resource-title">Projecteur Epson</h3>
+                                <p class="resource-details">Type : Équipement audiovisuel</p>
+                                <p class="resource-details">Connectique : HDMI, VGA, USB</p>
+                            </div>
+                            <div class="resource-actions">
+                                <button class="btn btn-primary">Réserver</button>
+                            </div>
+                        </a>
+                        
+                        <!-- Salle A102 -->
+                        <a href="resource-detail.html?id=5" class="resource-card">
+                            <div class="resource-image">
+                                <img src="https://via.placeholder.com/300x160?text=Salle+A102" alt="Salle A102">
+                            </div>
+                            <div class="resource-content">
+                                <h3 class="resource-title">Salle A102</h3>
+                                <p class="resource-details">Capacité : 8 personnes</p>
+                                <p class="resource-details">Équipements : Tableau blanc, WiFi</p>
+                            </div>
+                            <div class="resource-actions">
+                                <button class="btn btn-primary">Réserver</button>
+                            </div>
+                        </a>
+                        
+                        <!-- Citroën C3 -->
+                        <a href="resource-detail.html?id=6" class="resource-card">
+                            <div class="resource-image">
+                                <img src="https://via.placeholder.com/300x160?text=Citroën+C3" alt="Citroën C3">
+                            </div>
+                            <div class="resource-content">
+                                <h3 class="resource-title">Citroën C3</h3>
+                                <p class="resource-details">Type : Véhicule essence</p>
+                                <p class="resource-details">Boîte : Manuelle</p>
+                            </div>
+                            <div class="resource-actions">
+                                <button class="btn btn-primary">Réserver</button>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <!-- Vue en liste (masquée par défaut) -->
+                    <div class="results-list">
+                        <!-- Salle Pleyel -->
+                        <div class="list-item">
+                            <div class="list-item-image">
+                                <img src="https://via.placeholder.com/120x120?text=Salle+Pleyel" alt="Salle Pleyel">
+                            </div>
+                            <div class="list-item-content">
+                                <h3 class="list-item-title">Salle Pleyel</h3>
+                                <p class="list-item-details">Capacité : 12 personnes | Équipements : Vidéoprojecteur, WiFi | Saint-Denis Centre</p>
+                                <div class="list-item-actions">
+                                    <a href="resource-detail.html?id=1" class="btn btn-secondary mr-sm">Détails</a>
+                                    <button class="btn btn-primary">Réserver</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Salle du Conseil -->
+                        <div class="list-item">
+                            <div class="list-item-image">
+                                <img src="https://via.placeholder.com/120x120?text=Salle+du+Conseil" alt="Salle du Conseil">
+                            </div>
+                            <div class="list-item-content">
+                                <h3 class="list-item-title">Salle du Conseil</h3>
+                                <p class="list-item-details">Capacité : 24 personnes | Équipements : Visioconférence, WiFi | Saint-Denis Centre</p>
+                                <div class="list-item-actions">
+                                    <a href="resource-detail.html?id=2" class="btn btn-secondary mr-sm">Détails</a>
+                                    <button class="btn btn-primary">Réserver</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Renault Zoé -->
+                        <div class="list-item">
+                            <div class="list-item-image">
+                                <img src="https://via.placeholder.com/120x120?text=Renault+Zoé" alt="Renault Zoé">
+                            </div>
+                            <div class="list-item-content">
+                                <h3 class="list-item-title">Renault Zoé</h3>
+                                <p class="list-item-details">Type : Véhicule électrique | Boîte : Automatique | Saint-Denis Centre</p>
+                                <div class="list-item-actions">
+                                    <a href="resource-detail.html?id=3" class="btn btn-secondary mr-sm">Détails</a>
+                                    <button class="btn btn-primary">Réserver</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Projecteur Epson -->
+                        <div class="list-item">
+                            <div class="list-item-image">
+                                <span class="material-icons">video_projector</span>
+                            </div>
+                            <div class="list-item-content">
+                                <h3 class="list-item-title">Projecteur Epson</h3>
+                                <p class="list-item-details">Type : Équipement audiovisuel | Connectique : HDMI, VGA, USB | Saint-Denis Centre</p>
+                                <div class="list-item-actions">
+                                    <a href="resource-detail.html?id=4" class="btn btn-secondary mr-sm">Détails</a>
+                                    <button class="btn btn-primary">Réserver</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="app-footer">
+            <div class="footer-logos">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="footer-logo mr-md">
+                <img src="../../../logos/saint_denis.svg" alt="Logo Saint-Denis" class="footer-logo">
+            </div>
+            <div class="footer-links">
+                <a href="#" class="mr-md">Mentions légales</a>
+                <a href="#" class="mr-md">Politique de confidentialité</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Plaine Commune & Ville de Saint-Denis - Système de Réservation de Ressources
+            </div>
+        </footer>
+    </div>
+    
+    <script src="../../assets/js/navigation.js"></script>
+</body>
+</html>

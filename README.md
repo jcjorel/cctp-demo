@@ -48,6 +48,14 @@ gitGraph
    branch enrichissement-contexte-business
    checkout enrichissement-contexte-business
    commit id: "Ajout des identités visuelles et règles UX"
+   branch validation-ihm-preliminaire
+   checkout validation-ihm-preliminaire
+   commit id: "Structure des mockups"
+   commit id: "Interfaces utilisateur standard"
+   commit id: "Interfaces gestionnaire"
+   commit id: "Interfaces administrateur"
+   commit id: "Interfaces d'affichage public"
+   commit id: "Validation IHM préliminaire ✓"
 ```
 
 Au fil du développement, la structure des branches évoluera pour inclure des branches dédiées à chaque étape d'implémentation.
@@ -92,3 +100,30 @@ Cette étape a permis d'enrichir le contexte business avec des ressources visuel
 **Conversations capturées :**
 - [Création branche enrichissement contexte business (22/04/2025)](coding_assistant/captured_chats/20250422-1050-creation_branche_enrichissement_contexte_business.md) - Création de la branche Git pour le travail d'enrichissement
 - [Identités visuelles et UX logos (22/04/2025)](coding_assistant/captured_chats/20250422-1147-identites_visuelles_et_ux_logos.md) - Création des documents d'identité visuelle, des logos SVG et des règles UX
+
+### Étape 4 : Validation IHM préliminaire (branche `validation-ihm-preliminaire`)
+
+Cette étape visait à valider en amont les interfaces utilisateur du projet avant de procéder à leur implémentation complète. Cette validation préliminaire a permis au donneur d'ordre d'évaluer à la fois la forme (aspect visuel, ergonomie) et le fond (fonctionnalités, workflows) des interfaces proposées.
+
+**Objectifs atteints :**
+- Création d'une bibliothèque de composants UI réutilisables conforme aux identités visuelles
+- Implémentation des maquettes HTML/CSS pour l'ensemble des interfaces utilisateur:
+  - **Utilisateurs standards**: connexion, accueil, recherche, détail de ressource, confirmation de réservation, historique
+  - **Gestionnaires**: tableau de bord, liste des demandes, détail des demandes, statistiques
+  - **Administrateurs**: configuration système, gestion des ressources, gestion des utilisateurs, paramétrage des workflows
+  - **Affichage public**: écran d'information pour hall d'accueil, planning journalier
+
+**Documents clés produits :**
+- [IHM_MOCKUPS.md](doc/mockups/IHM_MOCKUPS.md) - Spécifications détaillées de l'interface utilisateur
+- [mockups/index.html](doc/mockups/index.html) - Point d'entrée pour naviguer entre les différentes maquettes
+- [mockups/components/components-library.html](doc/mockups/components/components-library.html) - Bibliothèque de composants UI réutilisables
+
+**Conversations capturées :**
+- [Validation IHM préliminaire (22/04/2025)](coding_assistant/captured_chats/20250422-1315-validation_ihm_preliminaire.md) - Mise en place de la structure pour les mockups
+- [Validation IHM administrateur (22/04/2025)](coding_assistant/captured_chats/20250422-1530-validation_ihm_administrateur.md) - Implémentation des interfaces administrateur
+
+Cette approche a permis d'obtenir la validation formelle du donneur d'ordre, évitant ainsi des corrections coûteuses plus tard dans le cycle de développement, et assurant que le produit final répondra pleinement aux attentes des utilisateurs et du donneur d'ordre.
+
+## Prochaine étape
+
+La prochaine étape consistera à intégrer les remarques du donneur d'ordre sur les mockups et à préparer l'architecture technique qui servira de base à l'implémentation des fonctionnalités.

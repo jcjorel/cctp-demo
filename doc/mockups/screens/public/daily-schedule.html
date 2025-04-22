@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planning Journalier - Système de Réservation de Ressources</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body { 
+            background-color: var(--color-background); 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; 
+            font-family: Arial, sans-serif;
+        }
+        
+        .public-display { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        
+        .display-header { 
+            background-color: var(--color-primary); 
+            color: white; 
+            padding: var(--space-md); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            height: 80px; 
+        }
+        
+        .display-title { 
+            font-size: 2rem; 
+            font-weight: bold; 
+            margin: 0; 
+        }
+        
+        .display-datetime { 
+            font-size: 1.5rem; 
+            font-weight: normal; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: flex-end; 
+        }
+        
+        .display-date { 
+            font-weight: 500; 
+        }
+        
+        .display-time { 
+            font-size: 1.75rem; 
+        }
+        
+        .display-location { 
+            font-size: 1.25rem; 
+            margin-top: 4px; 
+        }
+        
+        .display-content {
+            flex: 1;
+            display: flex;
+            padding: 16px;
+            gap: 16px;
+            overflow: hidden;
+        }
+        
+        /* Sidebar styles */
+        .display-sidebar {
+            width: 320px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+        }
+        
+        .sidebar-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin: 0 0 16px 0;
+            color: var(--color-primary);
+        }
+        
+        .sidebar-subtitle {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin: 16px 0 4px 0;
+        }
+        
+        .resource-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .resource-item {
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .resource-item:hover, 
+        .resource-item.active {
+            background-color: #f5f5f5;
+        }
+        
+        .resource-item.active {
+            border-left: 3px solid var(--color-primary);
+        }
+        
+        .resource-name {
+            font-weight: 500;
+        }
+        
+        .resource-details {
+            font-size: 0.875rem;
+            color: #666;
+        }
+        
+        .legend {
+            margin-top: auto;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+        
+        .legend-text {
+            font-size: 0.875rem;
+        }
+        
+        /* Main content styles */
+        .display-main {
+            flex: 1;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .schedule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .schedule-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin: 0;
+        }
+        
+        .schedule-nav {
+            display: flex;
+            gap: 8px;
+        }
+        
+        /* Timeline styles */
+        .schedule-timeline {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .timeline-header {
+            display: flex;
+            border-bottom: 1px solid #eaeaea;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+            position: relative;
+        }
+        
+        .hour-marker {
+            flex: 1;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #666;
+            position: relative;
+        }
+        
+        .hour-marker::after {
+            content: '';
+            position: absolute;
+            top: 24px;
+            bottom: -500px;
+            width: 1px;
+            background: #eaeaea;
+            left: 50%;
+            z-index: 1;
+        }
+        
+        .timeline-content {
+            flex: 1;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        
+        .timeline-now {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #f44336;
+            z-index: 10;
+        }
+        
+        .timeline-now::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            width: 10px;
+            height: 10px;
+            background-color: #f44336;
+            border-radius: 50%;
+        }
+        
+        /* Animation styles for reservation blocks */
+        .reservation {
+            position: absolute;
+            border-radius: 4px;
+            border-left: 3px solid;
+            padding: 6px;
+            overflow: hidden;
+            box-sizing: border-box;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease-out;
+            cursor: pointer;
+            
+            /* Initial state - slightly collapsed */
+            max-height: 60px;
+        }
+        
+        /* Expanded state on hover */
+        .reservation:hover {
+            max-height: 300px;
+            z-index: 15;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            transform: scale(1.03);
+        }
+        
+        /* Gradual reveal effect for content */
+        .reservation-header {
+            opacity: 1;
+            transition: opacity 0.2s ease;
+        }
+        
+        .reservation-details-container {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-out;
+            transform: translateY(-10px);
+        }
+        
+        .reservation:hover .reservation-details-container {
+            opacity: 1;
+            max-height: 200px;
+            transform: translateY(0);
+        }
+        
+        .reservation-time {
+            font-weight: bold;
+            margin-bottom: 3px;
+            font-size: 0.75rem;
+        }
+        
+        .reservation-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        
+        .reservation-organizer {
+            color: #666;
+            margin-bottom: 4px;
+            font-size: 0.75rem;
+        }
+        
+        .reservation-participants {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+            font-size: 0.75rem;
+        }
+        
+        .reservation-participants .material-icons,
+        .reservation-detail .material-icons {
+            font-size: 0.85rem;
+            margin-right: 3px;
+        }
+        
+        .reservation-detail {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+            font-size: 0.75rem;
+        }
+
+        /* Animation pour l'expansion */
+        @keyframes expand {
+            0% { max-height: 80px; opacity: 0.9; }
+            100% { max-height: 300px; opacity: 1; }
+        }
+
+        /* Animation pour la contraction */
+        @keyframes collapse {
+            0% { max-height: 300px; opacity: 1; }
+            100% { max-height: 80px; opacity: 0.9; }
+        }
+        
+        .reservation.expanding {
+            animation: expand 0.3s ease-out forwards;
+        }
+        
+        .reservation.collapsing {
+            animation: collapse 0.3s ease-in forwards;
+        }
+        
+        /* Message d'indication visuelle pour indiquer que l'élément est cliquable */
+        .reservation::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 16px;
+            height: 16px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(0,0,0,0.3)"><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"/></svg>') no-repeat center;
+            transform: rotate(180deg);
+            opacity: 0.5;
+            transition: transform 0.3s ease;
+        }
+        
+        .reservation:hover::after {
+            transform: rotate(0deg);
+        }
+        
+        .footer {
+            margin-top: 16px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-message {
+            font-size: 0.875rem;
+            color: #666;
+        }
+        
+        .footer-logos {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .footer-logo {
+            height: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="public-display">
+        <header class="display-header">
+            <div>
+                <h1 class="display-title">Planning des Réservations</h1>
+                <div class="display-location">Hall principal - Siège Plaine Commune</div>
+            </div>
+            <div class="display-datetime">
+                <div class="display-date">Mardi 22 avril 2025</div>
+                <div class="display-time">16:50</div>
+            </div>
+        </header>
+        
+        <main class="display-content">
+            <!-- Sidebar -->
+            <aside class="display-sidebar">
+                <h2 class="sidebar-title">Salles disponibles</h2>
+                
+                <div class="resource-list">
+                    <h3 class="sidebar-subtitle">Étage 1</h3>
+                    
+                    <div class="resource-item active">
+                        <div class="resource-name">Salle Jacques Duclos</div>
+                        <div class="resource-details">15 places • Vidéoprojecteur</div>
+                    </div>
+                    
+                    <div class="resource-item">
+                        <div class="resource-name">Salle Louise Michel</div>
+                        <div class="resource-details">8 places • Écran interactif</div>
+                    </div>
+                    
+                    <div class="resource-item">
+                        <div class="resource-name">Bureau 105</div>
+                        <div class="resource-details">4 places • Téléconférence</div>
+                    </div>
+                    
+                    <h3 class="sidebar-subtitle">Étage 2</h3>
+                    
+                    <div class="resource-item">
+                        <div class="resource-name">Salle Saint-Denis</div>
+                        <div class="resource-details">20 places • Équipement complet</div>
+                    </div>
+                    
+                    <div class="resource-item">
+                        <div class="resource-name">Salle Paul Éluard</div>
+                        <div class="resource-details">12 places • Visioconférence</div>
+                    </div>
+                </div>
+                
+                <div class="legend">
+                    <h3 class="sidebar-subtitle">Légende</h3>
+                    
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: rgba(213, 27, 92, 0.15);"></div>
+                        <span class="legend-text">Réunion interne</span>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: rgba(141, 173, 62, 0.15);"></div>
+                        <span class="legend-text">Réunion externe</span>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: rgba(33, 150, 243, 0.15);"></div>
+                        <span class="legend-text">Formation</span>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: rgba(158, 158, 158, 0.15);"></div>
+                        <span class="legend-text">Non disponible (maintenance)</span>
+                    </div>
+                </div>
+            </aside>
+            
+            <!-- Main content -->
+            <section class="display-main">
+                <div class="schedule-header">
+                    <h2 class="schedule-title">Salle Jacques Duclos - Aujourd'hui</h2>
+                    
+                    <div class="schedule-nav">
+                        <button class="btn btn-icon">
+                            <span class="material-icons">chevron_left</span>
+                        </button>
+                        <button class="btn btn-secondary">Aujourd'hui</button>
+                        <button class="btn btn-icon">
+                            <span class="material-icons">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="schedule-timeline">
+                    <!-- Timeline header with hours -->
+                    <div class="timeline-header">
+                        <div class="hour-marker"></div>
+                        <div class="hour-marker">8:00</div>
+                        <div class="hour-marker">9:00</div>
+                        <div class="hour-marker">10:00</div>
+                        <div class="hour-marker">11:00</div>
+                        <div class="hour-marker">12:00</div>
+                        <div class="hour-marker">13:00</div>
+                        <div class="hour-marker">14:00</div>
+                        <div class="hour-marker">15:00</div>
+                        <div class="hour-marker">16:00</div>
+                        <div class="hour-marker">17:00</div>
+                        <div class="hour-marker">18:00</div>
+                        <div class="hour-marker">19:00</div>
+                        <div class="hour-marker">20:00</div>
+                        <div class="hour-marker">21:00</div>
+                        <div class="hour-marker">22:00</div>
+                        <div class="hour-marker">23:00</div>
+                    </div>
+                    
+                    <!-- Timeline content with reservations -->
+                    <div class="timeline-content">
+                        <!-- Current time indicator (16:50) -->
+                        <div class="timeline-now" style="left: calc(8.95% * 16)"></div>
+                        
+                        <!-- Réunion équipe DSIM (9:00 - 11:00) -->
+                        <div class="reservation" 
+                             style="left: calc(2 * 5.95%); width: calc(2 * 5.95%); top: 10px; height: 60px; background-color: rgba(213, 27, 92, 0.15); border-left-color: #D51B5C;" data-expand="true">
+                            <div class="reservation-header">
+                                <div class="reservation-time">9:00 - 11:00</div>
+                                <div class="reservation-title">Réunion équipe DSIM</div>
+                                <div class="reservation-organizer">Claire Martin</div>
+                            </div>
+                            <div class="reservation-details-container">
+                                <div class="reservation-participants">
+                                    <span class="material-icons">people</span>
+                                    12 participants
+                                </div>
+                                <div class="reservation-detail">
+                                    <span class="material-icons">videocam</span>
+                                    Vidéoprojecteur
+                                </div>
+                                <div class="reservation-detail">
+                                    <span class="material-icons">description</span>
+                                    Réunion hebdomadaire de suivi des projets de la DSIM
+                                </div>
+                                <div class="reservation-detail">
+                                    <span class="material-icons">schedule</span>
+                                    Récurrence: Tous les mardis
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Entretien prestataires (13:00 - 14:30) -->
+                        <div class="reservation" 
+                             style="left: calc(6 * 5.95%); width: calc(1.5 * 5.95%); top: 10px; height: 60px; background-color: rgba(141, 173, 62, 0.15); border-left-color: #8DAD3E;" data-expand="true">
+                            <div class="reservation-header">
+                                <div class="reservation-time">13:00 - 14:30</div>
+                                <div class="reservation-title">Entretien prestataires</div>
+                                <div class="reservation-organizer">Jean Dupont</div>
+                            </div>
+                            <div class="reservation-details-container">
+                                <div class="reservation-participants">
+                                    <span class="material-icons">people</span>
+                                    4 participants
+                                </div>
+                                <div class="reservation-detail">
+                                    <span class="material-icons">business</span>
+                                    ABC Consulting
+                                </div>
+                                <div class="reservation-detail">
+                                    <span class="material-icons">description</span>
+                                    Évaluation des prestataires externes pour le nouveau projet
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Formation logiciel SRR (14:00 - 17:00) -->
+                        <div class="reservation" 
+                             style="left: calc(7 * 5.95%); width: calc(3 * 5.95%); top: 120px; height: 60px; background-color: rgba(33, 150, 243, 0.15); border-left-color: #2196F3;" data-expand="true">
+                            <div class="reservation-header">
+                                <div class="reservation-time">14:00 - 17:00</div>
+                                <div class="reservation-title">Formation logiciel SRR</div>
+                                <div class="reservation-organizer">Service Formation</div>
+                            </div>
+                            <div class="reservation-details-container">
+                                <div class="reservation-participants">
+                                    <span class="material-icons">people</span>
+                                    15 participants
+                                </div>
+                                <div class="reservation-detail">
+                                    <span class="material-icons">laptop</span>
+                                    Ordinateurs portables requis
+                                </div>
+                                <div class="reservation-detail">
+                                    <span class="material-icons">videocam</span>
+                                    Vidéoprojecteur
+                                </div>
+                                <div class="reservation-detail">
+                                    <span class="material-icons">description</span>
+                                    Formation aux fonctionnalités avancées du logiciel SRR v4.2
+                                </div>
+                                <div class="reservation-detail">
+                                    <span class="material-icons">school</span>
+                                    Support de formation disponible
+                                </div>
+                                <div class="reservation-detail">
+                                    <span class="material-icons">restaurant</span>
+                                    Pause-café prévue à 15h30
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Footer -->
+                    <footer class="footer">
+                        <div class="footer-message">
+                            Cette page s'actualise automatiquement toutes les 5 minutes
+                        </div>
+                        <div class="footer-logos">
+                            <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="footer-logo">
+                            <img src="../../../logos/saint_denis.svg" alt="Logo Saint-Denis" class="footer-logo">
+                        </div>
+                    </footer>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script>
+        // Update current time and time indicator
+        function updateTime() {
+            const now = new Date();
+            const date = now.toLocaleDateString('fr-FR', { 
+                weekday: 'long',
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric'
+            });
+            const time = now.toLocaleTimeString('fr-FR', { 
+                hour: '2-digit', 
+                minute: '2-digit'
+            });
+            
+            // Update header time display
+            document.querySelector('.display-date').textContent = date.charAt(0).toUpperCase() + date.slice(1);
+            document.querySelector('.display-time').textContent = time;
+            
+            // Update time indicator position
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const hoursDecimal = hours + (minutes / 60);
+            
+            // Position calculation (assuming 8:00 - 23:00 timespan displayed)
+            const startHour = 8;
+            const timespan = 16; // 16 hours from 8:00 to 24:00
+            const position = ((hoursDecimal - startHour) / timespan) * 100;
+            
+            document.querySelector('.timeline-now').style.left = `${position}%`;
+            
+            // Update every minute
+            setTimeout(updateTime, 60000);
+        }
+        
+        // Handle resource selection
+        document.querySelectorAll('.resource-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active class from all resources
+                document.querySelectorAll('.resource-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                
+                // Add active class to clicked resource
+                this.classList.add('active');
+                
+                // Update schedule title
+                const resourceName = this.querySelector('.resource-name').textContent;
+                document.querySelector('.schedule-title').textContent = resourceName + ' - Aujourd\'hui';
+            });
+        });
+        
+        // Réservation animation handlers
+        document.querySelectorAll('.reservation').forEach(reservation => {
+            reservation.addEventListener('mouseenter', function() {
+                this.style.height = 'auto';
+                this.classList.add('expanding');
+                this.classList.remove('collapsing');
+            });
+            
+            reservation.addEventListener('mouseleave', function() {
+                this.classList.remove('expanding');
+                this.classList.add('collapsing');
+                // Reset height after animation completes
+                setTimeout(() => {
+                    this.style.height = '60px';
+                    this.classList.remove('collapsing');
+                }, 300);
+            });
+        });
+        
+        // Initialize
+        window.addEventListener('load', updateTime);
+    </script>
+</body>
+</html>

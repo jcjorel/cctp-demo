@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation de réservation - Système de Réservation de Ressources</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Styles spécifiques à la page de confirmation */
+        .confirmation-page {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: var(--space-md);
+        }
+        
+        .confirmation-card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-2);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+            text-align: center;
+        }
+        
+        .confirmation-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: rgba(255, 152, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-lg);
+        }
+        
+        .confirmation-icon .material-icons {
+            font-size: 48px;
+            color: var(--color-warning);
+        }
+        
+        .confirmation-title {
+            margin: 0 0 var(--space-md) 0;
+            color: var(--color-text);
+            font-size: var(--font-size-xl);
+        }
+        
+        .confirmation-subtitle {
+            color: var(--color-text-secondary);
+            margin: 0 0 var(--space-lg) 0;
+        }
+        
+        .confirmation-reference {
+            background-color: var(--color-background-secondary);
+            padding: var(--space-md);
+            border-radius: var(--border-radius-sm);
+            display: inline-block;
+            font-size: var(--font-size-lg);
+            font-weight: 500;
+            color: var(--color-primary);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .confirmation-detail {
+            background-color: var(--color-background);
+            border-radius: var(--border-radius-md);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-1);
+            margin-bottom: var(--space-lg);
+            text-align: left;
+        }
+        
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .detail-title {
+            margin: 0;
+            color: var(--color-primary);
+        }
+        
+        .detail-status {
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--color-warning);
+            border: 1px solid var(--color-warning);
+        }
+        
+        .detail-section {
+            margin-bottom: var(--space-md);
+        }
+        
+        .detail-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .detail-section h3 {
+            margin: 0 0 var(--space-xs) 0;
+            font-size: var(--font-size-md);
+            color: var(--color-text);
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-xs);
+        }
+        
+        .detail-label {
+            color: var(--color-text-secondary);
+        }
+        
+        .detail-value {
+            font-weight: 500;
+            color: var(--color-text);
+        }
+        
+        .confirmation-actions {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+        
+        .workflow-steps {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .workflow-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        
+        .workflow-step::before {
+            content: "";
+            position: absolute;
+            top: 30px;
+            left: calc(-50% + 20px);
+            right: calc(50% + 20px);
+            height: 2px;
+            background-color: var(--color-border);
+            z-index: 1;
+        }
+        
+        .workflow-step:first-child::before {
+            display: none;
+        }
+        
+        .step-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: white;
+            border: 2px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-sm);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .step-icon .material-icons {
+            font-size: 28px;
+            color: var(--color-text-secondary);
+        }
+        
+        .workflow-step.active .step-icon {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+        
+        .workflow-step.active .step-icon .material-icons {
+            color: white;
+        }
+        
+        .workflow-step.completed .step-icon {
+            background-color: var(--color-success);
+            border-color: var(--color-success);
+        }
+        
+        .workflow-step.completed .step-icon .material-icons {
+            color: white;
+        }
+        
+        .workflow-step.completed::before {
+            background-color: var(--color-success);
+        }
+        
+        .step-label {
+            font-weight: 500;
+            color: var(--color-text);
+            margin: 0;
+        }
+        
+        .step-description {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+            margin: var(--space-xs) 0 0 0;
+        }
+        
+        .workflow-step.active .step-label {
+            color: var(--color-primary);
+        }
+        
+        .workflow-step.completed .step-label {
+            color: var(--color-success);
+        }
+        
+        .notification-card {
+            padding: var(--space-md);
+            background-color: rgba(33, 150, 243, 0.1);
+            border-left: 4px solid var(--color-info);
+            margin-bottom: var(--space-lg);
+            color: var(--color-text);
+        }
+        
+        .notification-card p {
+            margin: 0;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .confirmation-card {
+                padding: var(--space-md);
+            }
+            
+            .workflow-steps {
+                flex-direction: column;
+                gap: var(--space-md);
+            }
+            
+            .workflow-step {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                text-align: left;
+            }
+            
+            .workflow-step::before {
+                top: auto;
+                left: 30px;
+                width: 2px;
+                height: 40px;
+                bottom: calc(100% + 10px);
+            }
+            
+            .step-icon {
+                margin: 0 var(--space-md) 0 0;
+            }
+            
+            .confirmation-actions {
+                flex-direction: column;
+                gap: var(--space-sm);
+            }
+            
+            .confirmation-actions .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-container">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="header-logo">
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="home.html" class="nav-link">Accueil</a></li>
+                    <li class="nav-item"><a href="search.html" class="nav-link">Rechercher</a></li>
+                    <li class="nav-item"><a href="my-bookings.html" class="nav-link">Mes réservations</a></li>
+                    <li class="nav-item"><a href="help.html" class="nav-link">Aide</a></li>
+                </ul>
+            </nav>
+            <div class="user-controls">
+                <div class="user-avatar">M</div>
+                <span class="user-name">Marie Dupont</span>
+                <button class="btn btn-text" data-action="logout">
+                    <span class="material-icons">logout</span>
+                </button>
+            </div>
+        </header>
+        
+        <main class="confirmation-page">
+            <div class="workflow-steps">
+                <div class="workflow-step completed">
+                    <div class="step-icon">
+                        <span class="material-icons">description</span>
+                    </div>
+                    <h3 class="step-label">Demande</h3>
+                    <p class="step-description">Formulaire complété</p>
+                </div>
+                
+                <div class="workflow-step active">
+                    <div class="step-icon">
+                        <span class="material-icons">hourglass_top</span>
+                    </div>
+                    <h3 class="step-label">En attente</h3>
+                    <p class="step-description">Validation par gestionnaire</p>
+                </div>
+                
+                <div class="workflow-step">
+                    <div class="step-icon">
+                        <span class="material-icons">check_circle</span>
+                    </div>
+                    <h3 class="step-label">Validation</h3>
+                    <p class="step-description">Réservation confirmée</p>
+                </div>
+                
+                <div class="workflow-step">
+                    <div class="step-icon">
+                        <span class="material-icons">event_available</span>
+                    </div>
+                    <h3 class="step-label">Réservation</h3>
+                    <p class="step-description">Disponibilité garantie</p>
+                </div>
+            </div>
+            
+            <div class="confirmation-card">
+                <div class="confirmation-icon">
+                    <span class="material-icons">hourglass_top</span>
+                </div>
+                
+                <h1 class="confirmation-title">Demande de réservation enregistrée</h1>
+                <p class="confirmation-subtitle">Votre demande a été transmise au gestionnaire pour validation</p>
+                
+                <div class="confirmation-reference">
+                    Référence : DEM-2025-04-22-1458
+                </div>
+                
+                <div class="notification-card">
+                    <p><strong>Information :</strong> Un email de confirmation vous a été envoyé. Vous recevrez une notification dès que votre demande aura été traitée.</p>
+                </div>
+            </div>
+            
+            <div class="confirmation-detail">
+                <div class="detail-header">
+                    <h2 class="detail-title">Récapitulatif de la demande</h2>
+                    <span class="detail-status">En attente de validation</span>
+                </div>
+                
+                <div class="detail-section">
+                    <h3>Ressource réservée</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Type</span>
+                        <span class="detail-value">Salle de réunion</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Nom</span>
+                        <span class="detail-value">Salle Pleyel</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Localisation</span>
+                        <span class="detail-value">Hôtel de Ville - Saint-Denis</span>
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3>Date et horaires</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Date</span>
+                        <span class="detail-value">Mercredi 23 avril 2025</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Heure de début</span>
+                        <span class="detail-value">14h00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Heure de fin</span>
+                        <span class="detail-value">16h00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Durée</span>
+                        <span class="detail-value">2 heures</span>
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3>Informations complémentaires</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Motif</span>
+                        <span class="detail-value">Réunion de service</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Nombre de participants</span>
+                        <span class="detail-value">9 à 12 personnes</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Commentaire</span>
+                        <span class="detail-value">Besoin d'un système de visioconférence</span>
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3>Demandeur</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Nom</span>
+                        <span class="detail-value">Marie Dupont</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Service</span>
+                        <span class="detail-value">Direction des Ressources Humaines</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">marie.dupont@plainecommune.fr</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Téléphone</span>
+                        <span class="detail-value">01 49 33 XX XX</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="confirmation-actions">
+                <a href="my-bookings.html" class="btn btn-primary">
+                    <span class="material-icons mr-xs">visibility</span>
+                    Voir mes réservations
+                </a>
+                <a href="home.html" class="btn btn-secondary">
+                    <span class="material-icons mr-xs">home</span>
+                    Retour à l'accueil
+                </a>
+            </div>
+        </main>
+        
+        <footer class="app-footer">
+            <div class="footer-logos">
+                <img src="../../../logos/plaine_commune.svg" alt="Logo Plaine Commune" class="footer-logo mr-md">
+                <img src="../../../logos/saint_denis.svg" alt="Logo Saint-Denis" class="footer-logo">
+            </div>
+            <div class="footer-links">
+                <a href="#" class="mr-md">Mentions légales</a>
+                <a href="#" class="mr-md">Politique de confidentialité</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Plaine Commune & Ville de Saint-Denis - Système de Réservation de Ressources
+            </div>
+        </footer>
+    </div>
+    
+    <script src="../../assets/js/navigation.js"></script>
+</body>
+</html>
