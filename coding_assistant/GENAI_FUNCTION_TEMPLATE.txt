@@ -1,0 +1,428 @@
+# GenAI Function/Method/Class Documentation Templates by Language
+
+## Python
+
+```python
+def function_name(param1, param2=None):
+    """
+    [Function intent]
+    Concise explanation of what this function does and its purpose in the codebase.
+    
+    [Design principles]
+    Explanation of key design principles followed in this implementation.
+    
+    [Implementation details]
+    Key technical aspects of the implementation approach.
+    
+    Args:
+        param1 (type): Description of parameter
+        param2 (type, optional): Description of optional parameter
+        
+    Returns:
+        type: Description of return value
+        
+    Raises:
+        ExceptionType: When and why this exception might be raised
+    """
+    # Implementation...
+```
+
+```python
+class ClassName:
+    """
+    [Class intent]
+    Concise explanation of this class's purpose and role in the codebase.
+    
+    [Design principles]
+    Explanation of key design principles followed in this implementation.
+    
+    [Implementation details]
+    Key technical aspects of the implementation approach.
+    """
+    
+    def __init__(self, param1):
+        """
+        [Class method intent]
+        Initialize a new instance of the class.
+        
+        [Design principles]
+        Explanation of key design principles followed in initialization.
+        
+        [Implementation details]
+        Key technical aspects of initialization approach.
+        
+        Args:
+            param1 (type): Description of parameter
+        """
+        # Implementation...
+    
+    def method_name(self, param1):
+        """
+        [Class method intent]
+        Concise explanation of what this method does.
+        
+        [Design principles]
+        Explanation of key design principles followed in this implementation.
+        
+        [Implementation details]
+        Key technical aspects of the implementation approach.
+        
+        Args:
+            param1 (type): Description of parameter
+            
+        Returns:
+            type: Description of return value
+        """
+        # Implementation...
+```
+
+## JavaScript
+
+```javascript
+/**
+ * [Function intent]
+ * Concise explanation of what this function does and its purpose in the codebase.
+ *
+ * [Design principles]
+ * Explanation of key design principles followed in this implementation.
+ *
+ * [Implementation details]
+ * Key technical aspects of the implementation approach.
+ *
+ * @param {Type} param1 - Description of parameter
+ * @param {Type} [param2] - Description of optional parameter
+ * @returns {Type} Description of return value
+ * @throws {ExceptionType} When and why this exception might be raised
+ */
+function functionName(param1, param2) {
+    // Implementation...
+}
+```
+
+```javascript
+/**
+ * [Class intent]
+ * Concise explanation of this class's purpose and role in the codebase.
+ *
+ * [Design principles]
+ * Explanation of key design principles followed in this implementation.
+ *
+ * [Implementation details]
+ * Key technical aspects of the implementation approach.
+ */
+class ClassName {
+    /**
+     * [Class method intent]
+     * Initialize a new instance of the class.
+     *
+     * [Design principles]
+     * Explanation of key design principles followed in initialization.
+     *
+     * [Implementation details]
+     * Key technical aspects of initialization approach.
+     *
+     * @param {Type} param1 - Description of parameter
+     */
+    constructor(param1) {
+        // Implementation...
+    }
+
+    /**
+     * [Class method intent]
+     * Concise explanation of what this method does.
+     *
+     * [Design principles]
+     * Explanation of key design principles followed in this implementation.
+     *
+     * [Implementation details]
+     * Key technical aspects of the implementation approach.
+     *
+     * @param {Type} param1 - Description of parameter
+     * @returns {Type} Description of return value
+     */
+    methodName(param1) {
+        // Implementation...
+    }
+}
+```
+
+## Java
+
+```java
+/**
+ * [Function intent]
+ * Concise explanation of what this method does and its purpose in the codebase.
+ *
+ * [Design principles]
+ * Explanation of key design principles followed in this implementation.
+ *
+ * [Implementation details]
+ * Key technical aspects of the implementation approach.
+ *
+ * @param param1 Description of parameter
+ * @param param2 Description of parameter
+ * @return Description of return value
+ * @throws ExceptionType When and why this exception might be raised
+ */
+public ReturnType methodName(ParamType param1, ParamType param2) {
+    // Implementation...
+}
+```
+
+```java
+/**
+ * [Class intent]
+ * Concise explanation of this class's purpose and role in the codebase.
+ *
+ * [Design principles]
+ * Explanation of key design principles followed in this implementation.
+ *
+ * [Implementation details]
+ * Key technical aspects of the implementation approach.
+ */
+public class ClassName {
+
+    /**
+     * [Class method intent]
+     * Initialize a new instance of the class.
+     *
+     * [Design principles]
+     * Explanation of key design principles followed in initialization.
+     *
+     * [Implementation details]
+     * Key technical aspects of initialization approach.
+     *
+     * @param param1 Description of parameter
+     */
+    public ClassName(ParamType param1) {
+        // Implementation...
+    }
+
+    /**
+     * [Class method intent]
+     * Concise explanation of what this method does.
+     *
+     * [Design principles]
+     * Explanation of key design principles followed in this implementation.
+     *
+     * [Implementation details]
+     * Key technical aspects of the implementation approach.
+     *
+     * @param param1 Description of parameter
+     * @return Description of return value
+     */
+    public ReturnType methodName(ParamType param1) {
+        // Implementation...
+    }
+}
+```
+
+## TypeScript
+
+```typescript
+/**
+ * [Function intent]
+ * Concise explanation of what this function does and its purpose in the codebase.
+ *
+ * [Design principles]
+ * Explanation of key design principles followed in this implementation.
+ *
+ * [Implementation details]
+ * Key technical aspects of the implementation approach.
+ *
+ * @param param1 - Description of parameter
+ * @param param2 - Description of optional parameter
+ * @returns Description of return value
+ * @throws When and why an exception might be raised
+ */
+function functionName(param1: Type, param2?: Type): ReturnType {
+    // Implementation...
+}
+```
+
+```typescript
+/**
+ * [Class intent]
+ * Concise explanation of this class's purpose and role in the codebase.
+ *
+ * [Design principles]
+ * Explanation of key design principles followed in this implementation.
+ *
+ * [Implementation details]
+ * Key technical aspects of the implementation approach.
+ */
+class ClassName {
+    /**
+     * [Class method intent]
+     * Initialize a new instance of the class.
+     *
+     * [Design principles]
+     * Explanation of key design principles followed in initialization.
+     *
+     * [Implementation details]
+     * Key technical aspects of initialization approach.
+     *
+     * @param param1 - Description of parameter
+     */
+    constructor(param1: Type) {
+        // Implementation...
+    }
+
+    /**
+     * [Class method intent]
+     * Concise explanation of what this method does.
+     *
+     * [Design principles]
+     * Explanation of key design principles followed in this implementation.
+     *
+     * [Implementation details]
+     * Key technical aspects of the implementation approach.
+     *
+     * @param param1 - Description of parameter
+     * @returns Description of return value
+     */
+    methodName(param1: Type): ReturnType {
+        // Implementation...
+    }
+}
+```
+
+## C#
+
+```csharp
+/// <summary>
+/// [Function intent]
+/// Concise explanation of what this method does and its purpose in the codebase.
+/// 
+/// [Design principles]
+/// Explanation of key design principles followed in this implementation.
+/// 
+/// [Implementation details]
+/// Key technical aspects of the implementation approach.
+/// </summary>
+/// <param name="param1">Description of parameter</param>
+/// <param name="param2">Description of parameter</param>
+/// <returns>Description of return value</returns>
+/// <exception cref="ExceptionType">When and why this exception might be raised</exception>
+public ReturnType MethodName(ParamType param1, ParamType param2)
+{
+    // Implementation...
+}
+```
+
+```csharp
+/// <summary>
+/// [Class intent]
+/// Concise explanation of this class's purpose and role in the codebase.
+/// 
+/// [Design principles]
+/// Explanation of key design principles followed in this implementation.
+/// 
+/// [Implementation details]
+/// Key technical aspects of the implementation approach.
+/// </summary>
+public class ClassName
+{
+    /// <summary>
+    /// [Class method intent]
+    /// Initialize a new instance of the class.
+    /// 
+    /// [Design principles]
+    /// Explanation of key design principles followed in initialization.
+    /// 
+    /// [Implementation details]
+    /// Key technical aspects of initialization approach.
+    /// </summary>
+    /// <param name="param1">Description of parameter</param>
+    public ClassName(ParamType param1)
+    {
+        // Implementation...
+    }
+
+    /// <summary>
+    /// [Class method intent]
+    /// Concise explanation of what this method does.
+    /// 
+    /// [Design principles]
+    /// Explanation of key design principles followed in this implementation.
+    /// 
+    /// [Implementation details]
+    /// Key technical aspects of the implementation approach.
+    /// </summary>
+    /// <param name="param1">Description of parameter</param>
+    /// <returns>Description of return value</returns>
+    public ReturnType MethodName(ParamType param1)
+    {
+        // Implementation...
+    }
+}
+```
+
+## PHP
+
+```php
+/**
+ * [Function intent]
+ * Concise explanation of what this function does and its purpose in the codebase.
+ *
+ * [Design principles]
+ * Explanation of key design principles followed in this implementation.
+ *
+ * [Implementation details]
+ * Key technical aspects of the implementation approach.
+ *
+ * @param Type $param1 Description of parameter
+ * @param Type $param2 Description of optional parameter
+ * @return Type Description of return value
+ * @throws ExceptionType When and why this exception might be raised
+ */
+function functionName($param1, $param2 = null) {
+    // Implementation...
+}
+```
+
+```php
+/**
+ * [Class intent]
+ * Concise explanation of this class's purpose and role in the codebase.
+ *
+ * [Design principles]
+ * Explanation of key design principles followed in this implementation.
+ *
+ * [Implementation details]
+ * Key technical aspects of the implementation approach.
+ */
+class ClassName {
+    /**
+     * [Class method intent]
+     * Initialize a new instance of the class.
+     *
+     * [Design principles]
+     * Explanation of key design principles followed in initialization.
+     *
+     * [Implementation details]
+     * Key technical aspects of initialization approach.
+     *
+     * @param Type $param1 Description of parameter
+     */
+    public function __construct($param1) {
+        // Implementation...
+    }
+
+    /**
+     * [Class method intent]
+     * Concise explanation of what this method does.
+     *
+     * [Design principles]
+     * Explanation of key design principles followed in this implementation.
+     *
+     * [Implementation details]
+     * Key technical aspects of the implementation approach.
+     *
+     * @param Type $param1 Description of parameter
+     * @return Type Description of return value
+     */
+    public function methodName($param1) {
+        // Implementation...
+    }
+}
