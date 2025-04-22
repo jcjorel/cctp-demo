@@ -1,9 +1,17 @@
 # Hierarchical Semantic Tree Context (HSTC) - doc/mockups/flows
 
-Ce fichier fait partie de la structure HSTC (Hierarchical Semantic Tree Context) qui fournit un contexte sémantique hiérarchique pour le projet. Il contient les entêtes de documentation de tous les fichiers du répertoire courant.
+Ce fichier fait partie de la structure HSTC (Hierarchical Semantic Tree Context) qui fournit un contexte sémantique hiérarchique pour le projet. Il contient des résumés de tous les fichiers HSTC.md enfants (dans les sous-répertoires) ainsi que les entêtes de documentation de tous les fichiers du répertoire courant.
+
+## Résumés des répertoires enfants
+
+Ce répertoire ne contient pas de sous-répertoires avec fichiers HSTC.md.
 
 ## Fichiers du répertoire courant
 
-Ce répertoire est destiné à contenir les diagrammes de flux représentant les parcours utilisateurs dans le système de réservation de ressources. Actuellement, le répertoire ne contient pas de fichiers autres que le présent fichier HSTC.md.
+Ce répertoire contient des diagrammes de flux illustrant les parcours utilisateur et les processus métier principaux du système de réservation de ressources:
 
-Note: Les diagrammes de flux futurs documenteront les interactions et transitions entre les différents écrans du système pour chaque type d'utilisateur (standard, gestionnaire, administrateur).
+- Flux de recherche et réservation de ressources
+- Flux de validation des demandes de réservation
+- Flux de gestion des ressources par les administrateurs
+- Flux de check-in/check-out pour les ressources
+- Flux de notification et communication automatisée

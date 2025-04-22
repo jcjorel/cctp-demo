@@ -15,6 +15,39 @@ Contient les maquettes HTML/CSS pour les différentes interfaces du système (ut
 
 ## Fichiers du répertoire courant
 
+### Fichier 'API.md':
+Spécifications détaillées de l'API REST du système, incluant les formats d'échange, les mécanismes d'authentification, les codes de statut HTTP, et tous les endpoints disponibles avec leurs paramètres et réponses.
+
+### Fichier 'CONFIGURATION.md':
+Architecture de configuration du système, incluant les principes généraux, la structure des paramètres, la gestion par environnement, et les valeurs par défaut des principaux paramètres du système.
+
+### Fichier 'DATA_MODEL.md':
+Spécification complète du modèle de données, avec les définitions des entités, leurs relations, les implémentations SQLAlchemy, les stratégies d'indexation et les requêtes fréquentes optimisées.
+
+### Fichier 'DESIGN.md':
+Architecture technique complète du système, incluant la vision architecturale, les services fournis, la logique métier, les dépendances externes, les fonctions de support, et l'architecture frontend et backend.
+
+### Fichier 'DESIGN_DECISIONS.md':
+Journal des décisions de conception importantes prises pour le projet, qui seront éventuellement intégrées dans les documents de documentation principaux.
+
+### Fichier 'DOCUMENT_RELATIONSHIPS.md':
+Définition des relations entre les documents de documentation, incluant les dépendances et les impacts entre les différents fichiers.
+
+### Fichier 'MARKDOWN_CHANGELOG.md':
+Suivi des modifications apportées aux documents markdown dans le dossier principal de documentation.
+
+### Fichier 'PR-FAQ.md':
+Document Press Release/FAQ décrivant le produit final selon la méthodologie Amazon, expliquant les bénéfices du système pour les utilisateurs finaux.
+
+### Fichier 'SECURITY.md':
+Architecture de sécurité et mesures de protection mises en place, incluant le modèle de menaces, les mécanismes d'authentification et d'autorisation, la protection des données, et la gestion des incidents.
+
+### Fichier 'UX_DESIGN.md':
+Règles détaillées d'usage des logos et des éléments d'interface dans le système, garantissant la cohérence visuelle à travers toutes les interfaces.
+
+### Fichier 'WORKING_BACKWARDS.md':
+Document de vision "Working Backwards" décrivant l'expérience utilisateur cible du système de réservation de ressources.
+
 ### Fichier '46_CCTP_F_grpmt_logiciel_ressource_1389713110489.md':
 Reformulation du CCTP original en format markdown, contenant les spécifications techniques détaillées du système de réservation de ressources.
 
@@ -23,15 +56,3 @@ Version PDF originale du CCTP pour le système de réservation de ressources.
 
 ### Fichier 'CONTEXTE_BUSINESS_CCTP.md':
 Analyse détaillée du contexte business extrait du CCTP, incluant les objectifs, les contraintes et les exigences du projet.
-
-### Fichier 'MARKDOWN_CHANGELOG.md':
-Suivi des modifications apportées aux documents markdown dans le dossier principal de documentation.
-
-### Fichier 'PR-FAQ.md':
-Document Press Release/FAQ décrivant le produit final selon la méthodologie Amazon, expliquant les bénéfices du système pour les utilisateurs finaux.
-
-### Fichier 'UX_DESIGN.md':
-Règles détaillées d'usage des logos et des éléments d'interface dans le système, garantissant la cohérence visuelle à travers toutes les interfaces.
-
-### Fichier 'WORKING_BACKWARDS.md':
-Document de vision "Working Backwards" décrivant l'expérience utilisateur cible du système de réservation de ressources.

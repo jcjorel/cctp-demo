@@ -9,4 +9,8 @@ Contient les conversations capturées avec l'assistant de codage, documentant le
 
 ## Fichiers du répertoire courant
 
-Ce répertoire ne contient pas de fichiers au niveau racine autres que le présent fichier HSTC.md.
+### Fichier 'GENAI_FUNCTION_TEMPLATE.txt':
+Template de documentation pour les fonctions, méthodes et classes, définissant le format standardisé requis pour la documentation de code dans le projet avec les sections obligatoires: Intent, Design Principles et Implementation Details.
+
+### Fichier 'GENAI_HEADER_TEMPLATE.txt':
+Template de documentation pour les en-têtes de fichiers, définissant le format standardisé requis pour la documentation au niveau fichier, incluant l'intention du fichier, les principes de conception, les contraintes et l'historique des modifications.

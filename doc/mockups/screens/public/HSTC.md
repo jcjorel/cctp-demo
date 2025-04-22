@@ -1,11 +1,15 @@
 # Hierarchical Semantic Tree Context (HSTC) - doc/mockups/screens/public
 
-Ce fichier fait partie de la structure HSTC (Hierarchical Semantic Tree Context) qui fournit un contexte sémantique hiérarchique pour le projet. Il contient les entêtes de documentation de tous les fichiers du répertoire courant.
+Ce fichier fait partie de la structure HSTC (Hierarchical Semantic Tree Context) qui fournit un contexte sémantique hiérarchique pour le projet. Il contient des résumés de tous les fichiers HSTC.md enfants (dans les sous-répertoires) ainsi que les entêtes de documentation de tous les fichiers du répertoire courant.
+
+## Résumés des répertoires enfants
+
+Ce répertoire ne contient pas de sous-répertoires avec fichiers HSTC.md.
 
 ## Fichiers du répertoire courant
 
 ### Fichier 'daily-schedule.html':
-Maquette HTML/CSS pour l'interface de planning journalier destinée à l'affichage public, présentant les réservations du jour pour chaque ressource sous forme d'agenda, permettant aux visiteurs de visualiser la disponibilité des ressources en temps réel.
+Maquette de l'interface d'affichage public du planning journalier des ressources, conçue pour être affichée sur des écrans dans les espaces communs et permettant aux visiteurs et utilisateurs de visualiser l'occupation des ressources pour la journée en cours.
 
 ### Fichier 'display-hall.html':
-Maquette HTML/CSS pour l'interface d'écran d'information destinée à l'affichage dans les halls d'accueil, présentant les informations essentielles sur les réservations en cours et à venir, avec une mise en page optimisée pour les écrans de grande taille dans les lieux publics.
+Maquette de l'interface d'affichage pour les halls d'accueil, présentant une vue d'ensemble des réservations actuelles et à venir dans le bâtiment, avec un système de signalétique digitale pour orienter les visiteurs vers les bonnes salles et ressources.

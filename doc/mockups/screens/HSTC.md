@@ -5,16 +5,16 @@ Ce fichier fait partie de la structure HSTC (Hierarchical Semantic Tree Context)
 ## Résumés des répertoires enfants
 
 ### admin/
-Contient les maquettes HTML/CSS pour les interfaces administrateur du système, incluant la configuration système, la gestion des ressources, la gestion des utilisateurs et le paramétrage des workflows.
+Contient les maquettes des interfaces administrateur du système, incluant la configuration du système, la gestion des utilisateurs, la gestion des ressources et la configuration des workflows de validation.
 
 ### manager/
-Contient les maquettes HTML/CSS pour les interfaces gestionnaire du système, incluant le tableau de bord, la liste des demandes, le détail des demandes et les statistiques.
+Contient les maquettes des interfaces gestionnaire du système, incluant le tableau de bord de gestion, la visualisation des demandes, les détails des demandes et les statistiques d'utilisation des ressources.
 
 ### public/
-Contient les maquettes HTML/CSS pour les interfaces d'affichage public du système, incluant l'écran d'information pour hall d'accueil et le planning journalier.
+Contient les maquettes des interfaces d'affichage public du système, incluant l'affichage du planning journalier dans les halls d'accueil et les écrans d'information sur l'occupation des salles.
 
 ### user/
-Contient les maquettes HTML/CSS pour les interfaces utilisateur standard du système, incluant la connexion, l'accueil, la recherche, le détail de ressource, la confirmation de réservation et l'historique.
+Contient les maquettes des interfaces utilisateur standard du système, incluant la recherche de ressources, la réservation, la confirmation de réservation et la gestion des réservations existantes.
 
 ## Fichiers du répertoire courant
 

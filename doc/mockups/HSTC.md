@@ -5,30 +5,30 @@ Ce fichier fait partie de la structure HSTC (Hierarchical Semantic Tree Context)
 ## Résumés des répertoires enfants
 
 ### assets/
-Contient les ressources CSS et JavaScript utilisées dans les maquettes d'interface.
+Contient les fichiers CSS, JavaScript et autres ressources utilisées par les maquettes HTML, organisés en sous-répertoires par type.
 
 ### components/
-Contient la bibliothèque de composants UI réutilisables conforme aux identités visuelles.
+Contient les composants réutilisables de l'interface utilisateur, présentés dans une bibliothèque de composants consultable.
 
 ### flows/
-Contient les diagrammes de flux représentant les parcours utilisateurs dans le système.
+Contient les diagrammes de flux des processus principaux du système, illustrant les parcours utilisateur pour les différentes fonctionnalités.
 
 ### screens/
-Contient les maquettes HTML/CSS organisées par type d'utilisateur (admin, manager, public, user).
+Contient les maquettes HTML des différents écrans du système, organisées par type d'utilisateur (admin, manager, public, user).
 
 ## Fichiers du répertoire courant
 
 ### Fichier 'IHM_MOCKUPS.md':
-Spécifications détaillées de l'interface utilisateur, incluant les principes de conception, les règles d'interaction et les choix ergonomiques.
+Documentation principale des maquettes d'interface, expliquant l'approche de conception, les principes UX/UI, et les règles d'intégration des identités visuelles.
 
 ### Fichier 'index.html':
-Point d'entrée pour naviguer entre les différentes maquettes du système de réservation de ressources.
+Page d'accueil de la documentation des maquettes, permettant de naviguer entre les différentes interfaces et composants.
 
 ### Fichier 'MARKDOWN_CHANGELOG.md':
-Suivi des modifications apportées aux documents markdown dans le dossier des mockups.
+Suivi des modifications apportées aux documents markdown dans le répertoire des maquettes.
 
 ### Fichier 'MOCKUPS_PROGRESS.md':
-Document de suivi de l'avancement des maquettes, indiquant les interfaces qui ont été validées et celles qui sont encore en cours de développement.
+Suivi de l'avancement de la création des maquettes, avec les statuts de validation pour chaque écran et fonctionnalité.
 
 ### Fichier 'README.md':
-Document explicatif sur l'organisation des maquettes et comment les consulter.
+Instructions pour la navigation dans les maquettes, l'installation des dépendances nécessaires, et l'utilisation des composants.

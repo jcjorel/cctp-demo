@@ -5,10 +5,10 @@ Ce fichier fait partie de la structure HSTC (Hierarchical Semantic Tree Context)
 ## Résumés des répertoires enfants
 
 ### css/
-Contient les feuilles de style CSS utilisées dans les maquettes d'interface.
+Contient les fichiers de style CSS utilisés par les maquettes HTML, incluant les thèmes, les règles de mise en page, et les styles spécifiques aux composants.
 
 ### js/
-Contient les scripts JavaScript utilisés pour les interactions dynamiques dans les maquettes.
+Contient les fichiers JavaScript utilisés pour ajouter des fonctionnalités interactives aux maquettes HTML et simuler le comportement de l'application.
 
 ## Fichiers du répertoire courant
 

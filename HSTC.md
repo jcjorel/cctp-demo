@@ -5,10 +5,10 @@ Ce fichier fait partie de la structure HSTC (Hierarchical Semantic Tree Context)
 ## Résumés des répertoires enfants
 
 ### coding_assistant/
-Contient les conversations capturées avec l'assistant de codage, documentant le processus de développement et les décisions prises lors de l'implémentation du système de réservation de ressources.
+Contient les templates GenAI et les conversations capturées avec l'assistant de codage, documentant le processus de développement et les décisions prises lors de l'implémentation du système de réservation de ressources.
 
 ### doc/
-Contient la documentation principale du projet, incluant le CCTP, les analyses du contexte business, les identités visuelles et les mockups d'interface.
+Contient la documentation principale du projet, incluant l'architecture technique (DESIGN.md), le modèle de données (DATA_MODEL.md), les spécifications de l'API (API.md), la sécurité (SECURITY.md), la configuration (CONFIGURATION.md), le CCTP, les analyses du contexte business, les identités visuelles et les mockups d'interface.
 
 ### scratchpad/
 Répertoire pour les documents de travail temporaires, incluant les plans d'implémentation et les documents éphémères.
