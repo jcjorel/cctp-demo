@@ -1,0 +1,26 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fond transparent -->
+  <rect width="200" height="200" fill="none"/>
+  
+  <!-- Base du logo -->
+  <rect x="30" y="70" width="140" height="60" fill="#D51B5C" rx="5" ry="5"/>
+  
+  <!-- Élément bâtiment/développement -->
+  <polygon points="60,70 80,40 140,40 160,70" fill="#8DAD3E" stroke="#FFFFFF" stroke-width="1"/>
+  <rect x="90" y="50" width="10" height="20" fill="#FFFFFF"/>
+  <rect x="110" y="50" width="10" height="20" fill="#FFFFFF"/>
+  
+  <!-- Éléments urbains stylisés -->
+  <rect x="40" y="90" width="10" height="20" fill="#FFFFFF"/>
+  <rect x="60" y="90" width="10" height="30" fill="#FFFFFF"/>
+  <rect x="80" y="90" width="10" height="15" fill="#FFFFFF"/>
+  <rect x="100" y="90" width="10" height="25" fill="#FFFFFF"/>
+  <rect x="120" y="90" width="10" height="20" fill="#FFFFFF"/>
+  <rect x="140" y="90" width="10" height="30" fill="#FFFFFF"/>
+  
+  <!-- Texte "PLAINE COMMUNE" -->
+  <text x="100" y="85" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#FFFFFF">PLAINE COMMUNE</text>
+  
+  <!-- Texte "DÉVELOPPEMENT" -->
+  <text x="100" y="145" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#FFFFFF">DÉVELOPPEMENT</text>
+</svg>

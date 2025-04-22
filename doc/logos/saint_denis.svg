@@ -1,0 +1,19 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fond transparent -->
+  <rect width="200" height="200" fill="none"/>
+  
+  <!-- Blason stylisé -->
+  <path d="M100,30 L160,60 L160,140 L100,170 L40,140 L40,60 Z" fill="#E30613" stroke="#000000" stroke-width="2"/>
+  
+  <!-- Fleur de lys stylisée -->
+  <path d="M100,60 C105,75 115,70 120,80 C118,68 110,66 100,75 C90,66 82,68 80,80 C85,70 95,75 100,60 Z" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+  
+  <!-- Basilique stylisée -->
+  <path d="M70,100 L70,130 L130,130 L130,100 Z" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+  <path d="M85,100 L85,80 L115,80 L115,100" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+  <path d="M95,80 L95,70 L105,70 L105,80" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+  <path d="M100,70 L100,60" stroke="#FFFFFF" stroke-width="2"/>
+  
+  <!-- Texte "SAINT-DENIS" -->
+  <text x="100" y="150" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#FFFFFF">SAINT-DENIS</text>
+</svg>

@@ -1,0 +1,18 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fond transparent -->
+  <rect width="200" height="200" fill="none"/>
+  
+  <!-- Logo stylisé basé sur le site plainecommune.fr -->
+  <circle cx="100" cy="100" r="70" fill="#D51B5C"/>
+  
+  <!-- Éléments graphiques stylisés -->
+  <path d="M60,80 L140,80 L140,120 L60,120 Z" fill="none" stroke="#FFFFFF" stroke-width="3"/>
+  <path d="M80,80 L80,60 L120,60 L120,80" fill="none" stroke="#FFFFFF" stroke-width="3"/>
+  
+  <!-- Texte "PLAINE COMMUNE" -->
+  <text x="100" y="105" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#FFFFFF">PLAINE</text>
+  <text x="100" y="125" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#FFFFFF">COMMUNE</text>
+  
+  <!-- Texte "GRAND PARIS" -->
+  <text x="100" y="145" font-family="Arial, sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="#FFFFFF">GRAND PARIS</text>
+</svg>
