@@ -36,12 +36,15 @@ Ces serveurs fournissent des outils et des ressources supplémentaires qui sont 
 
 ## Structure des branches Git
 
-À l'heure actuelle, le projet ne contient que la branche principale `master`. Les branches spécifiques aux différentes étapes d'implémentation seront créées au fur et à mesure de l'avancement du projet.
+Le projet est organisé avec différentes branches correspondant aux étapes de développement:
 
 ```mermaid
 gitGraph
    commit id: "initial"
    commit id: "Création du README.md"
+   branch analyse-donnees-entrees-contexte-business
+   checkout analyse-donnees-entrees-contexte-business
+   commit id: "Ajout des documents d'analyse de contexte business"
 ```
 
 Au fil du développement, la structure des branches évoluera pour inclure des branches dédiées à chaque étape d'implémentation.
@@ -61,7 +64,17 @@ Cette étape préliminaire consiste à configurer l'environnement de développem
 
 ### Étape 1 : Analyse des besoins
 
-*À venir - Lien vers la conversation capturée*
+L'analyse des besoins s'est concentrée sur l'étude du contexte business du système de réservation de ressources à partir du CCTP (Cahier des Clauses Techniques Particulières) et l'élaboration de documents de vision.
+
+**Documents clés produits :**
+- [46_CCTP_F_grpmt_logiciel_ressource_1389713110489.md](doc/46_CCTP_F_grpmt_logiciel_ressource_1389713110489.md) - Reformulation du CCTP original en format markdown
+- [CONTEXTE_BUSINESS_CCTP.md](doc/CONTEXTE_BUSINESS_CCTP.md) - Analyse détaillée du contexte business extrait du CCTP
+- [PR-FAQ.md](doc/PR-FAQ.md) - Document Press Release/FAQ décrivant le produit final selon la méthodologie Amazon
+- [WORKING_BACKWARDS.md](doc/WORKING_BACKWARDS.md) - Document de vision "Working Backwards" décrivant l'expérience utilisateur cible
+
+**Conversations capturées :**
+- [Reformulation du CCTP PDF en Markdown (22/04/2025)](coding_assistant/captured_chats/20250422-1016-reformulation_cctp_pdf_en_markdown.md) - Conversion du CCTP du format PDF au format Markdown
+- [Analyse du contexte business CCTP (22/04/2025)](coding_assistant/captured_chats/20250422-1031-analyse_contexte_business_cctp.md) - Extraction et analyse du contexte business à partir du CCTP
 
 ### Étape 2 : Conception du système
 
