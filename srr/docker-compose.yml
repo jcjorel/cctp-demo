@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./services/backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./services/backend:/app  # Pour le développement (hot-reload)
+    environment:
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://redis:6379/0
+      - DEBUG=${DEBUG}
+      - MOCK_AUTH=${MOCK_AUTH:-True}
+      - MOCK_EXCHANGE=${MOCK_EXCHANGE:-True}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ALGORITHM=${JWT_ALGORITHM}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
+      - ALLOW_CORS_ORIGINS=${ALLOW_CORS_ORIGINS}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+      - mock-services
+    command: uvicorn main:app --reload --host 0.0.0.0 --port 8000
+    networks:
+      - srr_network
+
+  frontend:
+    build:
+      context: ./services/frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./services/frontend:/app  # Pour le développement (hot-reload)
+      - /app/node_modules
+    environment:
+      - REACT_APP_API_URL=${REACT_APP_API_URL}
+      - NODE_ENV=development
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    command: npm start
+    networks:
+      - srr_network
+
+  db:
+    image: postgres:14
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./services/postgres/init:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+    ports:
+      - "5432:5432"
+    networks:
+      - srr_network
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - redis_data:/data
+      - ./services/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    networks:
+      - srr_network
+
+  mock-services:
+    build:
+      context: ./services/mocks
+      dockerfile: Dockerfile
+    volumes:
+      - ./services/mocks:/app
+    environment:
+      - MOCK_USERS_FILE=/app/data/users.json
+      - MOCK_RESOURCES_FILE=/app/data/resources.json
+    ports:
+      - "8080:8080"
+    networks:
+      - srr_network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  srr_network:
+    driver: bridge

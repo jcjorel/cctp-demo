@@ -8,7 +8,7 @@ Ce document suit l'état d'avancement de l'implémentation de l'environnement de
 |-------|--------|------------------|
 | **Création des plans** | ✅ Complété | 2025-04-23 |
 | **Vérification de cohérence** | ❌ Non démarré | - |
-| **Implémentation** | ❌ Non démarré | - |
+| **Implémentation** | 🔄 En cours | 2025-04-23 |
 | **Validation** | ❌ Non démarré | - |
 
 ## Légende des statuts
@@ -23,12 +23,12 @@ Ce document suit l'état d'avancement de l'implémentation de l'environnement de
 | Module | Fichier de plan | Statut plan | Statut implémentation |
 |--------|------------------|-------------|----------------------|
 | Vue d'ensemble | [plan_overview.md](./plan_overview.md) | ✅ | ❌ |
-| Infrastructure | [plan_01_infrastructure.md](./plan_01_infrastructure.md) | ✅ | ❌ |
-| Backend Core | [plan_02_backend_core.md](./plan_02_backend_core.md) | ✅ | ❌ |
-| Database | [plan_03_database.md](./plan_03_database.md) | ✅ | ❌ |
-| Mock Services | [plan_04_mock_services.md](./plan_04_mock_services.md) | ✅ | ❌ |
-| Frontend Core | [plan_05_frontend_core.md](./plan_05_frontend_core.md) | ✅ | ❌ |
-| Authentication | [plan_06_authentication.md](./plan_06_authentication.md) | ✅ | ❌ |
+| Infrastructure | [plan_01_infrastructure.md](./plan_01_infrastructure.md) | ✅ | ✨ |
+| Backend Core | [plan_02_backend_core.md](./plan_02_backend_core.md) | ✅ | ✨ |
+| Database | [plan_03_database.md](./plan_03_database.md) | ✅ | ✨ |
+| Mock Services | [plan_04_mock_services.md](./plan_04_mock_services.md) | ✅ | ✨ |
+| Frontend Core | [plan_05_frontend_core.md](./plan_05_frontend_core.md) | ✅ | ✨ |
+| Authentication | [plan_06_authentication.md](./plan_06_authentication.md) | ✅ | ✨ |
 | API Integration | [plan_07_api_integration.md](./plan_07_api_integration.md) | ✅ | ❌ |
 | Testing | [plan_08_testing.md](./plan_08_testing.md) | ✅ | ❌ |
 | CI/CD | [plan_09_ci_cd.md](./plan_09_ci_cd.md) | ✅ | ❌ |
@@ -55,6 +55,14 @@ Ce document suit l'état d'avancement de l'implémentation de l'environnement de
 *Aucun blocage identifié à ce stade.*
 
 ## Notes d'avancement
+
+### 2025-04-23 (Matin)
+- Implémentation de l'infrastructure Docker complétée
+  * Structure de répertoires créée
+  * Fichiers Docker Compose et Dockerfiles
+  * Configuration des services (PostgreSQL, Redis, Backend, Frontend, Mocks)
+  * Données de test pour les services simulés
+  * Makefile pour la gestion des commandes
 
 ### 2025-04-23
 - Structure initiale du plan établie

@@ -1,0 +1,155 @@
+{
+  "resources": [
+    {
+      "id": "salle-a101",
+      "name": "Salle A101",
+      "type": "salle_reunion",
+      "capacity": 12,
+      "location": "Hôtel de Ville - Aile A - 1er étage",
+      "features": ["projecteur", "visioconference", "tableau"],
+      "email": "salle-a101@mairie-saint-denis.fr",
+      "calendar_id": "salle-a101",
+      "status": "active",
+      "created_at": "2025-01-01T00:00:00Z",
+      "manager": "jdupont"
+    },
+    {
+      "id": "salle-b205",
+      "name": "Salle B205",
+      "type": "salle_reunion",
+      "capacity": 8,
+      "location": "Hôtel de Ville - Aile B - 2ème étage",
+      "features": ["projecteur", "tableau"],
+      "email": "salle-b205@mairie-saint-denis.fr",
+      "calendar_id": "salle-b205",
+      "status": "active",
+      "created_at": "2025-01-01T00:00:00Z",
+      "manager": "cmoreau"
+    },
+    {
+      "id": "salle-conseil",
+      "name": "Salle du Conseil",
+      "type": "salle_reunion",
+      "capacity": 50,
+      "location": "Hôtel de Ville - Rez-de-chaussée",
+      "features": ["projecteur", "visioconference", "sonorisation", "tableau"],
+      "email": "salle-conseil@mairie-saint-denis.fr",
+      "calendar_id": "salle-conseil",
+      "status": "active",
+      "created_at": "2025-01-01T00:00:00Z",
+      "manager": "jdupont"
+    },
+    {
+      "id": "salle-c310",
+      "name": "Salle C310",
+      "type": "salle_reunion",
+      "capacity": 6,
+      "location": "Annexe - Aile C - 3ème étage",
+      "features": ["tableau"],
+      "email": "salle-c310@mairie-saint-denis.fr",
+      "calendar_id": "salle-c310",
+      "status": "active",
+      "created_at": "2025-01-01T00:00:00Z",
+      "manager": "cmoreau"
+    },
+    {
+      "id": "amphitheatre",
+      "name": "Amphithéâtre",
+      "type": "salle_reunion",
+      "capacity": 120,
+      "location": "Centre culturel - Rez-de-chaussée",
+      "features": ["projecteur", "visioconference", "sonorisation"],
+      "email": "amphitheatre@mairie-saint-denis.fr",
+      "calendar_id": "amphitheatre",
+      "status": "active",
+      "created_at": "2025-01-01T00:00:00Z",
+      "manager": "cmoreau"
+    },
+    {
+      "id": "salle-formation",
+      "name": "Salle de Formation",
+      "type": "salle_reunion",
+      "capacity": 15,
+      "location": "Annexe - Aile B - 1er étage",
+      "features": ["projecteur", "ordinateurs", "tableau"],
+      "email": "salle-formation@mairie-saint-denis.fr",
+      "calendar_id": "salle-formation",
+      "status": "maintenance",
+      "created_at": "2025-01-01T00:00:00Z",
+      "manager": "jdupont"
+    }
+  ],
+  "bookings": [
+    {
+      "id": "booking-001",
+      "resource_id": "salle-a101",
+      "user_id": "jdupont",
+      "title": "Réunion Urbanisme",
+      "start_time": "2025-04-24T09:00:00Z",
+      "end_time": "2025-04-24T10:30:00Z",
+      "status": "confirmed",
+      "attendees": ["jdupont", "smartin"],
+      "created_at": "2025-04-20T14:30:00Z"
+    },
+    {
+      "id": "booking-002",
+      "resource_id": "salle-b205",
+      "user_id": "smartin",
+      "title": "Entretiens RH",
+      "start_time": "2025-04-24T14:00:00Z",
+      "end_time": "2025-04-24T17:00:00Z",
+      "status": "confirmed",
+      "attendees": ["smartin"],
+      "created_at": "2025-04-21T10:15:00Z"
+    },
+    {
+      "id": "booking-003",
+      "resource_id": "salle-conseil",
+      "user_id": "cmoreau",
+      "title": "Conseil Municipal",
+      "start_time": "2025-04-25T18:00:00Z",
+      "end_time": "2025-04-25T20:00:00Z",
+      "status": "confirmed",
+      "attendees": ["jdupont", "cmoreau", "admin"],
+      "created_at": "2025-04-15T09:00:00Z"
+    },
+    {
+      "id": "booking-004",
+      "resource_id": "salle-a101",
+      "user_id": "plegrand",
+      "title": "Réunion Budget",
+      "start_time": "2025-04-26T10:00:00Z",
+      "end_time": "2025-04-26T12:00:00Z",
+      "status": "pending",
+      "attendees": ["plegrand", "jdupont"],
+      "created_at": "2025-04-22T16:45:00Z"
+    }
+  ],
+  "features": [
+    {
+      "id": "projecteur",
+      "name": "Projecteur",
+      "icon": "projector"
+    },
+    {
+      "id": "tableau",
+      "name": "Tableau",
+      "icon": "whiteboard"
+    },
+    {
+      "id": "visioconference",
+      "name": "Système de visioconférence",
+      "icon": "video-camera"
+    },
+    {
+      "id": "sonorisation",
+      "name": "Système de sonorisation",
+      "icon": "microphone"
+    },
+    {
+      "id": "ordinateurs",
+      "name": "Postes informatiques",
+      "icon": "computer"
+    }
+  ]
+}

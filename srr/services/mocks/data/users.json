@@ -1,0 +1,112 @@
+{
+  "users": [
+    {
+      "username": "admin",
+      "password_hash": "$2b$12$tZS.5QASbKAKD0P/p3qhs.CZ.LUzJ.vS5Yggg7jFJCxQSOq0P6FtW",
+      "email": "admin@mairie-saint-denis.fr",
+      "full_name": "Administrateur Système",
+      "role": "admin",
+      "department": "DSI",
+      "active": true,
+      "created_at": "2025-01-01T00:00:00Z",
+      "groups": ["SRR_Admins"]
+    },
+    {
+      "username": "jdupont",
+      "password_hash": "$2b$12$tZS.5QASbKAKD0P/p3qhs.CZ.LUzJ.vS5Yggg7jFJCxQSOq0P6FtW",
+      "email": "jean.dupont@mairie-saint-denis.fr",
+      "full_name": "Jean Dupont",
+      "role": "manager",
+      "department": "Urbanisme",
+      "active": true,
+      "created_at": "2025-01-02T00:00:00Z",
+      "groups": ["SRR_Managers", "Urbanisme"]
+    },
+    {
+      "username": "smartin",
+      "password_hash": "$2b$12$tZS.5QASbKAKD0P/p3qhs.CZ.LUzJ.vS5Yggg7jFJCxQSOq0P6FtW",
+      "email": "sophie.martin@mairie-saint-denis.fr",
+      "full_name": "Sophie Martin",
+      "role": "user",
+      "department": "RH",
+      "active": true,
+      "created_at": "2025-01-03T00:00:00Z",
+      "groups": ["SRR_Users", "RH"]
+    },
+    {
+      "username": "plegrand",
+      "password_hash": "$2b$12$tZS.5QASbKAKD0P/p3qhs.CZ.LUzJ.vS5Yggg7jFJCxQSOq0P6FtW",
+      "email": "pierre.legrand@mairie-saint-denis.fr",
+      "full_name": "Pierre Legrand",
+      "role": "user",
+      "department": "Finances",
+      "active": true,
+      "created_at": "2025-01-04T00:00:00Z",
+      "groups": ["SRR_Users", "Finances"]
+    },
+    {
+      "username": "cmoreau",
+      "password_hash": "$2b$12$tZS.5QASbKAKD0P/p3qhs.CZ.LUzJ.vS5Yggg7jFJCxQSOq0P6FtW",
+      "email": "claire.moreau@mairie-saint-denis.fr",
+      "full_name": "Claire Moreau",
+      "role": "manager",
+      "department": "Culture",
+      "active": true,
+      "created_at": "2025-01-05T00:00:00Z",
+      "groups": ["SRR_Managers", "Culture"]
+    },
+    {
+      "username": "inactif",
+      "password_hash": "$2b$12$tZS.5QASbKAKD0P/p3qhs.CZ.LUzJ.vS5Yggg7jFJCxQSOq0P6FtW",
+      "email": "user.inactif@mairie-saint-denis.fr",
+      "full_name": "Utilisateur Inactif",
+      "role": "user",
+      "department": "DSI",
+      "active": false,
+      "created_at": "2025-01-06T00:00:00Z",
+      "groups": ["SRR_Users"]
+    }
+  ],
+  "groups": [
+    {
+      "name": "SRR_Admins",
+      "description": "Administrateurs du système SRR",
+      "members": ["admin"]
+    },
+    {
+      "name": "SRR_Managers",
+      "description": "Gestionnaires de ressources SRR",
+      "members": ["jdupont", "cmoreau"]
+    },
+    {
+      "name": "SRR_Users",
+      "description": "Utilisateurs standard SRR",
+      "members": ["smartin", "plegrand", "inactif"]
+    },
+    {
+      "name": "Urbanisme",
+      "description": "Service Urbanisme",
+      "members": ["jdupont"]
+    },
+    {
+      "name": "RH",
+      "description": "Service Ressources Humaines",
+      "members": ["smartin"]
+    },
+    {
+      "name": "Finances",
+      "description": "Service Finances",
+      "members": ["plegrand"]
+    },
+    {
+      "name": "Culture",
+      "description": "Service Culture",
+      "members": ["cmoreau"]
+    },
+    {
+      "name": "DSI",
+      "description": "Direction des Systèmes d'Information",
+      "members": ["admin", "inactif"]
+    }
+  ]
+}

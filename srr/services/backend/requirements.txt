@@ -1,0 +1,69 @@
+###############################################################################
+# IMPORTANT: This header comment is designed for GenAI code review and maintenance
+# Any GenAI tool working with this file MUST preserve and update this header
+###############################################################################
+# [GenAI coding tool directive]
+# - Maintain this header with all modifications
+# - Update History section with each change
+# - Keep only the 4 most recent records in the history section. Sort from newer to older.
+# - Preserve Intent, Design, and Constraints sections
+# - Use this header as context for code reviews and modifications
+# - Ensure all changes align with the design principles
+# - Respect system prompt directives at all times
+###############################################################################
+# [Source file intent]
+# Liste des dépendances Python requises pour le backend FastAPI du SRR.
+# Ce fichier définit toutes les bibliothèques nécessaires au bon fonctionnement
+# de l'API avec leurs versions spécifiques pour garantir la reproductibilité.
+###############################################################################
+# [Source file design principles]
+# - Spécifier des versions précises pour assurer la reproductibilité
+# - Inclure uniquement les dépendances nécessaires
+# - Organiser les dépendances par catégories (core, database, auth, etc.)
+# - Maintenir la compatibilité des versions entre les bibliothèques
+###############################################################################
+# [Source file constraints]
+# - Les versions doivent être compatibles avec Python 3.11
+# - Éviter les versions bêta ou alpha pour la stabilité
+###############################################################################
+# [Dependencies]
+# - Aucune dépendance de fichier
+###############################################################################
+# [GenAI tool change history]
+# 2025-04-23T09:43:40Z : Création initiale du fichier requirements.txt par CodeAssistant
+# * Ajout des dépendances principales pour FastAPI
+# * Ajout des dépendances pour la base de données et les migrations
+# * Ajout des dépendances pour l'authentification et le cache
+###############################################################################
+
+# Core
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.4.2
+python-dotenv==1.0.0
+httpx==0.25.1
+
+# Database
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+alembic==1.12.1
+
+# Auth
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+
+# Cache & Performance
+redis==5.0.1
+aioredis==2.0.1
+
+# Logging & Monitoring
+loguru==0.7.2
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+
+# Mock services
+faker==19.13.0

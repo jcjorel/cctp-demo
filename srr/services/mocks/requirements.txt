@@ -1,0 +1,54 @@
+###############################################################################
+# IMPORTANT: This header comment is designed for GenAI code review and maintenance
+# Any GenAI tool working with this file MUST preserve and update this header
+###############################################################################
+# [GenAI coding tool directive]
+# - Maintain this header with all modifications
+# - Update History section with each change
+# - Keep only the 4 most recent records in the history section. Sort from newer to older.
+# - Preserve Intent, Design, and Constraints sections
+# - Use this header as context for code reviews and modifications
+# - Ensure all changes align with the design principles
+# - Respect system prompt directives at all times
+###############################################################################
+# [Source file intent]
+# Liste des dépendances Python requises pour les services simulés du SRR.
+# Ce fichier définit toutes les bibliothèques nécessaires pour simuler
+# les services AD/LDAP et Exchange avec leurs versions spécifiques.
+###############################################################################
+# [Source file design principles]
+# - Spécifier des versions précises pour assurer la reproductibilité
+# - Inclure uniquement les dépendances nécessaires
+# - Fournir des simulateurs légers mais fonctionnellement équivalents
+# - Maintenir la compatibilité des versions entre les bibliothèques
+###############################################################################
+# [Source file constraints]
+# - Les versions doivent être compatibles avec Python 3.11
+# - Éviter les versions bêta ou alpha pour la stabilité
+###############################################################################
+# [Dependencies]
+# - Aucune dépendance de fichier
+###############################################################################
+# [GenAI tool change history]
+# 2025-04-23T09:47:00Z : Création initiale du fichier requirements.txt des mocks par CodeAssistant
+# * Ajout des dépendances pour le serveur FastAPI simulé
+# * Ajout des dépendances pour la simulation AD/LDAP
+# * Ajout des dépendances pour la simulation Exchange
+###############################################################################
+
+# Core
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.4.2
+python-dotenv==1.0.0
+
+# Mock Services
+ldap3==2.9.1
+python-jose[cryptography]==3.3.0
+faker==19.13.0
+python-dateutil==2.8.2
+httpx==0.25.1
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
